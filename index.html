@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
     
-    <!-- Configuration Tailwind Thème Cyber-Militaire -->
+    <!-- Configuration Tailwind -->
     <script>
         tailwind.config = {
             darkMode: 'class',
@@ -27,23 +27,6 @@
                             dim: '#475569',
                             success: '#00ff9d'
                         }
-                    },
-                    fontFamily: {
-                        mono: ['"Courier New"', 'Courier', 'monospace'],
-                    },
-                    boxShadow: {
-                        'neon-blue': '0 0 5px #00f3ff, 0 0 10px #00f3ff',
-                        'neon-red': '0 0 5px #ff003c, 0 0 10px #ff003c',
-                    },
-                    animation: {
-                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-                        'scan': 'scan 4s linear infinite',
-                    },
-                    keyframes: {
-                        scan: {
-                            '0%': { transform: 'translateY(-100%)' },
-                            '100%': { transform: 'translateY(100%)' }
-                        }
                     }
                 }
             }
@@ -58,6 +41,8 @@
                 linear-gradient(90deg, rgba(0, 243, 255, 0.03) 1px, transparent 1px);
             background-size: 30px 30px;
             color: #e2e8f0;
+            margin: 0;
+            padding: 0;
         }
 
         ::-webkit-scrollbar {
@@ -71,26 +56,11 @@
             background: #1e293b; 
             border: 1px solid #00f3ff;
         }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #00f3ff; 
-        }
-
-        .scanline {
-            background: linear-gradient(to bottom, transparent, rgba(0, 243, 255, 0.2), transparent);
-            height: 20px;
-            width: 100%;
-            position: absolute;
-            top: 0;
-            left: 0;
-            pointer-events: none;
-            animation: scan 2.5s linear infinite;
-        }
 
         .tactical-input {
             background: rgba(10, 15, 24, 0.8);
             border: 1px solid #334155;
             color: #00f3ff;
-            transition: all 0.3s ease;
         }
         .tactical-input:focus {
             outline: none;
@@ -101,21 +71,10 @@
         .tactical-table th {
             background-color: #0f172a;
             color: #00f3ff;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            font-size: 0.75rem;
             border-bottom: 2px solid #1e293b;
-        }
-        .tactical-table tr {
-            border-bottom: 1px solid #1e293b;
-            transition: background 0.2s;
         }
         .tactical-table tr:hover {
             background: rgba(0, 243, 255, 0.05);
-        }
-        .tactical-table td {
-            color: #94a3b8;
-            font-size: 0.875rem;
         }
 
         .tricolore-bar {
@@ -126,1152 +85,342 @@
             margin-bottom: 1rem;
         }
 
-        .badge-nuance {
-            display: inline-block;
-            padding: 2px 8px;
-            border-radius: 12px;
-            font-size: 10px;
-            font-weight: bold;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .data-source-link {
-            transition: all 0.2s;
-        }
-        .data-source-link:hover {
-            text-shadow: 0 0 8px #00f3ff;
-        }
-
-        /* Style corrigé pour l'iframe - pleine largeur */
-        .explorer-container {
+        /* STYLE CORRIGÉ POUR L'IFRAME - PLEINE LARGEUR */
+        .iframe-container {
             width: 100%;
             background: #0a0f18;
             border: 2px solid #1e293b;
             border-radius: 8px;
             overflow: hidden;
-            margin-bottom: 2rem;
+            margin: 0;
+            padding: 0;
         }
         
-        .explorer-header {
+        .iframe-header {
             background: #0f172a;
             padding: 12px 20px;
             border-bottom: 2px solid #1e293b;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            width: 100%;
         }
         
-        .explorer-title {
+        .iframe-title {
             color: #00f3ff;
             font-family: 'Courier New', monospace;
             font-size: 1rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
             display: flex;
             align-items: center;
             gap: 10px;
         }
         
-        .explorer-select {
-            background: rgba(10, 15, 24, 0.9);
+        .iframe-select {
+            background: #0a0f18;
             border: 1px solid #334155;
             color: #00f3ff;
             padding: 6px 12px;
             border-radius: 4px;
             font-family: 'Courier New', monospace;
-            font-size: 0.9rem;
-            cursor: pointer;
-        }
-        .explorer-select:hover {
-            border-color: #00f3ff;
-            box-shadow: 0 0 8px rgba(0, 243, 255, 0.3);
         }
         
-        .explorer-iframe {
+        .iframe-content {
             width: 100%;
             height: 700px;
-            border: none;
-            display: block;
+            position: relative;
+            margin: 0;
+            padding: 0;
         }
         
-        .explorer-footer {
+        .iframe-content iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            display: block;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .iframe-footer {
             background: #0f172a;
             padding: 8px 20px;
             border-top: 2px solid #1e293b;
             text-align: right;
             font-size: 0.75rem;
             color: #475569;
+            width: 100%;
         }
-        .explorer-footer a {
+        .iframe-footer a {
             color: #00f3ff;
             text-decoration: none;
         }
-        .explorer-footer a:hover {
+        .iframe-footer a:hover {
             text-decoration: underline;
         }
     </style>
 </head>
-<body class="font-sans antialiased min-h-screen flex flex-col">
+<body class="font-sans antialiased min-h-screen">
 
-    <!-- Toast Notification Container -->
-    <div id="toast-container" class="fixed top-4 right-4 z-50 flex flex-col gap-2 pointer-events-none"></div>
+    <!-- Toast Container -->
+    <div id="toast-container" class="fixed top-4 right-4 z-50"></div>
 
-    <div class="container mx-auto px-4 py-6 flex-grow max-w-7xl">
+    <div class="container mx-auto px-4 py-6 max-w-full">
         
-        <!-- En-tête Tactique -->
-        <header class="mb-8 relative">
+        <!-- En-tête -->
+        <header class="mb-8">
             <div class="tricolore-bar"></div>
-            <div class="bg-mil-panel border border-mil-border p-6 relative overflow-hidden group">
-                <div class="absolute top-0 left-0 w-16 h-16 border-t-2 border-l-2 border-mil-neonBlue opacity-50"></div>
-                <div class="absolute bottom-0 right-0 w-16 h-16 border-b-2 border-r-2 border-mil-neonRed opacity-50"></div>
-                
-                <div class="flex flex-col md:flex-row justify-between items-start md:items-center relative z-10">
+            <div class="bg-mil-panel border border-mil-border p-6">
+                <div class="flex justify-between items-center">
                     <div>
-                        <div class="flex items-center gap-3 mb-1">
-                            <i class="fas fa-satellite-dish text-mil-neonBlue text-2xl animate-pulse-slow"></i>
-                            <h1 class="text-3xl font-bold font-mono tracking-wider text-white">
-                                MUNICIPALES <span class="text-mil-neonBlue">2026</span>
-                            </h1>
-                        </div>
-                        <p class="text-mil-dim font-mono text-sm uppercase tracking-widest flex items-center">
-                            <span class="w-2 h-2 bg-mil-neonRed rounded-full mr-2 animate-pulse"></span>
+                        <h1 class="text-3xl font-bold text-white">
+                            MUNICIPALES <span class="text-mil-neonBlue">2026</span>
+                        </h1>
+                        <p class="text-mil-dim mt-1">
+                            <span class="w-2 h-2 bg-mil-neonRed rounded-full inline-block mr-2 animate-pulse"></span>
                             TOUS DROM-COM · 11 TERRITOIRES
                         </p>
                     </div>
-                    
-                    <div class="mt-4 md:mt-0 flex items-center gap-4">
-                        <div class="text-right hidden md:block">
-                            <div class="text-xs text-mil-dim font-mono">MISE À JOUR</div>
-                            <div class="text-mil-success font-bold tracking-wider">1 MARS 2026</div>
-                        </div>
-                        <div class="h-10 w-px bg-mil-border hidden md:block"></div>
-                        <div class="text-right">
-                             <div class="text-xs text-mil-dim font-mono">TERRITOIRES</div>
-                             <div class="text-white font-mono text-sm">11 DROM-COM</div>
-                        </div>
+                    <div class="text-right">
+                        <div class="text-xs text-mil-dim">MISE À JOUR</div>
+                        <div class="text-mil-success">1 MARS 2026</div>
                     </div>
                 </div>
             </div>
         </header>
 
-        <!-- Section Sources multiples -->
+        <!-- SOURCES -->
         <section class="mb-8">
-            <div class="bg-mil-panel border border-mil-border p-6 relative tactical-border">
-                <div class="absolute top-0 right-0 p-4 opacity-20">
-                    <i class="fas fa-globe text-6xl text-mil-neonBlue"></i>
+            <div class="bg-mil-panel border border-mil-border p-6">
+                <div class="flex items-center gap-3 mb-4">
+                    <i class="fas fa-database text-mil-neonBlue"></i>
+                    <h2 class="text-xl font-mono text-white">SOURCES OFFICIELLES</h2>
                 </div>
-                <div class="relative z-10">
-                    <div class="flex items-center gap-3 mb-4">
-                        <i class="fas fa-database text-mil-neonBlue"></i>
-                        <h2 class="text-xl font-mono text-white">SOURCES OFFICIELLES DROM-COM</h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="bg-black/30 p-4 rounded border border-mil-border">
+                        <p class="text-mil-neonBlue font-bold mb-2">📁 DROM</p>
+                        <p class="text-sm">971, 972, 973, 974, 976</p>
                     </div>
-                    
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-                        <!-- France entière (DROM) -->
-                        <div class="bg-black/30 p-4 rounded border border-mil-border">
-                            <div class="flex items-center gap-2 mb-2">
-                                <span class="text-mil-neonBlue font-bold">📁 DROM</span>
-                            </div>
-                            <p class="text-xs text-mil-dim mb-1">971 · 972 · 973 · 974 · 976</p>
-                            <p class="text-sm text-white">Guadeloupe, Martinique, Guyane, Réunion, Mayotte</p>
-                            <p class="text-xs text-mil-dim mt-2">Fichier France entière (137,8 Mo)</p>
-                        </div>
-
-                        <!-- COM Pacifique -->
-                        <div class="bg-black/30 p-4 rounded border border-mil-border">
-                            <div class="flex items-center gap-2 mb-2">
-                                <span class="text-mil-success font-bold">🌊 COM PACIFIQUE</span>
-                            </div>
-                            <p class="text-xs text-mil-dim mb-1">987 · 988 · 986</p>
-                            <p class="text-sm text-white">Polynésie (1,4 Mo), Nouvelle-Calédonie, Wallis-et-Futuna</p>
-                            <p class="text-xs text-mil-dim mt-2">Polynésie : 139 listes, 4.876 candidats</p>
-                        </div>
-
-                        <!-- COM Atlantique -->
-                        <div class="bg-black/30 p-4 rounded border border-mil-border">
-                            <div class="flex items-center gap-2 mb-2">
-                                <span class="text-mil-neonRed font-bold">⛵ COM ATLANTIQUE</span>
-                            </div>
-                            <p class="text-xs text-mil-dim mb-1">975 · 977 · 978</p>
-                            <p class="text-sm text-white">St-Pierre, St-Barth, St-Martin</p>
-                            <p class="text-xs text-mil-dim mt-2">Fichiers spécifiques disponibles</p>
-                        </div>
+                    <div class="bg-black/30 p-4 rounded border border-mil-border">
+                        <p class="text-mil-success font-bold mb-2">🌊 COM PACIFIQUE</p>
+                        <p class="text-sm">987, 988, 986</p>
                     </div>
-
-                    <div class="flex flex-wrap gap-3">
-                        <a href="https://www.data.gouv.fr/datasets/elections-municipales-2026-listes-candidates-au-premier-tour" 
-                           target="_blank"
-                           class="data-source-link inline-flex items-center gap-2 bg-mil-neonBlue/10 border border-mil-neonBlue text-mil-neonBlue px-4 py-2 rounded font-mono text-sm hover:bg-mil-neonBlue/20 transition">
-                            <i class="fas fa-external-link-alt"></i>
-                            VOIR TOUS LES FICHIERS
-                        </a>
-                        <div class="text-xs text-mil-dim flex items-center">
-                            <i class="fas fa-info-circle mr-2 text-mil-neonBlue"></i>
-                            11 territoires · Codes 971 à 988
-                        </div>
+                    <div class="bg-black/30 p-4 rounded border border-mil-border">
+                        <p class="text-mil-neonRed font-bold mb-2">⛵ COM ATLANTIQUE</p>
+                        <p class="text-sm">975, 977, 978</p>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- EXPLORATEUR CARTOGRAPHIQUE - VERSION CORRIGÉE PLEINE LARGEUR -->
+        <!-- IFRAME PLEINE LARGEUR - CORRIGÉ -->
         <section class="mb-8">
-            <div class="explorer-container">
-                <div class="explorer-header">
-                    <div class="explorer-title">
+            <div class="iframe-container">
+                <div class="iframe-header">
+                    <div class="iframe-title">
                         <i class="fas fa-map-marked-alt text-mil-neonBlue"></i>
                         EXPLORATEUR CARTOGRAPHIQUE - MUNICIPALES 2026
                     </div>
-                    <div>
-                        <select id="territoireSelector" class="explorer-select" onchange="updateIframe()">
-                            <option value="971">971 · GUADELOUPE</option>
-                            <option value="972">972 · MARTINIQUE</option>
-                            <option value="973">973 · GUYANE</option>
-                            <option value="974" selected>974 · LA RÉUNION</option>
-                            <option value="976">976 · MAYOTTE</option>
-                            <option value="975">975 · ST-PIERRE-ET-MIQUELON</option>
-                            <option value="977">977 · ST-BARTHÉLEMY</option>
-                            <option value="978">978 · ST-MARTIN</option>
-                            <option value="986">986 · WALLIS-ET-FUTUNA</option>
-                            <option value="987">987 · POLYNÉSIE FRANÇAISE</option>
-                            <option value="988">988 · NOUVELLE-CALÉDONIE</option>
-                        </select>
-                    </div>
+                    <select id="territoireSelector" class="iframe-select" onchange="updateIframe()">
+                        <option value="971">971 · GUADELOUPE</option>
+                        <option value="972">972 · MARTINIQUE</option>
+                        <option value="973">973 · GUYANE</option>
+                        <option value="974" selected>974 · LA RÉUNION</option>
+                        <option value="976">976 · MAYOTTE</option>
+                        <option value="975">975 · ST-PIERRE-ET-MIQUELON</option>
+                        <option value="977">977 · ST-BARTHÉLEMY</option>
+                        <option value="978">978 · ST-MARTIN</option>
+                        <option value="986">986 · WALLIS-ET-FUTUNA</option>
+                        <option value="987">987 · POLYNÉSIE FRANÇAISE</option>
+                        <option value="988">988 · NOUVELLE-CALÉDONIE</option>
+                    </select>
                 </div>
                 
-                <iframe id="mainIframe" class="explorer-iframe" src="https://municipales2026.manufacture-osint.fr/#view=explorer&dept=974&embed=1" allowfullscreen></iframe>
+                <div class="iframe-content">
+                    <iframe id="mainIframe" src="https://municipales2026.manufacture-osint.fr/#view=explorer&dept=974&embed=1" allowfullscreen></iframe>
+                </div>
                 
-                <div class="explorer-footer">
+                <div class="iframe-footer">
                     <i class="fas fa-map-marker-alt text-mil-neonBlue mr-1"></i>
-                    Source : <a href="https://municipales2026.manufacture-osint.fr" target="_blank">manufacture-osint.fr</a> · 
-                    Données en temps réel
+                    Source : <a href="https://municipales2026.manufacture-osint.fr" target="_blank">manufacture-osint.fr</a>
                 </div>
             </div>
         </section>
 
-        <!-- Zone d'upload -->
+        <!-- UPLOAD -->
         <section class="mb-8">
-            <div class="flex items-center justify-between mb-2">
-                <h2 class="text-lg font-mono text-mil-neonBlue uppercase flex items-center">
-                    <i class="fas fa-download mr-2"></i> Importation Données CSV
+            <div class="bg-mil-panel border border-mil-border p-6">
+                <h2 class="text-lg font-mono text-mil-neonBlue mb-4">
+                    <i class="fas fa-download mr-2"></i> IMPORTATION CSV
                 </h2>
-                <span class="text-xs text-mil-dim border border-mil-border px-2 py-0.5 rounded">CSV · 971 À 988</span>
-            </div>
 
-            <div id="dropZone" class="relative bg-mil-panel border-2 border-dashed border-mil-border rounded-lg p-10 text-center transition-all duration-300 cursor-pointer hover:border-mil-neonBlue hover:shadow-neon-blue group">
-                <div class="scanline opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                
-                <div class="relative z-10">
-                    <i class="fas fa-microchip text-5xl text-mil-dim mb-4 group-hover:text-mil-neonBlue transition-colors"></i>
-                    <p class="text-gray-400 text-lg font-mono mb-2 group-hover:text-white">
-                        [ INITIER TRANSFERT FICHIER ]
-                    </p>
-                    <p class="text-sm text-mil-dim mb-6">
-                        Glissez-déposez votre fichier CSV (France entière ou COM spécifique)
-                    </p>
+                <div id="dropZone" class="border-2 border-dashed border-mil-border p-8 text-center cursor-pointer hover:border-mil-neonBlue">
+                    <i class="fas fa-file-csv text-4xl text-mil-dim mb-3"></i>
+                    <p class="text-white mb-2">Glissez-déposez votre fichier CSV</p>
                     <button onclick="document.getElementById('fileInput').click()" 
-                            class="bg-transparent border border-mil-neonBlue text-mil-neonBlue px-8 py-2 rounded font-mono text-sm hover:bg-mil-neonBlue hover:text-black transition-all shadow-[0_0_10px_rgba(0,243,255,0.2)] hover:shadow-[0_0_20px_rgba(0,243,255,0.6)] uppercase tracking-widest">
-                        Sélectionner Source
+                            class="border border-mil-neonBlue text-mil-neonBlue px-6 py-2 rounded hover:bg-mil-neonBlue hover:text-black transition">
+                        Sélectionner
                     </button>
                     <input type="file" id="fileInput" accept=".csv" class="hidden" onchange="handleFile(this.files[0])">
                 </div>
-            </div>
 
-            <!-- Info fichier chargé -->
-            <div id="fileInfo" class="mt-4 p-4 bg-mil-panel border-l-4 border-mil-success hidden relative overflow-hidden">
-                <div class="absolute top-0 right-0 p-2 opacity-20">
-                    <i class="fas fa-check-circle text-4xl text-mil-success"></i>
-                </div>
-                <div class="flex items-center relative z-10">
-                    <i class="fas fa-database text-mil-success mr-3 text-xl animate-bounce"></i>
-                    <div>
-                        <p class="font-mono font-medium text-white" id="fileName"></p>
-                        <p class="text-sm text-mil-dim" id="fileStats"></p>
-                    </div>
+                <div id="fileInfo" class="mt-4 p-3 bg-mil-panel border-l-4 border-mil-success hidden">
+                    <p class="text-white" id="fileName"></p>
+                    <p class="text-sm text-mil-dim" id="fileStats"></p>
                 </div>
             </div>
         </section>
 
-        <!-- Barre de progression -->
-        <div id="loadingStatus" class="bg-mil-panel border border-mil-border p-6 mb-8 hidden relative overflow-hidden">
-            <div class="absolute inset-0 bg-mil-neonBlue/5 z-0"></div>
-            <div class="relative z-10">
-                <div class="flex items-center justify-between mb-2">
-                    <h2 class="text-sm font-mono text-mil-neonBlue uppercase">
-                        <i class="fas fa-cog fa-spin mr-2"></i> Traitement des données...
-                    </h2>
-                    <span id="progressPercentage" class="text-sm font-mono text-white">0%</span>
-                </div>
-                <div class="w-full bg-black h-4 border border-mil-border relative overflow-hidden">
-                    <div class="absolute inset-0 w-full h-full" style="background-image: linear-gradient(90deg, transparent 50%, #1e293b 50%); background-size: 4px 100%; opacity: 0.3;"></div>
-                    <div id="progressBar" class="bg-gradient-to-r from-blue-600 to-mil-neonBlue h-full transition-all duration-100 relative" style="width: 0%">
-                        <div class="absolute right-0 top-0 bottom-0 w-1 bg-white shadow-[0_0_10px_white]"></div>
-                    </div>
-                </div>
-                <p id="statusMessage" class="text-xs font-mono text-mil-dim mt-2 text-right">
-                    > INITIALISATION DU PARSER...
-                </p>
-            </div>
-        </div>
+        <!-- STATS -->
+        <div id="statsCards" class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8 hidden"></div>
 
-        <!-- Cartes statistiques -->
-        <div id="statsCards" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8 hidden"></div>
-
-        <!-- Barre de recherche globale -->
+        <!-- RECHERCHE -->
         <div id="searchSection" class="bg-mil-panel border border-mil-border p-4 mb-8 hidden">
-            <div class="flex items-center gap-3">
-                <i class="fas fa-search text-mil-neonBlue"></i>
-                <input type="text" 
-                       id="globalSearch" 
-                       placeholder="RECHERCHE GLOBALE : nom, prénom, commune, liste, parti..." 
-                       class="flex-1 tactical-input rounded px-4 py-3 text-sm font-mono"
-                       autocomplete="off">
-                <button onclick="clearGlobalSearch()" class="text-mil-dim hover:text-white transition-colors px-3">
-                    <i class="fas fa-times"></i>
-                </button>
+            <input type="text" id="globalSearch" placeholder="RECHERCHE..." class="w-full tactical-input rounded px-4 py-3">
+        </div>
+
+        <!-- FILTRES -->
+        <div id="filtersSection" class="bg-mil-panel border border-mil-border p-6 mb-8 hidden">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <select id="filterDepartement" class="tactical-input rounded px-3 py-2">
+                    <option value="">TOUS</option>
+                </select>
+                <input type="text" id="filterCommune" placeholder="Commune..." class="tactical-input rounded px-3 py-2">
+                <select id="filterSexe" class="tactical-input rounded px-3 py-2">
+                    <option value="">SEXE</option>
+                    <option value="M">HOMME</option>
+                    <option value="F">FEMME</option>
+                </select>
+                <select id="filterTeteListe" class="tactical-input rounded px-3 py-2">
+                    <option value="">TÊTE DE LISTE</option>
+                    <option value="OUI">CHEF</option>
+                    <option value="NON">SUBALTERNE</option>
+                </select>
+            </div>
+            <div class="flex justify-between mt-4">
+                <span id="candidateCount" class="text-mil-neonBlue">0</span>
+                <button onclick="resetFilters()" class="text-mil-dim hover:text-white">RÉINITIALISER</button>
             </div>
         </div>
 
-        <!-- Panneau de Contrôle Avancé (Filtres) -->
-        <div id="filtersSection" class="bg-mil-panel border border-mil-border p-6 mb-8 relative hidden">
-            <div class="absolute top-0 left-1/2 transform -translate-x-1/2 w-24 h-1 bg-mil-neonRed shadow-[0_0_10px_#ff003c]"></div>
-            
-            <div class="flex items-center justify-between mb-6 border-b border-mil-border pb-2">
-                <h2 class="text-sm font-mono text-mil-neonBlue uppercase">
-                    <i class="fas fa-filter mr-2"></i> FILTRES AVANCÉS
-                </h2>
-                <div class="flex gap-2">
-                    <span id="activeFiltersCount" class="text-xs text-mil-dim"></span>
-                    <button onclick="resetAllFilters()" class="text-xs text-mil-dim hover:text-white font-mono transition-colors">
-                        [ RÉINITIALISER ]
-                    </button>
-                </div>
+        <!-- TABLEAU -->
+        <div id="tableSection" class="bg-mil-panel border border-mil-border rounded-lg overflow-hidden hidden">
+            <div class="px-6 py-4 bg-black/50 border-b border-mil-border">
+                <h2 class="text-white">CANDIDATS DROM-COM</h2>
             </div>
-
-            <!-- Ligne 1 : Filtres principaux -->
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
-                <!-- Département (avec tous les codes) -->
-                <div class="relative">
-                    <label class="block text-xs font-mono text-mil-dim mb-2 uppercase">
-                        <i class="fas fa-map-marker-alt mr-1 text-mil-neonBlue"></i> Territoire
-                    </label>
-                    <div class="relative">
-                        <select id="filterDepartement" class="w-full tactical-input rounded px-3 py-2 appearance-none cursor-pointer">
-                            <option value="">TOUS DROM-COM</option>
-                            <option value="971">971 // GUADELOUPE</option>
-                            <option value="972">972 // MARTINIQUE</option>
-                            <option value="973">973 // GUYANE</option>
-                            <option value="974">974 // LA RÉUNION</option>
-                            <option value="976">976 // MAYOTTE</option>
-                            <option value="975">975 // ST-PIERRE-ET-MIQUELON</option>
-                            <option value="977">977 // ST-BARTHÉLEMY</option>
-                            <option value="978">978 // ST-MARTIN</option>
-                            <option value="986">986 // WALLIS-ET-FUTUNA</option>
-                            <option value="987">987 // POLYNÉSIE FRANÇAISE</option>
-                            <option value="988">988 // NOUVELLE-CALÉDONIE</option>
-                        </select>
-                        <div class="absolute right-3 top-3 pointer-events-none text-mil-neonBlue">
-                            <i class="fas fa-caret-down"></i>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Commune -->
-                <div>
-                    <label class="block text-xs font-mono text-mil-dim mb-2 uppercase">
-                        <i class="fas fa-city mr-1 text-mil-neonBlue"></i> Commune
-                    </label>
-                    <input type="text" id="filterCommune" placeholder="Nom de la commune..." 
-                           class="w-full tactical-input rounded px-3 py-2 font-mono text-sm">
-                </div>
-
-                <!-- Nuance politique / Parti -->
-                <div class="relative">
-                    <label class="block text-xs font-mono text-mil-dim mb-2 uppercase">
-                        <i class="fas fa-flag mr-1 text-mil-neonBlue"></i> Nuance politique
-                    </label>
-                    <div class="relative">
-                        <select id="filterNuance" class="w-full tactical-input rounded px-3 py-2 appearance-none cursor-pointer">
-                            <option value="">TOUTES</option>
-                        </select>
-                        <div class="absolute right-3 top-3 pointer-events-none text-mil-neonBlue">
-                            <i class="fas fa-caret-down"></i>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Liste -->
-                <div>
-                    <label class="block text-xs font-mono text-mil-dim mb-2 uppercase">
-                        <i class="fas fa-list mr-1 text-mil-neonBlue"></i> Nom de liste
-                    </label>
-                    <input type="text" id="filterListe" placeholder="Rechercher une liste..." 
-                           class="w-full tactical-input rounded px-3 py-2 font-mono text-sm">
-                </div>
-            </div>
-
-            <!-- Ligne 2 : Filtres secondaires -->
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
-                <!-- Sexe -->
-                <div class="relative">
-                    <label class="block text-xs font-mono text-mil-dim mb-2 uppercase">
-                        <i class="fas fa-venus-mars mr-1 text-mil-neonBlue"></i> Sexe
-                    </label>
-                    <div class="relative">
-                        <select id="filterSexe" class="w-full tactical-input rounded px-3 py-2 appearance-none cursor-pointer">
-                            <option value="">TOUS</option>
-                            <option value="M">HOMME</option>
-                            <option value="F">FEMME</option>
-                        </select>
-                        <div class="absolute right-3 top-3 pointer-events-none text-mil-neonBlue">
-                            <i class="fas fa-caret-down"></i>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Tête de liste -->
-                <div class="relative">
-                    <label class="block text-xs font-mono text-mil-dim mb-2 uppercase">
-                        <i class="fas fa-star mr-1 text-mil-neonBlue"></i> Tête de liste
-                    </label>
-                    <div class="relative">
-                        <select id="filterTeteListe" class="w-full tactical-input rounded px-3 py-2 appearance-none cursor-pointer">
-                            <option value="">TOUS</option>
-                            <option value="OUI">CHEF DE LISTE</option>
-                            <option value="NON">SUBALTERNE</option>
-                        </select>
-                        <div class="absolute right-3 top-3 pointer-events-none text-mil-neonBlue">
-                            <i class="fas fa-caret-down"></i>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Position dans la liste -->
-                <div class="relative">
-                    <label class="block text-xs font-mono text-mil-dim mb-2 uppercase">
-                        <i class="fas fa-sort-numeric-down mr-1 text-mil-neonBlue"></i> Position
-                    </label>
-                    <div class="relative">
-                        <select id="filterPosition" class="w-full tactical-input rounded px-3 py-2 appearance-none cursor-pointer">
-                            <option value="">TOUTES</option>
-                            <option value="1">TÊTES DE LISTE (1)</option>
-                            <option value="2-5">ÉLIGIBLES (2-5)</option>
-                            <option value="6+">COMPLÉMENTS (6+)</option>
-                        </select>
-                        <div class="absolute right-3 top-3 pointer-events-none text-mil-neonBlue">
-                            <i class="fas fa-caret-down"></i>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Ordre de tri -->
-                <div class="relative">
-                    <label class="block text-xs font-mono text-mil-dim mb-2 uppercase">
-                        <i class="fas fa-sort-amount-down mr-1 text-mil-neonBlue"></i> Trier par
-                    </label>
-                    <div class="relative">
-                        <select id="sortOrder" class="w-full tactical-input rounded px-3 py-2 appearance-none cursor-pointer">
-                            <option value="commune_asc">Commune (A-Z)</option>
-                            <option value="commune_desc">Commune (Z-A)</option>
-                            <option value="nom_asc">Nom (A-Z)</option>
-                            <option value="nom_desc">Nom (Z-A)</option>
-                            <option value="ordre_asc">Position (croissant)</option>
-                            <option value="ordre_desc">Position (décroissant)</option>
-                            <option value="departement_asc">Territoire (A-Z)</option>
-                        </select>
-                        <div class="absolute right-3 top-3 pointer-events-none text-mil-neonBlue">
-                            <i class="fas fa-caret-down"></i>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Export -->
-                <div class="flex items-end">
-                    <button onclick="exportFilteredData()" class="w-full bg-transparent border border-mil-success text-mil-success px-3 py-2 rounded font-mono text-sm hover:bg-mil-success hover:text-black transition-all">
-                        <i class="fas fa-download mr-2"></i> EXPORTER
-                    </button>
-                </div>
-            </div>
-
-            <!-- Filtres actifs -->
-            <div id="activeFilters" class="flex flex-wrap gap-2 mt-4 min-h-[32px]"></div>
-
-            <!-- Résumé des résultats -->
-            <div class="mt-4 flex justify-between items-center border-t border-mil-border pt-4">
-                <div class="text-xs font-mono text-mil-dim">
-                    <i class="fas fa-database mr-1"></i>
-                    TOTAL BASE: <span id="totalBaseCount">0</span> CANDIDATS
-                </div>
-                <div class="bg-black/50 px-4 py-2 rounded border border-mil-border inline-flex items-center">
-                    <span class="w-2 h-2 rounded-full bg-mil-neonBlue mr-2 animate-pulse"></span>
-                    <span class="text-xs font-mono text-white">RÉSULTATS: <span id="candidateCount" class="text-mil-neonBlue font-bold text-lg ml-1">0</span></span>
-                </div>
-            </div>
-        </div>
-
-        <!-- Tableau de données -->
-        <div id="tableSection" class="bg-mil-panel border border-mil-border rounded-lg overflow-hidden hidden shadow-2xl relative">
-            <div class="px-6 py-4 bg-mil-bg border-b border-mil-border flex justify-between items-center sticky top-0 z-20">
-                <h2 class="text-sm font-mono text-white uppercase tracking-widest flex items-center">
-                    <i class="fas fa-list mr-2 text-mil-neonRed"></i>
-                    Candidats DROM-COM
-                </h2>
-                <div class="flex items-center gap-4">
-                    <span id="tableInfo" class="text-xs font-mono text-mil-dim">
-                        <span id="tableStart">0</span>-<span id="tableEnd">0</span>/<span id="tableTotal">0</span>
-                    </span>
-                    <span id="totalCandidates" class="text-xs font-mono text-mil-dim bg-black px-2 py-1 rounded border border-mil-border"></span>
-                </div>
-            </div>
-            
-            <div class="overflow-x-auto max-h-[600px] overflow-y-auto relative">
-                <table class="w-full tactical-table text-left border-collapse">
-                    <thead class="sticky top-0 z-10 shadow-lg">
+            <div class="overflow-x-auto">
+                <table class="w-full tactical-table">
+                    <thead>
                         <tr>
-                            <th class="p-4 pl-6">#</th>
-                            <th class="p-4">Nom</th>
-                            <th class="p-4">Prénom</th>
-                            <th class="p-4 text-mil-neonBlue">Territoire</th>
-                            <th class="p-4">Commune</th>
-                            <th class="p-4">Liste</th>
-                            <th class="p-4">Nuance</th>
-                            <th class="p-4 text-center">Statut</th>
-                            <th class="p-4 text-center">Rang</th>
-                            <th class="p-4 text-center">Sexe</th>
+                            <th class="p-4">NOM</th>
+                            <th class="p-4">PRÉNOM</th>
+                            <th class="p-4">TERRITOIRE</th>
+                            <th class="p-4">COMMUNE</th>
+                            <th class="p-4">LISTE</th>
+                            <th class="p-4">STATUT</th>
+                            <th class="p-4">SEXE</th>
                         </tr>
                     </thead>
-                    <tbody id="candidatesTableBody" class="font-mono text-sm divide-y divide-mil-border">
-                        <tr>
-                            <td colspan="10" class="p-12 text-center text-mil-dim">
-                                <i class="fas fa-database text-4xl mb-4 opacity-50"></i>
-                                <p class="font-mono">EN ATTENTE DE FICHIER CSV</p>
-                                <p class="text-xs mt-2">UTILISEZ LA ZONE D'UPLOAD POUR CHARGER LES DONNÉES</p>
-                            </td>
-                        </tr>
-                    </tbody>
+                    <tbody id="candidatesTableBody"></tbody>
                 </table>
-            </div>
-
-            <!-- Pagination -->
-            <div id="paginationSection" class="bg-mil-bg px-6 py-3 border-t border-mil-border hidden items-center justify-between">
-                <div class="flex items-center gap-2">
-                    <span class="text-xs text-mil-dim">Lignes/page:</span>
-                    <select id="pageSize" class="bg-mil-panel border border-mil-border text-white text-xs rounded px-2 py-1" onchange="changePageSize()">
-                        <option value="50">50</option>
-                        <option value="100" selected>100</option>
-                        <option value="250">250</option>
-                        <option value="500">500</option>
-                        <option value="1000">1000</option>
-                    </select>
-                </div>
-                <div class="flex gap-2">
-                    <button onclick="changePage('first')" class="px-3 py-1 border border-mil-border rounded hover:bg-mil-neonBlue/20 disabled:opacity-50" id="firstPage">
-                        <i class="fas fa-angle-double-left"></i>
-                    </button>
-                    <button onclick="changePage('prev')" class="px-3 py-1 border border-mil-border rounded hover:bg-mil-neonBlue/20 disabled:opacity-50" id="prevPage">
-                        <i class="fas fa-angle-left"></i>
-                    </button>
-                    <span id="pageInfo" class="px-4 py-1 text-xs font-mono text-mil-neonBlue">Page 1</span>
-                    <button onclick="changePage('next')" class="px-3 py-1 border border-mil-border rounded hover:bg-mil-neonBlue/20 disabled:opacity-50" id="nextPage">
-                        <i class="fas fa-angle-right"></i>
-                    </button>
-                    <button onclick="changePage('last')" class="px-3 py-1 border border-mil-border rounded hover:bg-mil-neonBlue/20 disabled:opacity-50" id="lastPage">
-                        <i class="fas fa-angle-double-right"></i>
-                    </button>
-                </div>
-            </div>
-
-            <!-- Boutons de chargement progressif -->
-            <div id="loadingControls" class="bg-mil-bg/50 px-6 py-3 border-t border-mil-border hidden">
-                <div class="flex gap-4 justify-center">
-                    <button onclick="loadMore()" class="bg-mil-neonBlue/20 text-mil-neonBlue px-6 py-2 rounded font-mono text-sm hover:bg-mil-neonBlue/40 transition border border-mil-neonBlue/30">
-                        <i class="fas fa-plus-circle mr-2"></i> CHARGER +100
-                    </button>
-                    <button onclick="loadAll()" class="bg-mil-neonRed/20 text-mil-neonRed px-6 py-2 rounded font-mono text-sm hover:bg-mil-neonRed/40 transition border border-mil-neonRed/30">
-                        <i class="fas fa-database mr-2"></i> TOUT CHARGER
-                    </button>
-                </div>
             </div>
         </div>
     </div>
 
-    <!-- Pied de page -->
-    <footer class="border-t border-mil-border bg-mil-bg py-6 mt-8">
-        <div class="container mx-auto px-4 text-center">
-            <p class="text-xs text-mil-dim font-mono">
-                <i class="fas fa-database text-mil-neonBlue mr-1"></i>
-                SOURCES : <a href="https://www.data.gouv.fr/datasets/elections-municipales-2026-listes-candidates-au-premier-tour" target="_blank" class="text-mil-neonBlue hover:underline">data.gouv.fr</a> · 
-                <a href="https://municipales2026.manufacture-osint.fr" target="_blank" class="text-mil-neonBlue hover:underline">manufacture-osint.fr</a>
-            </p>
-            <p class="text-xs text-mil-dim mt-1">
-                DROM-COM : 971 Guadeloupe · 972 Martinique · 973 Guyane · 974 Réunion · 976 Mayotte · 975 St-Pierre · 977 St-Barth · 978 St-Martin · 986 Wallis · 987 Polynésie · 988 Calédonie
-            </p>
-            <div class="flex justify-center gap-4 mt-2">
-                <div class="h-1 w-1 bg-mil-neonBlue rounded-full animate-ping"></div>
-                <div class="h-1 w-1 bg-white rounded-full animate-ping delay-75"></div>
-                <div class="h-1 w-1 bg-mil-neonRed rounded-full animate-ping delay-150"></div>
-            </div>
+    <!-- FOOTER -->
+    <footer class="border-t border-mil-border bg-mil-bg py-4 mt-8">
+        <div class="container mx-auto px-4 text-center text-xs text-mil-dim">
+            <i class="fas fa-database text-mil-neonBlue mr-1"></i>
+            SOURCES : data.gouv.fr · manufacture-osint.fr
         </div>
     </footer>
 
     <script>
-        // --- TOUS les codes DROM-COM (11 territoires) ---
+        // DROM-COM
         const DROM_COM = {
-            '971': 'GUADELOUPE',
-            '972': 'MARTINIQUE',
-            '973': 'GUYANE',
-            '974': 'LA RÉUNION',
-            '976': 'MAYOTTE',
-            '975': 'ST-PIERRE-ET-MIQUELON',
-            '977': 'ST-BARTHÉLEMY',
-            '978': 'ST-MARTIN',
-            '986': 'WALLIS-ET-FUTUNA',
-            '987': 'POLYNÉSIE FRANÇAISE',
-            '988': 'NOUVELLE-CALÉDONIE'
-        };
-
-        // Statistiques des COM (données réelles)
-        const COM_STATS = {
-            '987': { candidats: 4876, listes: 139, communes: 48 },
-            '988': { listes: 123 }
-        };
-
-        const NUANCES_LIBELLES = {
-            'LDIV': 'DIVERS',
-            'LDVC': 'CENTRE',
-            'LDVG': 'GAUCHE',
-            'LDVD': 'DROITE',
-            'LLR': 'LR',
-            'LSOC': 'SOCIALISTE',
-            'LFI': 'FI',
-            'LRN': 'RN',
-            'LREM': 'RENAISSANCE',
-            'LUDI': 'UDI',
-            'LECO': 'ÉCOLOGISTE',
-            'LCOM': 'COMMUNISTE'
+            '971': 'GUADELOUPE', '972': 'MARTINIQUE', '973': 'GUYANE',
+            '974': 'LA RÉUNION', '976': 'MAYOTTE', '975': 'ST-PIERRE',
+            '977': 'ST-BARTH', '978': 'ST-MARTIN', '986': 'WALLIS',
+            '987': 'POLYNÉSIE', '988': 'CALÉDONIE'
         };
 
         let allCandidates = [];
         let displayedCandidates = [];
-        let filteredCandidates = [];
-        let currentPage = 1;
-        let pageSize = 100;
-        let filterTimeout;
 
-        // --- Fonction pour mettre à jour l'iframe selon le territoire sélectionné ---
+        // Met à jour l'iframe
         function updateIframe() {
             const territoire = document.getElementById('territoireSelector').value;
-            const iframe = document.getElementById('mainIframe');
-            iframe.src = `https://municipales2026.manufacture-osint.fr/#view=explorer&dept=${territoire}&embed=1`;
-            
-            // Afficher une notification discrète
-            showToast(`Explorateur chargé : ${DROM_COM[territoire]}`, 'info');
+            document.getElementById('mainIframe').src = `https://municipales2026.manufacture-osint.fr/#view=explorer&dept=${territoire}&embed=1`;
         }
 
-        // --- Gestion Toast ---
-        function showToast(message, type = 'info') {
-            const container = document.getElementById('toast-container');
-            const toast = document.createElement('div');
-            
-            let borderColor = type === 'error' ? 'border-mil-neonRed' : (type === 'success' ? 'border-mil-success' : 'border-mil-neonBlue');
-            let icon = type === 'error' ? 'fa-times-circle' : (type === 'success' ? 'fa-check-circle' : 'fa-info-circle');
-
-            toast.className = `bg-mil-panel border-l-4 ${borderColor} text-white p-4 rounded shadow-lg flex items-center gap-3 min-w-[300px] pointer-events-auto transform transition-all duration-300 translate-x-full opacity-0`;
-            toast.innerHTML = `
-                <i class="fas ${icon} ${type === 'error' ? 'text-mil-neonRed' : type === 'success' ? 'text-mil-success' : 'text-mil-neonBlue'}"></i>
-                <div class="font-mono text-sm">${message}</div>
-            `;
-
-            container.appendChild(toast);
-            requestAnimationFrame(() => {
-                toast.classList.remove('translate-x-full', 'opacity-0');
-            });
-            setTimeout(() => {
-                toast.classList.add('translate-x-full', 'opacity-0');
-                setTimeout(() => toast.remove(), 300);
-            }, 4000);
-        }
-
-        // --- Gestion Drag & Drop ---
-        const dropZone = document.getElementById('dropZone');
-        
-        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
-            dropZone.addEventListener(eventName, preventDefaults, false);
-        });
-
-        function preventDefaults(e) {
-            e.preventDefault();
-            e.stopPropagation();
-        }
-
-        ['dragenter', 'dragover'].forEach(eventName => {
-            dropZone.addEventListener(eventName, () => {
-                dropZone.classList.add('border-mil-neonBlue', 'bg-mil-panel/80');
-            }, false);
-        });
-
-        ['dragleave', 'drop'].forEach(eventName => {
-            dropZone.addEventListener(eventName, () => {
-                dropZone.classList.remove('border-mil-neonBlue', 'bg-mil-panel/80');
-            }, false);
-        });
-
-        dropZone.addEventListener('drop', (e) => {
-            const file = e.dataTransfer.files[0];
-            if (file && file.name.endsWith('.csv')) {
-                handleFile(file);
-            } else {
-                showToast('Erreur: Format de fichier invalide. CSV requis.', 'error');
-            }
-        });
-
-        // Gestionnaire du fichier
+        // Gestionnaire de fichier
         function handleFile(file) {
             if (!file) return;
             
-            document.getElementById('fileName').textContent = file.name.toUpperCase();
+            document.getElementById('fileName').textContent = file.name;
             document.getElementById('fileInfo').classList.remove('hidden');
-            document.getElementById('searchSection').classList.remove('hidden');
-            document.getElementById('filtersSection').classList.remove('hidden');
-            document.getElementById('statsCards').classList.remove('hidden');
-            document.getElementById('tableSection').classList.remove('hidden');
-            document.getElementById('paginationSection').classList.remove('hidden');
-            document.getElementById('loadingControls').classList.remove('hidden');
-            document.getElementById('loadingStatus').classList.remove('hidden');
             
-            // Reset
-            allCandidates = [];
-            displayedCandidates = [];
-            
-            // Parse le fichier en mode streaming
             Papa.parse(file, {
                 delimiter: ";",
                 header: true,
-                skipEmptyLines: true,
-                encoding: "UTF-8",
-                
                 step: function(row) {
                     const data = row.data;
-                    const codeDep = data['Code département'] || data['Code'] || data['Département'];
+                    const codeDep = data['Code département'];
                     
-                    // Vérifie tous les codes DROM-COM (971 à 988)
                     if (codeDep && DROM_COM[codeDep]) {
-                        const candidate = {
+                        allCandidates.push({
                             codeDep: codeDep,
                             departement: DROM_COM[codeDep],
-                            commune: data['Circonscription'] || data['Commune'] || '',
-                            liste: data['Libellé abrégé de liste'] || data['Libellé de la liste'] || data['Liste'] || '',
+                            commune: data['Circonscription'] || '',
+                            liste: data['Libellé abrégé de liste'] || '',
                             teteDeListe: data['Tête de liste'] || 'NON',
-                            ordre: parseInt(data['Ordre']) || 0,
                             sexe: data['Sexe'] || '',
-                            nom: data['Nom sur le bulletin de vote'] || data['Nom'] || '',
-                            prenom: data['Prénom sur le bulletin de vote'] || data['Prénom'] || '',
-                            nuance: data['Code nuance de liste'] || 'LDIV',
-                            nuanceLibelle: NUANCES_LIBELLES[data['Code nuance de liste']] || data['Code nuance de liste'] || 'DIV'
-                        };
-                        
-                        if (candidate.nom) {
-                            allCandidates.push(candidate);
-                            
-                            // Affiche immédiatement les 500 premiers
-                            if (allCandidates.length <= 500) {
-                                displayedCandidates.push(candidate);
-                            }
-                            
-                            // Met à jour la progression
-                            updateProgress(allCandidates.length);
-                        }
+                            nom: data['Nom sur le bulletin de vote'] || '',
+                            prenom: data['Prénom sur le bulletin de vote'] || ''
+                        });
                     }
                 },
-                
                 complete: function() {
-                    document.getElementById('loadingStatus').classList.add('hidden');
-                    
-                    // Stats spéciales pour la Polynésie
-                    let polynesieStats = '';
-                    const polynesieCount = allCandidates.filter(c => c.codeDep === '987').length;
-                    if (polynesieCount > 0) {
-                        polynesieStats = ` · Polynésie: ${polynesieCount} candidats`;
-                    }
-                    
-                    document.getElementById('fileStats').innerHTML = `
-                        ${allCandidates.length.toLocaleString()} candidats trouvés${polynesieStats}
-                    `;
-                    document.getElementById('totalBaseCount').textContent = allCandidates.length.toLocaleString();
-                    
-                    // Met à jour l'affichage
-                    filteredCandidates = [...displayedCandidates];
-                    updateFilters();
-                    filterAndDisplayCandidates();
-                    updateStatistics();
-                    
-                    showToast(`${allCandidates.length} candidats chargés avec succès`, 'success');
-                },
-                
-                error: function(error) {
-                    showToast('Erreur de chargement: ' + error, 'error');
+                    displayedCandidates = allCandidates.slice(0, 500);
+                    document.getElementById('statsCards').classList.remove('hidden');
+                    document.getElementById('searchSection').classList.remove('hidden');
+                    document.getElementById('filtersSection').classList.remove('hidden');
+                    document.getElementById('tableSection').classList.remove('hidden');
+                    displayResults();
                 }
             });
         }
 
-        function updateProgress(count) {
-            const percent = Math.min(100, (count / 50000) * 100);
-            document.getElementById('progressBar').style.width = percent + '%';
-            document.getElementById('progressPercentage').textContent = Math.round(percent) + '%';
-            document.getElementById('statusMessage').textContent = `> CHARGEMENT: ${count} CANDIDATS`;
-        }
-
-        function loadMore() {
-            const next = allCandidates.slice(displayedCandidates.length, displayedCandidates.length + 100);
-            displayedCandidates = [...displayedCandidates, ...next];
-            filteredCandidates = [...displayedCandidates];
-            filterAndDisplayCandidates();
-        }
-
-        function loadAll() {
-            displayedCandidates = [...allCandidates];
-            filteredCandidates = [...allCandidates];
-            filterAndDisplayCandidates();
-        }
-
-        function updateFilters() {
-            // Le filtre département est déjà pré-rempli dans le HTML
-            // On met à jour seulement les nuances
-            const nuanceSet = new Set(allCandidates.map(c => c.nuance));
-            const nuanceSelect = document.getElementById('filterNuance');
-            nuanceSelect.innerHTML = '<option value="">TOUTES</option>';
-            Array.from(nuanceSet).sort().forEach(nuance => {
-                nuanceSelect.innerHTML += `<option value="${nuance}">${NUANCES_LIBELLES[nuance] || nuance}</option>`;
-            });
-        }
-
-        function filterAndDisplayCandidates(resetPage = true) {
-            const search = document.getElementById('globalSearch')?.value.toLowerCase() || '';
-            const dept = document.getElementById('filterDepartement').value;
-            const commune = document.getElementById('filterCommune').value.toLowerCase();
-            const nuance = document.getElementById('filterNuance').value;
-            const liste = document.getElementById('filterListe').value.toLowerCase();
-            const sexe = document.getElementById('filterSexe').value;
-            const teteListe = document.getElementById('filterTeteListe').value;
-            const position = document.getElementById('filterPosition').value;
-            
-            filteredCandidates = displayedCandidates.filter(c => {
-                if (search) {
-                    const searchable = `${c.nom} ${c.prenom} ${c.commune} ${c.liste} ${c.nuanceLibelle}`.toLowerCase();
-                    if (!searchable.includes(search)) return false;
-                }
-                
-                if (dept && c.codeDep !== dept) return false;
-                if (commune && !c.commune.toLowerCase().includes(commune)) return false;
-                if (nuance && c.nuance !== nuance) return false;
-                if (liste && !c.liste.toLowerCase().includes(liste)) return false;
-                if (sexe && c.sexe !== sexe) return false;
-                if (teteListe === 'OUI' && c.teteDeListe !== 'OUI') return false;
-                if (teteListe === 'NON' && c.teteDeListe === 'OUI') return false;
-                
-                if (position === '1' && c.ordre !== 1) return false;
-                if (position === '2-5' && (c.ordre < 2 || c.ordre > 5)) return false;
-                if (position === '6+' && c.ordre < 6) return false;
-                
-                return true;
-            });
-            
-            applySort();
-            
-            document.getElementById('candidateCount').textContent = filteredCandidates.length.toLocaleString();
-            document.getElementById('totalCandidates').textContent = `BASE: ${allCandidates.length.toLocaleString()}`;
-            document.getElementById('tableTotal').textContent = filteredCandidates.length.toLocaleString();
-            
-            updateActiveFilters();
-            
-            if (resetPage) {
-                currentPage = 1;
-            }
-            
-            displayPage();
-        }
-
-        function applySort() {
-            const sortValue = document.getElementById('sortOrder').value;
-            const [field, direction] = sortValue.split('_');
-            
-            filteredCandidates.sort((a, b) => {
-                let valA, valB;
-                
-                switch(field) {
-                    case 'commune':
-                        valA = a.commune.toLowerCase();
-                        valB = b.commune.toLowerCase();
-                        break;
-                    case 'nom':
-                        valA = `${a.nom} ${a.prenom}`.toLowerCase();
-                        valB = `${b.nom} ${b.prenom}`.toLowerCase();
-                        break;
-                    case 'ordre':
-                        valA = a.ordre;
-                        valB = b.ordre;
-                        break;
-                    case 'departement':
-                        valA = a.departement.toLowerCase();
-                        valB = b.departement.toLowerCase();
-                        break;
-                    default:
-                        return 0;
-                }
-                
-                if (valA < valB) return direction === 'asc' ? -1 : 1;
-                if (valA > valB) return direction === 'asc' ? 1 : -1;
-                return 0;
-            });
-        }
-
-        function updateActiveFilters() {
-            const filters = [];
-            const container = document.getElementById('activeFilters');
-            
-            const search = document.getElementById('globalSearch').value;
-            const dept = document.getElementById('filterDepartement').value;
-            const commune = document.getElementById('filterCommune').value;
-            const nuance = document.getElementById('filterNuance').value;
-            const liste = document.getElementById('filterListe').value;
-            const sexe = document.getElementById('filterSexe').value;
-            const teteListe = document.getElementById('filterTeteListe').value;
-            const position = document.getElementById('filterPosition').value;
-            
-            if (search) filters.push(`<span class="inline-flex items-center px-2 py-1 text-xs bg-blue-900/50 text-mil-neonBlue border border-mil-neonBlue/30 rounded">RECHERCHE: ${search}</span>`);
-            if (dept) filters.push(`<span class="inline-flex items-center px-2 py-1 text-xs bg-purple-900/50 text-purple-400 border border-purple-500/30 rounded">${DROM_COM[dept]}</span>`);
-            if (commune) filters.push(`<span class="inline-flex items-center px-2 py-1 text-xs bg-green-900/50 text-green-400 border border-green-500/30 rounded">${commune}</span>`);
-            if (nuance) filters.push(`<span class="inline-flex items-center px-2 py-1 text-xs bg-yellow-900/50 text-yellow-400 border border-yellow-500/30 rounded">${NUANCES_LIBELLES[nuance] || nuance}</span>`);
-            if (liste) filters.push(`<span class="inline-flex items-center px-2 py-1 text-xs bg-pink-900/50 text-pink-400 border border-pink-500/30 rounded">LISTE: ${liste}</span>`);
-            if (sexe) filters.push(`<span class="inline-flex items-center px-2 py-1 text-xs bg-indigo-900/50 text-indigo-400 border border-indigo-500/30 rounded">${sexe === 'F' ? 'FEMME' : 'HOMME'}</span>`);
-            if (teteListe) filters.push(`<span class="inline-flex items-center px-2 py-1 text-xs bg-red-900/50 text-mil-neonRed border border-mil-neonRed/30 rounded">${teteListe === 'OUI' ? 'CHEF' : 'SUBALTERNE'}</span>`);
-            if (position) filters.push(`<span class="inline-flex items-center px-2 py-1 text-xs bg-gray-700 text-gray-300 border border-gray-500/30 rounded">POS: ${position}</span>`);
-            
-            container.innerHTML = filters.join(' ');
-            document.getElementById('activeFiltersCount').textContent = filters.length ? `(${filters.length} actif${filters.length > 1 ? 's' : ''})` : '';
-        }
-
-        function displayPage() {
-            const start = (currentPage - 1) * pageSize;
-            const end = Math.min(start + pageSize, filteredCandidates.length);
-            const pageData = filteredCandidates.slice(start, end);
-            
+        function displayResults() {
             const tbody = document.getElementById('candidatesTableBody');
-            
-            if (pageData.length === 0) {
-                tbody.innerHTML = `
-                    <tr>
-                        <td colspan="10" class="p-12 text-center text-mil-dim">
-                            <i class="fas fa-search text-3xl mb-3 opacity-50"></i>
-                            <p class="font-mono">AUCUN RÉSULTAT</p>
-                        </td>
-                    </tr>
-                `;
-            } else {
-                tbody.innerHTML = pageData.map((c, index) => `
-                    <tr class="hover:bg-white/5 transition-colors border-l-2 border-transparent hover:border-mil-neonBlue">
-                        <td class="p-4 pl-6 text-mil-dim">${start + index + 1}</td>
-                        <td class="p-4 font-bold text-white">${c.nom.toUpperCase()}</td>
-                        <td class="p-4 text-gray-300">${c.prenom}</td>
-                        <td class="p-4 text-mil-neonBlue">${c.departement}</td>
-                        <td class="p-4 text-gray-400">${c.commune}</td>
-                        <td class="p-4 text-xs text-gray-500 truncate max-w-[200px]" title="${c.liste}">${c.liste}</td>
-                        <td class="p-4">
-                            <span class="badge-nuance" style="background: ${getNuanceColor(c.nuance)}20; color: ${getNuanceColor(c.nuance)}; border: 1px solid ${getNuanceColor(c.nuance)}40">
-                                ${c.nuanceLibelle}
-                            </span>
-                        </td>
-                        <td class="p-4 text-center">
-                            ${c.teteDeListe === 'OUI' 
-                                ? '<span class="inline-block px-2 py-0.5 text-[10px] font-bold text-black bg-mil-neonRed rounded shadow-[0_0_8px_#ff003c]">CHEF</span>' 
-                                : '<span class="text-xs text-gray-600">-</span>'}
-                        </td>
-                        <td class="p-4 text-center text-mil-dim font-mono">#${c.ordre}</td>
-                        <td class="p-4 text-center">
-                            <i class="fas ${c.sexe === 'F' ? 'fa-venus text-pink-500' : 'fa-mars text-blue-500'}"></i>
-                        </td>
-                    </tr>
-                `).join('');
-            }
-            
-            document.getElementById('tableStart').textContent = filteredCandidates.length > 0 ? start + 1 : 0;
-            document.getElementById('tableEnd').textContent = end;
-            
-            const totalPages = Math.ceil(filteredCandidates.length / pageSize);
-            document.getElementById('pageInfo').textContent = `Page ${currentPage}/${totalPages || 1}`;
-            
-            document.getElementById('firstPage').disabled = currentPage === 1;
-            document.getElementById('prevPage').disabled = currentPage === 1;
-            document.getElementById('nextPage').disabled = currentPage === totalPages || totalPages === 0;
-            document.getElementById('lastPage').disabled = currentPage === totalPages || totalPages === 0;
+            tbody.innerHTML = displayedCandidates.map(c => `
+                <tr class="border-b border-mil-border">
+                    <td class="p-4">${c.nom}</td>
+                    <td class="p-4">${c.prenom}</td>
+                    <td class="p-4 text-mil-neonBlue">${c.departement}</td>
+                    <td class="p-4">${c.commune}</td>
+                    <td class="p-4">${c.liste}</td>
+                    <td class="p-4">${c.teteDeListe === 'OUI' ? 'CHEF' : '-'}</td>
+                    <td class="p-4">${c.sexe}</td>
+                </tr>
+            `).join('');
         }
 
-        function getNuanceColor(nuance) {
-            const colors = {
-                'LDIV': '#94a3b8',
-                'LDVC': '#fbbf24',
-                'LDVG': '#f87171',
-                'LDVD': '#60a5fa',
-                'LLR': '#3b82f6',
-                'LSOC': '#f97316',
-                'LFI': '#ef4444',
-                'LRN': '#1e293b',
-                'LREM': '#f59e0b',
-                'LUDI': '#8b5cf6',
-                'LECO': '#10b981',
-                'LCOM': '#dc2626'
-            };
-            return colors[nuance] || '#94a3b8';
-        }
-
-        function updateStatistics() {
-            const total = allCandidates.length;
-            const femmes = allCandidates.filter(c => c.sexe === 'F').length;
-            const hommes = allCandidates.filter(c => c.sexe === 'M').length;
-            const teteListe = allCandidates.filter(c => c.teteDeListe === 'OUI').length;
-            
-            // Stats par territoire
-            const territoires = {};
-            allCandidates.forEach(c => {
-                territoires[c.departement] = (territoires[c.departement] || 0) + 1;
-            });
-            
-            const topTerritoire = Object.entries(territoires)
-                .sort((a, b) => b[1] - a[1])
-                .slice(0, 1)
-                .map(([nom, count]) => `${nom} (${count})`)
-                .join('');
-            
-            const statsHtml = `
-                <div class="bg-mil-panel border border-mil-border p-5 relative overflow-hidden group hover:border-mil-neonBlue transition-colors">
-                    <div class="absolute right-0 top-0 p-3 opacity-10 group-hover:opacity-20 transition-opacity">
-                        <i class="fas fa-users text-6xl text-mil-neonBlue"></i>
-                    </div>
-                    <div class="relative z-10">
-                        <p class="text-xs font-mono text-mil-dim uppercase">EFFECTIF TOTAL</p>
-                        <p class="text-3xl font-bold text-white font-mono">${total.toLocaleString()}</p>
-                        <p class="text-xs text-mil-neonBlue">11 TERRITOIRES</p>
-                    </div>
-                </div>
-                <div class="bg-mil-panel border border-mil-border p-5 relative overflow-hidden group hover:border-pink-500 transition-colors">
-                    <div class="absolute right-0 top-0 p-3 opacity-10 group-hover:opacity-20 transition-opacity">
-                        <i class="fas fa-venus text-6xl text-pink-500"></i>
-                    </div>
-                    <div class="relative z-10">
-                        <p class="text-xs font-mono text-mil-dim uppercase">FEMMES</p>
-                        <p class="text-3xl font-bold text-white font-mono">${femmes.toLocaleString()}</p>
-                        <p class="text-xs text-pink-500">${((femmes/total)*100).toFixed(1)}%</p>
-                    </div>
-                </div>
-                <div class="bg-mil-panel border border-mil-border p-5 relative overflow-hidden group hover:border-blue-500 transition-colors">
-                    <div class="absolute right-0 top-0 p-3 opacity-10 group-hover:opacity-20 transition-opacity">
-                        <i class="fas fa-mars text-6xl text-blue-500"></i>
-                    </div>
-                    <div class="relative z-10">
-                        <p class="text-xs font-mono text-mil-dim uppercase">HOMMES</p>
-                        <p class="text-3xl font-bold text-white font-mono">${hommes.toLocaleString()}</p>
-                        <p class="text-xs text-blue-500">${((hommes/total)*100).toFixed(1)}%</p>
-                    </div>
-                </div>
-                <div class="bg-mil-panel border border-mil-border p-5 relative overflow-hidden group hover:border-mil-neonRed transition-colors">
-                    <div class="absolute right-0 top-0 p-3 opacity-10 group-hover:opacity-20 transition-opacity">
-                        <i class="fas fa-star text-6xl text-mil-neonRed"></i>
-                    </div>
-                    <div class="relative z-10">
-                        <p class="text-xs font-mono text-mil-dim uppercase">CHEFS DE LISTE</p>
-                        <p class="text-3xl font-bold text-white font-mono">${teteListe.toLocaleString()}</p>
-                        <p class="text-xs text-mil-neonRed">${((teteListe/total)*100).toFixed(1)}%</p>
-                        <p class="text-xs text-mil-dim mt-1">${topTerritoire}</p>
-                    </div>
-                </div>
-            `;
-            
-            document.getElementById('statsCards').innerHTML = statsHtml;
-        }
-
-        function changePage(direction) {
-            const totalPages = Math.ceil(filteredCandidates.length / pageSize);
-            if (direction === 'first') currentPage = 1;
-            if (direction === 'prev' && currentPage > 1) currentPage--;
-            if (direction === 'next' && currentPage < totalPages) currentPage++;
-            if (direction === 'last') currentPage = totalPages;
-            displayPage();
-        }
-
-        function changePageSize() {
-            pageSize = parseInt(document.getElementById('pageSize').value);
-            currentPage = 1;
-            displayPage();
-        }
-
-        function exportFilteredData() {
-            if (filteredCandidates.length === 0) {
-                showToast('Aucune donnée à exporter', 'error');
-                return;
-            }
-            
-            const headers = ['Nom', 'Prénom', 'Département', 'Commune', 'Liste', 'Nuance', 'Tête de liste', 'Ordre', 'Sexe'];
-            const csvContent = [
-                headers.join(';'),
-                ...filteredCandidates.map(c => 
-                    [
-                        c.nom,
-                        c.prenom,
-                        c.departement,
-                        c.commune,
-                        `"${c.liste.replace(/"/g, '""')}"`,
-                        c.nuanceLibelle,
-                        c.teteDeListe,
-                        c.ordre,
-                        c.sexe
-                    ].join(';')
-                )
-            ].join('\n');
-            
-            const blob = new Blob(['\uFEFF' + csvContent], { type: 'text/csv;charset=utf-8;' });
-            const link = document.createElement('a');
-            link.href = URL.createObjectURL(blob);
-            link.download = `candidats_drom_com_${new Date().toISOString().slice(0,10)}.csv`;
-            link.click();
-            showToast('Export terminé', 'success');
-        }
-
-        function resetAllFilters() {
-            document.getElementById('globalSearch').value = '';
+        function resetFilters() {
             document.getElementById('filterDepartement').value = '';
             document.getElementById('filterCommune').value = '';
-            document.getElementById('filterNuance').value = '';
-            document.getElementById('filterListe').value = '';
             document.getElementById('filterSexe').value = '';
             document.getElementById('filterTeteListe').value = '';
-            document.getElementById('filterPosition').value = '';
-            document.getElementById('sortOrder').value = 'commune_asc';
-            
-            filterAndDisplayCandidates(true);
-            showToast('Filtres réinitialisés');
         }
 
-        function clearGlobalSearch() {
-            document.getElementById('globalSearch').value = '';
-            filterAndDisplayCandidates(true);
-        }
-
-        function debounceFilter() {
-            clearTimeout(filterTimeout);
-            filterTimeout = setTimeout(() => filterAndDisplayCandidates(true), 300);
-        }
-
-        // Event Listeners
-        document.getElementById('globalSearch')?.addEventListener('input', debounceFilter);
-        document.getElementById('filterDepartement').addEventListener('change', () => filterAndDisplayCandidates(true));
-        document.getElementById('filterCommune').addEventListener('input', debounceFilter);
-        document.getElementById('filterNuance').addEventListener('change', () => filterAndDisplayCandidates(true));
-        document.getElementById('filterListe').addEventListener('input', debounceFilter);
-        document.getElementById('filterSexe').addEventListener('change', () => filterAndDisplayCandidates(true));
-        document.getElementById('filterTeteListe').addEventListener('change', () => filterAndDisplayCandidates(true));
-        document.getElementById('filterPosition').addEventListener('change', () => filterAndDisplayCandidates(true));
-        document.getElementById('sortOrder').addEventListener('change', () => filterAndDisplayCandidates(true));
+        // Drag & drop
+        const dropZone = document.getElementById('dropZone');
+        dropZone.addEventListener('dragover', (e) => e.preventDefault());
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            const file = e.dataTransfer.files[0];
+            if (file) handleFile(file);
+        });
     </script>
 </body>
 </html>
