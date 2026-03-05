@@ -142,6 +142,37 @@
         .data-source-link:hover {
             text-shadow: 0 0 8px #00f3ff;
         }
+
+        .iframe-container {
+            position: relative;
+            width: 100%;
+            height: 600px;
+            border: 2px solid #1e293b;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 0 20px rgba(0, 243, 255, 0.2);
+        }
+        .iframe-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        .iframe-overlay {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            background: rgba(10, 15, 24, 0.8);
+            border: 1px solid #00f3ff;
+            border-radius: 4px;
+            padding: 4px 8px;
+            font-size: 10px;
+            color: #00f3ff;
+            pointer-events: none;
+            z-index: 10;
+        }
     </style>
 </head>
 <body class="font-sans antialiased min-h-screen flex flex-col">
@@ -247,11 +278,49 @@
             </div>
         </section>
 
+        <!-- Sélecteur de territoire pour l'iframe -->
+        <section class="mb-8">
+            <div class="bg-mil-panel border border-mil-border p-6">
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="text-lg font-mono text-mil-neonBlue uppercase flex items-center">
+                        <i class="fas fa-map mr-2"></i> EXPLORATEUR CARTOGRAPHIQUE
+                    </h2>
+                    <div class="flex items-center gap-2">
+                        <span class="text-xs text-mil-dim">TERRITOIRE :</span>
+                        <select id="territoireSelector" class="tactical-input rounded px-3 py-1 text-sm" onchange="updateIframe()">
+                            <option value="971">971 · GUADELOUPE</option>
+                            <option value="972">972 · MARTINIQUE</option>
+                            <option value="973">973 · GUYANE</option>
+                            <option value="974" selected>974 · LA RÉUNION</option>
+                            <option value="976">976 · MAYOTTE</option>
+                            <option value="975">975 · ST-PIERRE-ET-MIQUELON</option>
+                            <option value="977">977 · ST-BARTHÉLEMY</option>
+                            <option value="978">978 · ST-MARTIN</option>
+                            <option value="986">986 · WALLIS-ET-FUTUNA</option>
+                            <option value="987">987 · POLYNÉSIE FRANÇAISE</option>
+                            <option value="988">988 · NOUVELLE-CALÉDONIE</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <!-- Iframe avec overlay -->
+                <div class="iframe-container">
+                    <iframe id="mainIframe" src="https://municipales2026.manufacture-osint.fr/#view=explorer&dept=974&embed=1" allowfullscreen></iframe>
+                    <div class="iframe-overlay">
+                        <i class="fas fa-map-marker-alt mr-1"></i> MANUFACTURE OSINT · MUNICIPALES 2026
+                    </div>
+                </div>
+                <p class="text-xs text-mil-dim mt-2 text-right">
+                    Source : <a href="https://municipales2026.manufacture-osint.fr" target="_blank" class="text-mil-neonBlue hover:underline">manufacture-osint.fr</a>
+                </p>
+            </div>
+        </section>
+
         <!-- Zone d'upload -->
         <section class="mb-8">
             <div class="flex items-center justify-between mb-2">
                 <h2 class="text-lg font-mono text-mil-neonBlue uppercase flex items-center">
-                    <i class="fas fa-download mr-2"></i> Importation Données
+                    <i class="fas fa-download mr-2"></i> Importation Données CSV
                 </h2>
                 <span class="text-xs text-mil-dim border border-mil-border px-2 py-0.5 rounded">CSV · 971 À 988</span>
             </div>
@@ -598,11 +667,8 @@
         <div class="container mx-auto px-4 text-center">
             <p class="text-xs text-mil-dim font-mono">
                 <i class="fas fa-database text-mil-neonBlue mr-1"></i>
-                SOURCE : <a href="https://www.data.gouv.fr/datasets/elections-municipales-2026-listes-candidates-au-premier-tour" 
-                           target="_blank" 
-                           class="text-mil-neonBlue hover:underline">
-                    data.gouv.fr - Elections municipales 2026
-                </a>
+                SOURCES : <a href="https://www.data.gouv.fr/datasets/elections-municipales-2026-listes-candidates-au-premier-tour" target="_blank" class="text-mil-neonBlue hover:underline">data.gouv.fr</a> · 
+                <a href="https://municipales2026.manufacture-osint.fr" target="_blank" class="text-mil-neonBlue hover:underline">manufacture-osint.fr</a>
             </p>
             <p class="text-xs text-mil-dim mt-1">
                 DROM-COM : 971 Guadeloupe · 972 Martinique · 973 Guyane · 974 Réunion · 976 Mayotte · 975 St-Pierre · 977 St-Barth · 978 St-Martin · 986 Wallis · 987 Polynésie · 988 Calédonie
@@ -658,6 +724,16 @@
         let currentPage = 1;
         let pageSize = 100;
         let filterTimeout;
+
+        // --- Fonction pour mettre à jour l'iframe selon le territoire sélectionné ---
+        function updateIframe() {
+            const territoire = document.getElementById('territoireSelector').value;
+            const iframe = document.getElementById('mainIframe');
+            iframe.src = `https://municipales2026.manufacture-osint.fr/#view=explorer&dept=${territoire}&embed=1`;
+            
+            // Afficher une notification discrète
+            showToast(`Explorateur chargé : ${DROM_COM[territoire]}`, 'info');
+        }
 
         // --- Gestion Toast ---
         function showToast(message, type = 'info') {
