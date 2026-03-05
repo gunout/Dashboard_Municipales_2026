@@ -2,8 +2,8 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SYSTEME TACTIQUE :: Municipales 2026 - TOUS DROM-COM</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>SYSTEME TACTIQUE :: Municipales 2026 - DROM-COM</title>
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -21,28 +21,46 @@
             color: #e2e8f0;
             font-family: 'Courier New', monospace;
             min-height: 100vh;
-            padding: 20px;
+            padding: 10px;
         }
         
         .container {
             max-width: 1400px;
             margin: 0 auto;
+            width: 100%;
         }
         
         .panel {
             background: #0a0f18;
             border: 1px solid #1e293b;
             border-radius: 8px;
-            padding: 24px;
-            margin-bottom: 30px;
+            padding: 16px;
+            margin-bottom: 20px;
             position: relative;
         }
         
+        /* Responsive padding */
+        @media (min-width: 768px) {
+            .panel {
+                padding: 24px;
+            }
+            body {
+                padding: 20px;
+            }
+        }
+        
         h1 {
-            font-size: 2rem;
+            font-size: 1.5rem;
             font-weight: bold;
             color: white;
         }
+        
+        @media (min-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+        }
+        
         .neon-blue {
             color: #00f3ff;
         }
@@ -53,24 +71,50 @@
             color: #00ff9d;
         }
         
-        /* Grilles */
+        /* Grilles responsives */
         .grid-4 {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 20px;
-            margin-bottom: 30px;
+            grid-template-columns: 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
         }
+        
         .grid-3 {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 20px;
-            margin-bottom: 30px;
+            grid-template-columns: 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
         }
+        
         .grid-6 {
             display: grid;
-            grid-template-columns: repeat(6, 1fr);
-            gap: 10px;
-            margin-bottom: 20px;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+        
+        @media (min-width: 640px) {
+            .grid-4 {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .grid-3 {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .grid-6 {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+        
+        @media (min-width: 1024px) {
+            .grid-4 {
+                grid-template-columns: repeat(4, 1fr);
+            }
+            .grid-3 {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            .grid-6 {
+                grid-template-columns: repeat(6, 1fr);
+            }
         }
         
         /* Cartes de téléchargement */
@@ -78,11 +122,18 @@
             background: #0f172a;
             border: 1px solid #1e293b;
             border-radius: 8px;
-            padding: 20px;
+            padding: 15px;
             transition: all 0.3s;
             position: relative;
             overflow: hidden;
         }
+        
+        @media (min-width: 768px) {
+            .download-card {
+                padding: 20px;
+            }
+        }
+        
         .download-card:hover {
             border-color: #00f3ff;
             transform: translateY(-2px);
@@ -91,12 +142,12 @@
         
         .download-card .size {
             position: absolute;
-            top: 10px;
-            right: 10px;
+            top: 8px;
+            right: 8px;
             background: #1e293b;
-            padding: 4px 8px;
+            padding: 3px 6px;
             border-radius: 4px;
-            font-size: 0.7rem;
+            font-size: 0.6rem;
             color: #00f3ff;
         }
         
@@ -104,13 +155,24 @@
             display: inline-block;
             background: #00f3ff;
             color: black;
-            padding: 10px 20px;
+            padding: 8px 16px;
             border-radius: 4px;
             text-decoration: none;
             font-weight: bold;
-            margin-top: 15px;
+            margin-top: 12px;
             transition: all 0.3s;
+            font-size: 0.9rem;
+            width: 100%;
+            text-align: center;
         }
+        
+        @media (min-width: 768px) {
+            .download-btn {
+                width: auto;
+                padding: 10px 20px;
+            }
+        }
+        
         .download-btn:hover {
             background: white;
             box-shadow: 0 0 15px #00f3ff;
@@ -118,84 +180,81 @@
         
         .badge {
             display: inline-block;
-            padding: 4px 8px;
+            padding: 3px 6px;
             border-radius: 12px;
-            font-size: 0.7rem;
+            font-size: 0.6rem;
             font-weight: bold;
-        }
-        .badge-blue {
-            background: rgba(0, 243, 255, 0.2);
-            color: #00f3ff;
-        }
-        .badge-red {
-            background: rgba(255, 0, 60, 0.2);
-            color: #ff003c;
-        }
-        .badge-green {
-            background: rgba(0, 255, 157, 0.2);
-            color: #00ff9d;
+            margin-right: 3px;
         }
         
         /* Upload zone */
         .upload-zone {
             border: 2px dashed #1e293b;
             border-radius: 8px;
-            padding: 40px;
+            padding: 25px 15px;
             text-align: center;
             cursor: pointer;
             transition: all 0.3s;
         }
+        
+        @media (min-width: 768px) {
+            .upload-zone {
+                padding: 40px;
+            }
+        }
+        
         .upload-zone:hover {
             border-color: #00f3ff;
         }
         
-        /* Moteur de recherche */
-        .search-container {
-            background: #0f172a;
-            border: 1px solid #1e293b;
-            border-radius: 8px;
-            padding: 20px;
-            margin-bottom: 20px;
+        .upload-zone i {
+            font-size: 2.5rem;
         }
         
+        @media (min-width: 768px) {
+            .upload-zone i {
+                font-size: 3rem;
+            }
+        }
+        
+        /* Moteur de recherche responsive */
         .search-grid {
             display: grid;
-            grid-template-columns: 2fr 1fr 1fr 1fr;
-            gap: 15px;
+            grid-template-columns: 1fr;
+            gap: 10px;
             margin-bottom: 15px;
         }
         
-        .search-input {
+        @media (min-width: 768px) {
+            .search-grid {
+                grid-template-columns: 2fr 1fr 1fr 1fr;
+                gap: 15px;
+            }
+        }
+        
+        .search-input, .search-select {
             background: #0a0f18;
             border: 1px solid #334155;
             color: #00f3ff;
-            padding: 12px 15px;
+            padding: 12px;
             border-radius: 6px;
             width: 100%;
             font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
         }
-        .search-input:focus {
+        
+        .search-input:focus, .search-select:focus {
             outline: none;
             border-color: #00f3ff;
             box-shadow: 0 0 10px rgba(0, 243, 255, 0.3);
         }
         
-        .search-select {
-            background: #0a0f18;
-            border: 1px solid #334155;
-            color: #00f3ff;
-            padding: 12px 15px;
-            border-radius: 6px;
-            width: 100%;
-            cursor: pointer;
-        }
-        
         .active-filters {
             display: flex;
             flex-wrap: wrap;
-            gap: 10px;
+            gap: 8px;
             margin: 15px 0;
-            padding: 15px 0;
+            padding: 12px 0;
             border-top: 1px solid #1e293b;
             border-bottom: 1px solid #1e293b;
         }
@@ -204,12 +263,12 @@
             background: rgba(0, 243, 255, 0.1);
             border: 1px solid #00f3ff;
             color: #00f3ff;
-            padding: 5px 12px;
+            padding: 4px 10px;
             border-radius: 20px;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             display: inline-flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
         }
         .filter-tag button {
             background: none;
@@ -217,43 +276,93 @@
             color: #ff003c;
             cursor: pointer;
             font-weight: bold;
+            font-size: 0.9rem;
         }
         
         .search-stats {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
+            flex-direction: column;
+            gap: 5px;
             padding: 10px;
             background: #0a0f18;
             border-radius: 6px;
             margin-top: 15px;
         }
         
-        /* Tableau */
+        @media (min-width: 768px) {
+            .search-stats {
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+            }
+        }
+        
+        /* Boutons d'action */
+        .action-btn {
+            background: #334155;
+            border: none;
+            color: white;
+            padding: 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            width: 100%;
+        }
+        
+        .search-btn {
+            background: #00f3ff;
+            border: none;
+            color: black;
+            padding: 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 0.9rem;
+            width: 100%;
+        }
+        
+        @media (min-width: 768px) {
+            .action-btn, .search-btn {
+                width: auto;
+                padding: 12px 20px;
+            }
+        }
+        
+        /* Tableau responsive */
         .table-container {
             overflow-x: auto;
-            max-height: 500px;
+            max-height: 400px;
             overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        @media (min-width: 768px) {
+            .table-container {
+                max-height: 500px;
+            }
         }
         
         table {
             width: 100%;
             border-collapse: collapse;
+            min-width: 600px; /* Force le scroll horizontal sur mobile */
         }
         
         th {
             background: #0f172a;
             color: #00f3ff;
-            padding: 12px;
+            padding: 10px;
             text-align: left;
             position: sticky;
             top: 0;
+            font-size: 0.75rem;
         }
         
         td {
-            padding: 12px;
+            padding: 10px;
             border-bottom: 1px solid #1e293b;
             color: #94a3b8;
+            font-size: 0.8rem;
         }
         
         tr:hover {
@@ -261,9 +370,9 @@
         }
         
         .role-badge {
-            padding: 4px 8px;
+            padding: 3px 6px;
             border-radius: 12px;
-            font-size: 0.7rem;
+            font-size: 0.65rem;
             font-weight: bold;
         }
         .role-chef {
@@ -271,59 +380,124 @@
             color: #ff003c;
         }
         
+        /* En-tête responsive */
+        .header-content {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        @media (min-width: 768px) {
+            .header-content {
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+            }
+        }
+        
+        .header-right {
+            text-align: left;
+        }
+        
+        @media (min-width: 768px) {
+            .header-right {
+                text-align: right;
+            }
+        }
+        
+        /* Explorateur */
+        .explorer-select {
+            background: #0a0f18;
+            border: 1px solid #334155;
+            color: #00f3ff;
+            padding: 10px;
+            border-radius: 4px;
+            width: 100%;
+            margin-top: 10px;
+            font-size: 0.9rem;
+        }
+        
+        @media (min-width: 768px) {
+            .explorer-select {
+                width: auto;
+                min-width: 250px;
+                margin-top: 0;
+            }
+        }
+        
+        .explorer-link {
+            display: inline-block;
+            background: #00f3ff;
+            color: black;
+            padding: 12px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            width: 100%;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+        
+        @media (min-width: 768px) {
+            .explorer-link {
+                width: auto;
+                padding: 15px 40px;
+            }
+        }
+        
         footer {
             border-top: 1px solid #1e293b;
-            padding: 20px 0;
-            margin-top: 40px;
+            padding: 15px 0;
+            margin-top: 30px;
             text-align: center;
             color: #475569;
-            font-size: 0.8rem;
+            font-size: 0.7rem;
         }
-
+        
         .territoire-badge {
             display: inline-block;
-            padding: 2px 6px;
+            padding: 2px 4px;
             background: #1e293b;
             border-radius: 4px;
-            font-size: 0.7rem;
+            font-size: 0.6rem;
             color: #00f3ff;
-            margin-left: 5px;
+            margin-left: 3px;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <!-- En-tête -->
+        <!-- En-tête responsive -->
         <div class="panel">
-            <div style="height:2px; background:linear-gradient(90deg, #0055ff 33%, #ffffff 33%, #ffffff 66%, #ff003c 66%); margin-bottom:20px;"></div>
-            <div style="display:flex; justify-content:space-between; align-items:center;">
+            <div style="height:2px; background:linear-gradient(90deg, #0055ff 33%, #ffffff 33%, #ffffff 66%, #ff003c 66%); margin-bottom:15px;"></div>
+            <div class="header-content">
                 <div>
                     <h1>MUNICIPALES <span class="neon-blue">2026</span></h1>
-                    <p style="color:#475569; margin-top:5px;">
+                    <p style="color:#475569; margin-top:5px; font-size:0.8rem;">
                         <i class="fas fa-globe" style="color:#00f3ff;"></i> 
                         TOUS DROM-COM · 11 TERRITOIRES
                     </p>
                 </div>
-                <div style="text-align:right;">
-                    <div style="color:#475569; font-size:0.8rem;">MISE À JOUR</div>
-                    <div style="color:#00ff9d;">1 MARS 2026</div>
+                <div class="header-right">
+                    <div style="color:#475569; font-size:0.7rem;">MISE À JOUR</div>
+                    <div style="color:#00ff9d; font-size:0.9rem;">1 MARS 2026</div>
                 </div>
             </div>
         </div>
 
-        <!-- CARTES DE TÉLÉCHARGEMENT -->
+        <!-- CARTES DE TÉLÉCHARGEMENT (responsives) -->
         <div class="grid-3">
-            <!-- France entière (DROM) -->
+            <!-- France entière -->
             <div class="download-card">
-                <span class="size">137,8 Mo</span>
-                <div style="display:flex; align-items:center; gap:10px; margin-bottom:15px;">
+                <span class="size">137 Mo</span>
+                <div style="display:flex; align-items:center; gap:8px; margin-bottom:10px;">
                     <i class="fas fa-map fa-2x" style="color:#00f3ff;"></i>
                     <div>
-                        <h3 style="color:white;">FRANCE ENTIÈRE</h3>
-                        <p style="color:#475569; font-size:0.8rem;">DROM inclus (971-976)</p>
+                        <h3 style="color:white; font-size:1rem;">FRANCE ENTIÈRE</h3>
+                        <p style="color:#475569; font-size:0.7rem;">DROM inclus</p>
                     </div>
                 </div>
-                <div style="margin:10px 0;">
+                <div style="margin:8px 0;">
                     <span class="badge badge-blue">971</span>
                     <span class="badge badge-blue">972</span>
                     <span class="badge badge-blue">973</span>
@@ -331,40 +505,39 @@
                     <span class="badge badge-blue">976</span>
                 </div>
                 <a href="https://www.data.gouv.fr/fr/datasets/r/b929c2a4-18ec-4e8b-bc37-2ff346a867cd" target="_blank" class="download-btn">
-                    <i class="fas fa-download mr-2"></i> TÉLÉCHARGER
+                    TÉLÉCHARGER
                 </a>
             </div>
 
-            <!-- Polynésie française -->
+            <!-- Polynésie -->
             <div class="download-card">
                 <span class="size">1,4 Mo</span>
-                <div style="display:flex; align-items:center; gap:10px; margin-bottom:15px;">
+                <div style="display:flex; align-items:center; gap:8px; margin-bottom:10px;">
                     <i class="fas fa-umbrella-beach fa-2x" style="color:#00ff9d;"></i>
                     <div>
-                        <h3 style="color:white;">POLYNÉSIE FRANÇAISE</h3>
-                        <p style="color:#475569; font-size:0.8rem;">987 · 48 communes</p>
+                        <h3 style="color:white; font-size:1rem;">POLYNÉSIE</h3>
+                        <p style="color:#475569; font-size:0.7rem;">987 · 48 communes</p>
                     </div>
                 </div>
-                <div style="margin:10px 0;">
+                <div style="margin:8px 0;">
                     <span class="badge badge-green">987</span>
-                    <span class="badge badge-green">139 listes</span>
                 </div>
                 <a href="https://www.data.gouv.fr/fr/datasets/r/5e7d2f8a-1b3c-4d5e-8f9a-0b1c2d3e4f5g" target="_blank" class="download-btn">
-                    <i class="fas fa-download mr-2"></i> TÉLÉCHARGER
+                    TÉLÉCHARGER
                 </a>
             </div>
 
-            <!-- Nouvelle-Calédonie + autres COM -->
+            <!-- Autres COM -->
             <div class="download-card">
-                <span class="size">Fichiers spécifiques</span>
-                <div style="display:flex; align-items:center; gap:10px; margin-bottom:15px;">
+                <span class="size">Multiples</span>
+                <div style="display:flex; align-items:center; gap:8px; margin-bottom:10px;">
                     <i class="fas fa-ship fa-2x" style="color:#ff003c;"></i>
                     <div>
-                        <h3 style="color:white;">AUTRES COM</h3>
-                        <p style="color:#475569; font-size:0.8rem;">Nouvelle-Calédonie, Wallis, St-Pierre</p>
+                        <h3 style="color:white; font-size:1rem;">AUTRES COM</h3>
+                        <p style="color:#475569; font-size:0.7rem;">988,986,975...</p>
                     </div>
                 </div>
-                <div style="margin:10px 0;">
+                <div style="margin:8px 0;">
                     <span class="badge badge-red">988</span>
                     <span class="badge badge-red">986</span>
                     <span class="badge badge-red">975</span>
@@ -372,162 +545,160 @@
                     <span class="badge badge-red">978</span>
                 </div>
                 <a href="https://www.data.gouv.fr/datasets/elections-municipales-2026-listes-candidates-au-premier-tour" target="_blank" class="download-btn" style="background:#334155;">
-                    <i class="fas fa-external-link-alt mr-2"></i> VOIR TOUS
+                    VOIR TOUS
                 </a>
             </div>
         </div>
 
-        <!-- LISTE COMPLÈTE DES TERRITOIRES -->
+        <!-- LISTE DES TERRITOIRES (responsive grid) -->
         <div class="panel">
-            <div style="display:flex; align-items:center; gap:10px; margin-bottom:20px;">
+            <div style="display:flex; align-items:center; gap:8px; margin-bottom:15px;">
                 <i class="fas fa-list" style="color:#00f3ff;"></i>
-                <h2 style="color:white;">11 TERRITOIRES DROM-COM</h2>
+                <h2 style="color:white; font-size:1.1rem;">11 TERRITOIRES</h2>
             </div>
             <div class="grid-6">
-                <div style="text-align:center; padding:10px; background:#0f172a; border-radius:4px;">
+                <div style="text-align:center; padding:8px; background:#0f172a; border-radius:4px;">
                     <span style="color:#00f3ff; font-weight:bold;">971</span><br>
-                    <span style="font-size:0.8rem;">Guadeloupe</span>
+                    <span style="font-size:0.7rem;">Guadeloupe</span>
                 </div>
-                <div style="text-align:center; padding:10px; background:#0f172a; border-radius:4px;">
+                <div style="text-align:center; padding:8px; background:#0f172a; border-radius:4px;">
                     <span style="color:#00f3ff; font-weight:bold;">972</span><br>
-                    <span style="font-size:0.8rem;">Martinique</span>
+                    <span style="font-size:0.7rem;">Martinique</span>
                 </div>
-                <div style="text-align:center; padding:10px; background:#0f172a; border-radius:4px;">
+                <div style="text-align:center; padding:8px; background:#0f172a; border-radius:4px;">
                     <span style="color:#00f3ff; font-weight:bold;">973</span><br>
-                    <span style="font-size:0.8rem;">Guyane</span>
+                    <span style="font-size:0.7rem;">Guyane</span>
                 </div>
-                <div style="text-align:center; padding:10px; background:#0f172a; border-radius:4px;">
+                <div style="text-align:center; padding:8px; background:#0f172a; border-radius:4px;">
                     <span style="color:#00f3ff; font-weight:bold;">974</span><br>
-                    <span style="font-size:0.8rem;">La Réunion</span>
+                    <span style="font-size:0.7rem;">La Réunion</span>
                 </div>
-                <div style="text-align:center; padding:10px; background:#0f172a; border-radius:4px;">
+                <div style="text-align:center; padding:8px; background:#0f172a; border-radius:4px;">
                     <span style="color:#00f3ff; font-weight:bold;">976</span><br>
-                    <span style="font-size:0.8rem;">Mayotte</span>
+                    <span style="font-size:0.7rem;">Mayotte</span>
                 </div>
-                <div style="text-align:center; padding:10px; background:#0f172a; border-radius:4px;">
+                <div style="text-align:center; padding:8px; background:#0f172a; border-radius:4px;">
                     <span style="color:#00ff9d; font-weight:bold;">987</span><br>
-                    <span style="font-size:0.8rem;">Polynésie</span>
+                    <span style="font-size:0.7rem;">Polynésie</span>
                 </div>
-                <div style="text-align:center; padding:10px; background:#0f172a; border-radius:4px;">
+                <div style="text-align:center; padding:8px; background:#0f172a; border-radius:4px;">
                     <span style="color:#00ff9d; font-weight:bold;">988</span><br>
-                    <span style="font-size:0.8rem;">Calédonie</span>
+                    <span style="font-size:0.7rem;">Calédonie</span>
                 </div>
-                <div style="text-align:center; padding:10px; background:#0f172a; border-radius:4px;">
+                <div style="text-align:center; padding:8px; background:#0f172a; border-radius:4px;">
                     <span style="color:#00ff9d; font-weight:bold;">986</span><br>
-                    <span style="font-size:0.8rem;">Wallis</span>
+                    <span style="font-size:0.7rem;">Wallis</span>
                 </div>
-                <div style="text-align:center; padding:10px; background:#ff003c20; border-radius:4px;">
+                <div style="text-align:center; padding:8px; background:#ff003c20; border-radius:4px;">
                     <span style="color:#ff003c; font-weight:bold;">975</span><br>
-                    <span style="font-size:0.8rem;">St-Pierre</span>
+                    <span style="font-size:0.7rem;">St-Pierre</span>
                 </div>
-                <div style="text-align:center; padding:10px; background:#ff003c20; border-radius:4px;">
+                <div style="text-align:center; padding:8px; background:#ff003c20; border-radius:4px;">
                     <span style="color:#ff003c; font-weight:bold;">977</span><br>
-                    <span style="font-size:0.8rem;">St-Barth</span>
+                    <span style="font-size:0.7rem;">St-Barth</span>
                 </div>
-                <div style="text-align:center; padding:10px; background:#ff003c20; border-radius:4px;">
+                <div style="text-align:center; padding:8px; background:#ff003c20; border-radius:4px;">
                     <span style="color:#ff003c; font-weight:bold;">978</span><br>
-                    <span style="font-size:0.8rem;">St-Martin</span>
+                    <span style="font-size:0.7rem;">St-Martin</span>
                 </div>
             </div>
         </div>
 
-        <!-- EXPLORATEUR -->
+        <!-- EXPLORATEUR (responsive) -->
         <div class="panel">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
-                <div style="display:flex; align-items:center; gap:10px;">
+            <div style="display:flex; flex-direction:column; gap:10px; margin-bottom:15px;">
+                <div style="display:flex; align-items:center; gap:8px;">
                     <i class="fas fa-map-marked-alt" style="color:#00f3ff;"></i>
-                    <h2 style="color:white;">EXPLORATEUR CARTOGRAPHIQUE</h2>
+                    <h2 style="color:white; font-size:1.1rem;">EXPLORATEUR</h2>
                 </div>
-                <select id="territoireSelect" style="background:#0a0f18; border:1px solid #334155; color:#00f3ff; padding:8px 16px; border-radius:4px;" onchange="updateExplorerLink()">
+                <select id="territoireSelect" class="explorer-select" onchange="updateExplorerLink()">
                     <option value="971">971 · GUADELOUPE</option>
                     <option value="972">972 · MARTINIQUE</option>
                     <option value="973">973 · GUYANE</option>
                     <option value="974" selected>974 · LA RÉUNION</option>
                     <option value="976">976 · MAYOTTE</option>
-                    <option value="975">975 · ST-PIERRE-ET-MIQUELON</option>
-                    <option value="977">977 · ST-BARTHÉLEMY</option>
+                    <option value="975">975 · ST-PIERRE</option>
+                    <option value="977">977 · ST-BARTH</option>
                     <option value="978">978 · ST-MARTIN</option>
-                    <option value="986">986 · WALLIS-ET-FUTUNA</option>
-                    <option value="987">987 · POLYNÉSIE FRANÇAISE</option>
-                    <option value="988">988 · NOUVELLE-CALÉDONIE</option>
+                    <option value="986">986 · WALLIS</option>
+                    <option value="987">987 · POLYNÉSIE</option>
+                    <option value="988">988 · CALÉDONIE</option>
                 </select>
             </div>
             
-            <div style="text-align:center; padding:40px; background:#0f172a; border-radius:8px;">
-                <a id="explorerLink" href="https://municipales2026.manufacture-osint.fr/#view=explorer&dept=974" target="_blank" style="display:inline-block; background:#00f3ff; color:black; padding:15px 40px; border-radius:8px; text-decoration:none; font-weight:bold;">
-                    <i class="fas fa-map mr-2"></i> LANCER L'EXPLORATEUR
+            <div style="text-align:center; padding:25px; background:#0f172a; border-radius:8px;">
+                <a id="explorerLink" href="https://municipales2026.manufacture-osint.fr/#view=explorer&dept=974" target="_blank" class="explorer-link">
+                    <i class="fas fa-map mr-2"></i> LANCER
                 </a>
             </div>
         </div>
 
-        <!-- UPLOAD CSV -->
+        <!-- UPLOAD CSV (responsive) -->
         <div class="panel">
-            <h2 style="color:#00f3ff; margin-bottom:20px;">
-                <i class="fas fa-upload mr-2"></i> IMPORTATION DES DONNÉES
+            <h2 style="color:#00f3ff; margin-bottom:15px; font-size:1.1rem;">
+                <i class="fas fa-upload mr-2"></i> IMPORT CSV
             </h2>
             <div id="dropZone" class="upload-zone" onclick="document.getElementById('fileInput').click()">
-                <i class="fas fa-file-csv" style="font-size:3rem; color:#475569; margin-bottom:10px;"></i>
-                <p style="color:white; margin-bottom:10px;">Glissez-déposez votre fichier CSV</p>
-                <p style="color:#475569; font-size:0.9rem;">ou cliquez pour sélectionner</p>
+                <i class="fas fa-file-csv" style="color:#475569; margin-bottom:8px;"></i>
+                <p style="color:white; margin-bottom:5px; font-size:0.9rem;">Glissez votre fichier</p>
+                <p style="color:#475569; font-size:0.8rem;">ou cliquez</p>
                 <input type="file" id="fileInput" accept=".csv" style="display:none;" onchange="handleFile(this.files[0])">
             </div>
-            <div id="fileInfo" style="margin-top:15px; padding:15px; background:#0f172a; border-left:4px solid #00ff9d; display:none;">
-                <p id="fileName" style="color:white;"></p>
-                <p id="fileStats" style="color:#475569; font-size:0.9rem;"></p>
+            <div id="fileInfo" style="margin-top:10px; padding:12px; background:#0f172a; border-left:4px solid #00ff9d; display:none;">
+                <p id="fileName" style="color:white; font-size:0.8rem;"></p>
+                <p id="fileStats" style="color:#475569; font-size:0.7rem;"></p>
             </div>
         </div>
 
-        <!-- STATS -->
+        <!-- STATS (responsive grid) -->
         <div id="statsCards" class="grid-4" style="display:none;"></div>
 
-        <!-- MOTEUR DE RECHERCHE AVANCÉ -->
+        <!-- MOTEUR DE RECHERCHE (responsive) -->
         <div id="searchSection" class="panel" style="display:none;">
-            <h2 style="color:#00f3ff; margin-bottom:20px;">
-                <i class="fas fa-search mr-2"></i> RECHERCHE MULTICRITÈRES
+            <h2 style="color:#00f3ff; margin-bottom:15px; font-size:1.1rem;">
+                <i class="fas fa-search mr-2"></i> RECHERCHE
             </h2>
             
             <div class="search-grid">
-                <input type="text" id="searchNom" class="search-input" placeholder="🔍 Nom du candidat...">
-                <input type="text" id="searchCommune" class="search-input" placeholder="🏙️ Commune...">
-                <input type="text" id="searchListe" class="search-input" placeholder="📋 Parti / Liste...">
+                <input type="text" id="searchNom" class="search-input" placeholder="Nom...">
+                <input type="text" id="searchCommune" class="search-input" placeholder="Commune...">
+                <input type="text" id="searchListe" class="search-input" placeholder="Parti...">
                 <select id="searchRole" class="search-select">
-                    <option value="">🎯 Tous les rôles</option>
-                    <option value="OUI">👑 Chefs de liste</option>
-                    <option value="NON">👥 Colistiers</option>
+                    <option value="">Rôle</option>
+                    <option value="OUI">Chefs</option>
+                    <option value="NON">Colistiers</option>
                 </select>
             </div>
 
             <div class="search-grid">
                 <select id="searchTerritoire" class="search-select">
-                    <option value="">🌍 Tous les territoires (11)</option>
+                    <option value="">Tous territoires</option>
                 </select>
                 <select id="searchSexe" class="search-select">
-                    <option value="">⚥ Tous les sexes</option>
-                    <option value="M">♂ Hommes</option>
-                    <option value="F">♀ Femmes</option>
+                    <option value="">Tous sexes</option>
+                    <option value="M">Hommes</option>
+                    <option value="F">Femmes</option>
                 </select>
-                <button onclick="resetSearch()" style="background:#334155; border:none; color:white; padding:12px; border-radius:6px; cursor:pointer;">
-                    <i class="fas fa-undo mr-2"></i> Réinitialiser
+                <button onclick="resetSearch()" class="action-btn">
+                    <i class="fas fa-undo mr-2"></i> Reset
                 </button>
-                <button onclick="applySearch()" style="background:#00f3ff; border:none; color:black; padding:12px; border-radius:6px; cursor:pointer; font-weight:bold;">
-                    <i class="fas fa-search mr-2"></i> Rechercher
+                <button onclick="applySearch()" class="search-btn">
+                    <i class="fas fa-search mr-2"></i> OK
                 </button>
             </div>
 
-            <!-- Filtres actifs -->
             <div id="activeFilters" class="active-filters"></div>
 
-            <!-- Statistiques -->
             <div class="search-stats">
-                <span id="resultCount" style="color:#00f3ff;">0 résultats</span>
-                <span id="totalCount" style="color:#475569;">Total: 0 candidats</span>
+                <span id="resultCount" style="color:#00f3ff; font-size:0.8rem;">0 résultats</span>
+                <span id="totalCount" style="color:#475569; font-size:0.7rem;">Total: 0</span>
             </div>
         </div>
 
-        <!-- TABLEAU -->
+        <!-- TABLEAU (responsive scroll) -->
         <div id="tableSection" class="panel" style="display:none;">
-            <h2 style="color:#ff003c; margin-bottom:15px;">
-                <i class="fas fa-list mr-2"></i> CANDIDATS DROM-COM
+            <h2 style="color:#ff003c; margin-bottom:10px; font-size:1rem;">
+                <i class="fas fa-list mr-2"></i> CANDIDATS
             </h2>
             <div class="table-container">
                 <table>
@@ -535,9 +706,9 @@
                         <tr>
                             <th>NOM</th>
                             <th>PRÉNOM</th>
-                            <th>TERRITOIRE</th>
+                            <th>TERR.</th>
                             <th>COMMUNE</th>
-                            <th>LISTE / PARTI</th>
+                            <th>LISTE</th>
                             <th>RÔLE</th>
                             <th>SEXE</th>
                         </tr>
@@ -548,38 +719,23 @@
         </div>
 
         <footer>
-            <i class="fas fa-database" style="color:#00f3ff; margin-right:5px;"></i>
-            SOURCE : data.gouv.fr · 11 TERRITOIRES · MOTEUR DE RECHERCHE INTÉGRÉ
+            <i class="fas fa-database" style="color:#00f3ff;"></i>
+            data.gouv.fr · 11 TERRITOIRES · MOBILE
         </footer>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
     <script>
-        // TOUS LES DROM-COM (11 territoires)
         const DROM_COM = {
-            '971': 'GUADELOUPE',
-            '972': 'MARTINIQUE',
-            '973': 'GUYANE',
-            '974': 'LA RÉUNION',
-            '976': 'MAYOTTE',
-            '975': 'ST-PIERRE-ET-MIQUELON',
-            '977': 'ST-BARTHÉLEMY',
-            '978': 'ST-MARTIN',
-            '986': 'WALLIS-ET-FUTUNA',
-            '987': 'POLYNÉSIE FRANÇAISE',
-            '988': 'NOUVELLE-CALÉDONIE'
-        };
-
-        // Statistiques réelles
-        const STATS = {
-            '987': { candidats: 4876, listes: 139 },
-            '988': { listes: 123 }
+            '971': 'GUADELOUPE', '972': 'MARTINIQUE', '973': 'GUYANE',
+            '974': 'LA RÉUNION', '976': 'MAYOTTE', '975': 'ST-PIERRE',
+            '977': 'ST-BARTH', '978': 'ST-MARTIN', '986': 'WALLIS',
+            '987': 'POLYNÉSIE', '988': 'CALÉDONIE'
         };
 
         let allCandidates = [];
         let filteredCandidates = [];
 
-        // Met à jour le lien de l'explorateur
         function updateExplorerLink() {
             const select = document.getElementById('territoireSelect');
             const link = document.getElementById('explorerLink');
@@ -587,7 +743,6 @@
             link.innerHTML = `<i class="fas fa-map mr-2"></i> LANCER ${DROM_COM[select.value]}`;
         }
 
-        // Drag & drop
         const dropZone = document.getElementById('dropZone');
         dropZone.addEventListener('dragover', (e) => e.preventDefault());
         dropZone.addEventListener('drop', (e) => {
@@ -608,7 +763,7 @@
                 skipEmptyLines: true,
                 step: function(row) {
                     const data = row.data;
-                    const codeDep = data['Code département'] || data['Code'] || data['Département'];
+                    const codeDep = data['Code département'] || data['Code'];
                     
                     if (codeDep && DROM_COM[codeDep]) {
                         allCandidates.push({
@@ -617,29 +772,17 @@
                             prenom: data['Prénom sur le bulletin de vote'] || data['Prénom'] || '',
                             departement: DROM_COM[codeDep],
                             commune: data['Circonscription'] || data['Commune'] || '',
-                            liste: data['Libellé abrégé de liste'] || data['Libellé de la liste'] || data['Liste'] || 'Sans étiquette',
+                            liste: data['Libellé abrégé de liste'] || data['Liste'] || '',
                             teteDeListe: data['Tête de liste'] || 'NON',
-                            sexe: data['Sexe'] || '',
-                            nuance: data['Code nuance de liste'] || ''
+                            sexe: data['Sexe'] || ''
                         });
                     }
                 },
                 complete: function() {
-                    // Stats spéciales Polynésie
-                    const polynesieCount = allCandidates.filter(c => c.codeDep === '987').length;
-                    const caledonieCount = allCandidates.filter(c => c.codeDep === '988').length;
-                    
-                    document.getElementById('fileStats').innerHTML = `
-                        ${allCandidates.length} candidats trouvés<br>
-                        <span style="color:#00ff9d;">Polynésie: ${polynesieCount} · Calédonie: ${caledonieCount}</span>
-                    `;
-
                     initSearchFilters();
-                    
                     document.getElementById('statsCards').style.display = 'grid';
                     document.getElementById('searchSection').style.display = 'block';
                     document.getElementById('tableSection').style.display = 'block';
-                    
                     updateStats();
                     filteredCandidates = [...allCandidates];
                     displayResults();
@@ -651,14 +794,11 @@
             const territoireSelect = document.getElementById('searchTerritoire');
             const territoires = [...new Set(allCandidates.map(c => c.codeDep))].sort();
             
-            territoireSelect.innerHTML = '<option value="">🌍 Tous les territoires (11)</option>';
+            territoireSelect.innerHTML = '<option value="">Tous territoires</option>';
             territoires.forEach(code => {
                 const option = document.createElement('option');
                 option.value = code;
-                let stats = '';
-                if (code === '987') stats = ` (${STATS['987'].candidats} cand.)`;
-                if (code === '988') stats = ` (${STATS['988'].listes} listes)`;
-                option.textContent = `${code} · ${DROM_COM[code]}${stats}`;
+                option.textContent = `${code} · ${DROM_COM[code]}`;
                 territoireSelect.appendChild(option);
             });
         }
@@ -696,9 +836,9 @@
             const searchTerritoire = document.getElementById('searchTerritoire').value;
             const searchSexe = document.getElementById('searchSexe').value;
             
-            if (searchNom) filters.push(`<span class="filter-tag">Nom: ${searchNom} <button onclick="clearFilter('nom')">×</button></span>`);
-            if (searchCommune) filters.push(`<span class="filter-tag">Commune: ${searchCommune} <button onclick="clearFilter('commune')">×</button></span>`);
-            if (searchListe) filters.push(`<span class="filter-tag">Parti: ${searchListe} <button onclick="clearFilter('liste')">×</button></span>`);
+            if (searchNom) filters.push(`<span class="filter-tag">${searchNom} <button onclick="clearFilter('nom')">×</button></span>`);
+            if (searchCommune) filters.push(`<span class="filter-tag">${searchCommune} <button onclick="clearFilter('commune')">×</button></span>`);
+            if (searchListe) filters.push(`<span class="filter-tag">${searchListe} <button onclick="clearFilter('liste')">×</button></span>`);
             if (searchRole) filters.push(`<span class="filter-tag">${searchRole === 'OUI' ? 'Chefs' : 'Colistiers'} <button onclick="clearFilter('role')">×</button></span>`);
             if (searchTerritoire) filters.push(`<span class="filter-tag">${DROM_COM[searchTerritoire]} <button onclick="clearFilter('territoire')">×</button></span>`);
             if (searchSexe) filters.push(`<span class="filter-tag">${searchSexe === 'M' ? 'Hommes' : 'Femmes'} <button onclick="clearFilter('sexe')">×</button></span>`);
@@ -725,7 +865,6 @@
             document.getElementById('searchRole').value = '';
             document.getElementById('searchTerritoire').value = '';
             document.getElementById('searchSexe').value = '';
-            
             filteredCandidates = [...allCandidates];
             updateActiveFilters();
             displayResults();
@@ -734,20 +873,20 @@
         function displayResults() {
             const tbody = document.getElementById('candidatesTableBody');
             document.getElementById('resultCount').innerHTML = `${filteredCandidates.length} résultats`;
-            document.getElementById('totalCount').innerHTML = `Total: ${allCandidates.length} candidats`;
+            document.getElementById('totalCount').innerHTML = `Total: ${allCandidates.length}`;
             
             if (filteredCandidates.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; padding:40px;">Aucun résultat trouvé</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="7" style="padding:30px; text-align:center;">Aucun résultat</td></tr>';
                 return;
             }
 
             tbody.innerHTML = filteredCandidates.slice(0, 500).map(c => `
                 <tr>
-                    <td style="font-weight:bold; color:white;">${c.nom}</td>
+                    <td style="color:white;">${c.nom}</td>
                     <td>${c.prenom}</td>
-                    <td style="color:#00f3ff;">${c.departement}</td>
+                    <td style="color:#00f3ff;">${c.codeDep}</td>
                     <td>${c.commune}</td>
-                    <td style="max-width:200px; overflow:hidden; text-overflow:ellipsis;">${c.liste}</td>
+                    <td style="max-width:100px;">${c.liste}</td>
                     <td>${c.teteDeListe === 'OUI' ? '<span class="role-badge role-chef">CHEF</span>' : '-'}</td>
                     <td>${c.sexe}</td>
                 </tr>
@@ -759,33 +898,29 @@
             const femmes = allCandidates.filter(c => c.sexe === 'F').length;
             const hommes = allCandidates.filter(c => c.sexe === 'M').length;
             const chefs = allCandidates.filter(c => c.teteDeListe === 'OUI').length;
-            const territoires = new Set(allCandidates.map(c => c.codeDep)).size;
             
             document.getElementById('statsCards').innerHTML = `
-                <div class="download-card" style="padding:20px;">
-                    <div style="color:#475569;">TOTAL</div>
-                    <div style="font-size:2rem; color:white;">${total}</div>
-                    <div style="color:#475569;">${territoires}/11 territoires</div>
+                <div class="download-card">
+                    <div style="color:#475569; font-size:0.7rem;">TOTAL</div>
+                    <div style="font-size:1.5rem; color:white;">${total}</div>
                 </div>
-                <div class="download-card" style="padding:20px;">
-                    <div style="color:#475569;">FEMMES</div>
-                    <div style="font-size:2rem; color:#ff69b4;">${femmes}</div>
-                    <div style="color:#475569;">${((femmes/total)*100 || 0).toFixed(1)}%</div>
+                <div class="download-card">
+                    <div style="color:#475569; font-size:0.7rem;">FEMMES</div>
+                    <div style="font-size:1.5rem; color:#ff69b4;">${femmes}</div>
+                    <div style="color:#475569; font-size:0.6rem;">${((femmes/total)*100 || 0).toFixed(1)}%</div>
                 </div>
-                <div class="download-card" style="padding:20px;">
-                    <div style="color:#475569;">HOMMES</div>
-                    <div style="font-size:2rem; color:#4169e1;">${hommes}</div>
-                    <div style="color:#475569;">${((hommes/total)*100 || 0).toFixed(1)}%</div>
+                <div class="download-card">
+                    <div style="color:#475569; font-size:0.7rem;">HOMMES</div>
+                    <div style="font-size:1.5rem; color:#4169e1;">${hommes}</div>
+                    <div style="color:#475569; font-size:0.6rem;">${((hommes/total)*100 || 0).toFixed(1)}%</div>
                 </div>
-                <div class="download-card" style="padding:20px;">
-                    <div style="color:#475569;">CHEFS</div>
-                    <div style="font-size:2rem; color:#ff003c;">${chefs}</div>
-                    <div style="color:#475569;">${((chefs/total)*100 || 0).toFixed(1)}%</div>
+                <div class="download-card">
+                    <div style="color:#475569; font-size:0.7rem;">CHEFS</div>
+                    <div style="font-size:1.5rem; color:#ff003c;">${chefs}</div>
                 </div>
             `;
         }
 
-        // Recherche en temps réel
         document.getElementById('searchNom').addEventListener('input', applySearch);
         document.getElementById('searchCommune').addEventListener('input', applySearch);
         document.getElementById('searchListe').addEventListener('input', applySearch);
