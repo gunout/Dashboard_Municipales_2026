@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Municipales 2026 · DROM-COM</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+</head>
+<body class="bg-gray-100 font-sans">
+    <div class="container mx-auto px-4 py-8">
+        <!-- En-tête -->
+        <div class="bg-gradient-to-r from-blue-900 to-blue-700 rounded-xl shadow-lg p-6 mb-8 text-white">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h1 class="text-3xl font-bold flex items-center">
+                        <i class="fas fa-umbrella-beach mr-3"></i>
+                        Municipales 2026 · DROM-COM
+                    </h1>
+                    <p class="text-blue-100 mt-2">
+                        <i class="fas fa-database mr-2"></i>
+                        Données officielles data.gouv.fr
+                    </p>
+                </div>
+                <div class="bg-white/20 backdrop-blur rounded-lg px-4 py-2">
+                    <i class="fas fa-check-circle mr-2"></i>
+                    Structure CSV validée
+                </div>
+            </div>
+        </div>
+
+        <!-- Zone d'upload -->
+        <div class="bg-white rounded-xl shadow-lg p-6 mb-8">
+            <h2 class="text-lg font-semibold text-gray-800 mb-4">
+                <i class="fas fa-cloud-upload-alt mr-2 text-blue-600"></i>
+                Chargement du fichier CSV
+            </h2>
+            
+            <div class="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-blue-500 transition-colors"
+                 id="dropZone">
+                <i class="fas fa-file-csv text-5xl text-gray-400 mb-3"></i>
+                <p class="text-gray-600 text-lg mb-2">
+                    Glissez-déposez votre fichier CSV ici
+                </p>
+                <p class="text-sm text-gray-500 mb-4">
+                    ou
+                </p>
+                <button onclick="document.getElementById('fileInput').click()" 
+                        class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700">
+                    <i class="fas fa-folder-open mr-2"></i>
+                    Sélectionner le fichier
+                </button>
+                <input type="file" id="fileInput" accept=".csv" class="hidden" onchange="handleFile(this.files[0])">
+                <p class="text-xs text-gray-400 mt-4">
+                    Format attendu : Code département;Département;Code circonscription;Circonscription;...
+                </p>
+            </div>
+
+            <!-- Info fichier chargé -->
+            <div id="fileInfo" class="mt-4 p-4 bg-green-50 border border-green-200 rounded-lg hidden">
+                <div class="flex items-center">
+                    <i class="fas fa-check-circle text-green-500 mr-3 text-xl"></i>
+                    <div>
+                        <p class="font-medium text-green-800" id="fileName"></p>
+                        <p class="text-sm text-green-600" id="fileStats"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Barre de progression -->
+        <div id="loadingStatus" class="bg-white rounded-xl shadow-lg p-6 mb-8 hidden">
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="text-lg font-semibold text-gray-700">
+                    <i class="fas fa-sync-alt fa-spin mr-2 text-blue-600"></i>
+                    Traitement du fichier...
+                </h2>
+                <span id="progressPercentage" class="text-sm font-medium text-blue-600">0%</span>
+            </div>
+            <div class="w-full bg-gray-200 rounded-full h-2.5">
+                <div id="progressBar" class="bg-blue-600 h-2.5 rounded-full transition-all duration-300" style="width: 0%"></div>
+            </div>
+            <p id="statusMessage" class="text-sm text-gray-500 mt-3">
+                Lecture du fichier en cours...
+            </p>
+        </div>
+
+        <!-- Cartes statistiques -->
+        <div id="statsCards" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8 hidden"></div>
+
+        <!-- Filtres -->
+        <div id="filtersSection" class="bg-white rounded-xl shadow-lg p-6 mb-8 hidden">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        <i class="fas fa-map-marker-alt mr-1 text-blue-500"></i> Département
+                    </label>
+                    <select id="filterDepartement" class="w-full border rounded-lg px-3 py-2">
+                        <option value="">Tous les DROM-COM</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        <i class="fas fa-city mr-1 text-blue-500"></i> Commune
+                    </label>
+                    <input type="text" id="filterCommune" placeholder="Nom de la commune" 
+                           class="w-full border rounded-lg px-3 py-2">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        <i class="fas fa-venus-mars mr-1 text-blue-500"></i> Sexe
+                    </label>
+                    <select id="filterSexe" class="w-full border rounded-lg px-3 py-2">
+                        <option value="">Tous</option>
+                        <option value="M">Homme</option>
+                        <option value="F">Femme</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        <i class="fas fa-flag mr-1 text-blue-500"></i> Tête de liste
+                    </label>
+                    <select id="filterTeteListe" class="w-full border rounded-lg px-3 py-2">
+                        <option value="">Tous</option>
+                        <option value="OUI">Oui</option>
+                        <option value="">Non</option>
+                    </select>
+                </div>
+            </div>
+            <div class="flex justify-between items-center mt-4">
+                <p id="resultCount" class="text-sm text-gray-600">
+                    <i class="fas fa-users mr-1"></i>
+                    <span id="candidateCount">0</span> candidats affichés
+                </p>
+                <button onclick="resetFilters()" class="text-gray-600 hover:text-gray-800">
+                    <i class="fas fa-undo mr-1"></i> Réinitialiser
+                </button>
+            </div>
+        </div>
+
+        <!-- Tableau des candidats -->
+        <div id="tableSection" class="bg-white rounded-xl shadow-lg overflow-hidden hidden">
+            <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
+                <h2 class="text-xl font-semibold text-gray-800">
+                    <i class="fas fa-list-ul mr-2 text-blue-600"></i>
+                    Candidats dans les DROM-COM
+                    <span id="totalCandidates" class="ml-3 text-sm font-normal text-gray-500"></span>
+                </h2>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Nom</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Prénom</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Département</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Commune</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Liste</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Tête de liste</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Ordre</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Sexe</th>
+                        </tr>
+                    </thead>
+                    <tbody id="candidatesTableBody" class="bg-white divide-y divide-gray-200">
+                        <tr>
+                            <td colspan="8" class="px-6 py-12 text-center text-gray-500">
+                                <i class="fas fa-upload text-3xl mb-3 text-gray-400"></i>
+                                <p>Chargez votre fichier CSV pour voir les données</p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Codes des DROM-COM
+        const DROM_COM = {
+            '971': 'Guadeloupe',
+            '972': 'Martinique',
+            '973': 'Guyane',
+            '974': 'La Réunion',
+            '976': 'Mayotte',
+            '975': 'Saint-Pierre-et-Miquelon',
+            '977': 'Saint-Barthélemy',
+            '978': 'Saint-Martin',
+            '986': 'Wallis-et-Futuna',
+            '987': 'Polynésie française',
+            '988': 'Nouvelle-Calédonie'
+        };
+
+        let allCandidates = [];
+        let filteredCandidates = [];
+
+        // Gestion du drop
+        const dropZone = document.getElementById('dropZone');
+        
+        dropZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropZone.classList.add('border-blue-500', 'bg-blue-50');
+        });
+
+        dropZone.addEventListener('dragleave', () => {
+            dropZone.classList.remove('border-blue-500', 'bg-blue-50');
+        });
+
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('border-blue-500', 'bg-blue-50');
+            const file = e.dataTransfer.files[0];
+            if (file && file.name.endsWith('.csv')) {
+                handleFile(file);
+            } else {
+                alert('Veuillez sélectionner un fichier CSV');
+            }
+        });
+
+        // Gestion du fichier sélectionné
+        function handleFile(file) {
+            if (!file) return;
+            
+            // Afficher les infos du fichier
+            document.getElementById('fileName').textContent = file.name;
+            document.getElementById('fileInfo').classList.remove('hidden');
+            
+            // Lire et parser le fichier
+            parseCSV(file);
+        }
+
+        function parseCSV(file) {
+            showLoading(true);
+            
+            Papa.parse(file, {
+                delimiter: ";",
+                header: true,
+                skipEmptyLines: true,
+                encoding: "UTF-8",
+                complete: function(results) {
+                    processData(results.data);
+                },
+                error: function(error) {
+                    alert('Erreur lors de la lecture du fichier: ' + error);
+                    showLoading(false);
+                }
+            });
+        }
+
+        function processData(data) {
+            // Filtrer uniquement les DROM-COM
+            allCandidates = data
+                .filter(row => {
+                    const codeDep = row['Code département'];
+                    return codeDep && DROM_COM[codeDep];
+                })
+                .map(row => ({
+                    codeDep: row['Code département'],
+                    departement: DROM_COM[row['Code département']] || row['Département'],
+                    commune: row['Circonscription'] || '',
+                    liste: row['Libellé abrégé de liste'] || row['Libellé de la liste'] || '',
+                    teteDeListe: row['Tête de liste'] || '',
+                    ordre: row['Ordre'] || '',
+                    sexe: row['Sexe'] || '',
+                    nom: row['Nom sur le bulletin de vote'] || '',
+                    prenom: row['Prénom sur le bulletin de vote'] || '',
+                    nuance: row['Code nuance de liste'] || '',
+                    nationalite: row['Nationalité'] || 'Française'
+                }))
+                .filter(c => c.nom && c.nom !== ''); // Garder seulement les entrées valides
+
+            if (allCandidates.length === 0) {
+                alert('Aucun candidat des DROM-COM trouvé dans le fichier');
+                showLoading(false);
+                return;
+            }
+
+            // Mise à jour des stats
+            document.getElementById('fileStats').innerHTML = `
+                ${allCandidates.length} candidats trouvés dans les DROM-COM
+            `;
+
+            showLoading(false);
+            initializeDashboard();
+        }
+
+        function initializeDashboard() {
+            // Afficher les sections
+            document.getElementById('statsCards').classList.remove('hidden');
+            document.getElementById('filtersSection').classList.remove('hidden');
+            document.getElementById('tableSection').classList.remove('hidden');
+            
+            updateFilters();
+            filterAndDisplayCandidates();
+            updateStatistics();
+        }
+
+        function updateFilters() {
+            const deptSet = new Set();
+            
+            allCandidates.forEach(c => {
+                if (c.codeDep) deptSet.add(c.codeDep);
+            });
+            
+            const deptSelect = document.getElementById('filterDepartement');
+            deptSelect.innerHTML = '<option value="">Tous les DROM-COM</option>';
+            Array.from(deptSet).sort().forEach(code => {
+                deptSelect.innerHTML += `<option value="${code}">${DROM_COM[code] || code}</option>`;
+            });
+        }
+
+        function filterAndDisplayCandidates() {
+            const dept = document.getElementById('filterDepartement').value;
+            const commune = document.getElementById('filterCommune').value.toLowerCase();
+            const sexe = document.getElementById('filterSexe').value;
+            const teteListe = document.getElementById('filterTeteListe').value;
+            
+            filteredCandidates = allCandidates.filter(c => {
+                if (dept && c.codeDep !== dept) return false;
+                if (commune && !c.commune.toLowerCase().includes(commune)) return false;
+                if (sexe && c.sexe !== sexe) return false;
+                if (teteListe === 'OUI' && c.teteDeListe !== 'OUI') return false;
+                if (teteListe === '' && c.teteDeListe === 'OUI') return false;
+                return true;
+            });
+            
+            document.getElementById('candidateCount').textContent = filteredCandidates.length;
+            document.getElementById('totalCandidates').textContent = `(total: ${allCandidates.length})`;
+            
+            displayCandidates();
+        }
+
+        function displayCandidates() {
+            const tbody = document.getElementById('candidatesTableBody');
+            
+            if (filteredCandidates.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="8" class="px-6 py-8 text-center text-gray-500">
+                            <i class="fas fa-search text-3xl mb-3 text-gray-400"></i>
+                            <p>Aucun candidat trouvé</p>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+            
+            tbody.innerHTML = filteredCandidates.slice(0, 1000).map(c => `
+                <tr class="hover:bg-gray-50">
+                    <td class="px-6 py-3 text-sm text-gray-900">${c.nom}</td>
+                    <td class="px-6 py-3 text-sm text-gray-900">${c.prenom}</td>
+                    <td class="px-6 py-3 text-sm text-gray-500">${c.departement}</td>
+                    <td class="px-6 py-3 text-sm text-gray-500">${c.commune}</td>
+                    <td class="px-6 py-3 text-sm text-gray-500">${c.liste}</td>
+                    <td class="px-6 py-3 text-sm">
+                        <span class="px-2 py-1 text-xs font-semibold rounded-full ${c.teteDeListe === 'OUI' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}">
+                            ${c.teteDeListe || 'Non'}
+                        </span>
+                    </td>
+                    <td class="px-6 py-3 text-sm text-gray-500">${c.ordre}</td>
+                    <td class="px-6 py-3 text-sm">
+                        <span class="px-2 py-1 text-xs font-semibold rounded-full ${c.sexe === 'F' ? 'bg-pink-100 text-pink-800' : 'bg-blue-100 text-blue-800'}">
+                            ${c.sexe === 'F' ? 'Femme' : c.sexe === 'M' ? 'Homme' : '-'}
+                        </span>
+                    </td>
+                </tr>
+            `).join('');
+            
+            if (filteredCandidates.length > 1000) {
+                tbody.innerHTML += `
+                    <tr class="bg-gray-50">
+                        <td colspan="8" class="px-6 py-3 text-center text-sm text-gray-500">
+                            <i class="fas fa-info-circle mr-1"></i>
+                            Affichage des 1000 premiers résultats (${filteredCandidates.length} au total)
+                        </td>
+                    </tr>
+                `;
+            }
+        }
+
+        function updateStatistics() {
+            const total = allCandidates.length;
+            const femmes = allCandidates.filter(c => c.sexe === 'F').length;
+            const hommes = allCandidates.filter(c => c.sexe === 'M').length;
+            const teteListe = allCandidates.filter(c => c.teteDeListe === 'OUI').length;
+            
+            // Stats par département
+            const deptStats = {};
+            allCandidates.forEach(c => {
+                if (c.departement) {
+                    deptStats[c.departement] = (deptStats[c.departement] || 0) + 1;
+                }
+            });
+            
+            const topDept = Object.entries(deptStats)
+                .sort((a, b) => b[1] - a[1])
+                .slice(0, 3)
+                .map(([dept, count]) => `${dept} (${count})`)
+                .join(', ');
+            
+            document.getElementById('statsCards').innerHTML = `
+                <div class="bg-white rounded-xl shadow p-6">
+                    <div class="flex items-center">
+                        <div class="bg-blue-100 rounded-full p-3 mr-4">
+                            <i class="fas fa-users text-blue-600 text-xl"></i>
+                        </div>
+                        <div>
+                            <p class="text-gray-500 text-sm">Total candidats</p>
+                            <p class="text-2xl font-bold">${total}</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-xl shadow p-6">
+                    <div class="flex items-center">
+                        <div class="bg-pink-100 rounded-full p-3 mr-4">
+                            <i class="fas fa-venus text-pink-600 text-xl"></i>
+                        </div>
+                        <div>
+                            <p class="text-gray-500 text-sm">Femmes</p>
+                            <p class="text-2xl font-bold">${femmes}</p>
+                            <p class="text-xs text-gray-400">${((femmes/total)*100).toFixed(1)}%</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-xl shadow p-6">
+                    <div class="flex items-center">
+                        <div class="bg-blue-100 rounded-full p-3 mr-4">
+                            <i class="fas fa-mars text-blue-600 text-xl"></i>
+                        </div>
+                        <div>
+                            <p class="text-gray-500 text-sm">Hommes</p>
+                            <p class="text-2xl font-bold">${hommes}</p>
+                            <p class="text-xs text-gray-400">${((hommes/total)*100).toFixed(1)}%</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-xl shadow p-6">
+                    <div class="flex items-center">
+                        <div class="bg-green-100 rounded-full p-3 mr-4">
+                            <i class="fas fa-star text-green-600 text-xl"></i>
+                        </div>
+                        <div>
+                            <p class="text-gray-500 text-sm">Têtes de liste</p>
+                            <p class="text-2xl font-bold">${teteListe}</p>
+                            <p class="text-xs text-gray-400">Top: ${topDept}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function showLoading(show) {
+            document.getElementById('loadingStatus').classList.toggle('hidden', !show);
+        }
+
+        function resetFilters() {
+            document.getElementById('filterDepartement').value = '';
+            document.getElementById('filterCommune').value = '';
+            document.getElementById('filterSexe').value = '';
+            document.getElementById('filterTeteListe').value = '';
+            filterAndDisplayCandidates();
+        }
+
+        // Écouteurs d'événements
+        document.getElementById('filterDepartement').addEventListener('change', filterAndDisplayCandidates);
+        document.getElementById('filterCommune').addEventListener('input', filterAndDisplayCandidates);
+        document.getElementById('filterSexe').addEventListener('change', filterAndDisplayCandidates);
+        document.getElementById('filterTeteListe').addEventListener('change', filterAndDisplayCandidates);
+    </script>
+</body>
+</html>
