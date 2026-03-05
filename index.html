@@ -3,684 +3,289 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SYSTEME TACTIQUE :: Municipales 2026 - Recherche Avancée</title>
-    
-    <!-- Scripts & Styles -->
+    <title>Dashboard Municipales 2026 · DROM-COM</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
-    
-    <!-- Configuration Tailwind Thème Cyber-Militaire -->
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        mil: {
-                            bg: '#030508',
-                            panel: '#0a0f18',
-                            border: '#1e293b',
-                            neonBlue: '#00f3ff',
-                            neonRed: '#ff003c',
-                            neonWhite: '#e2e8f0',
-                            dim: '#475569',
-                            success: '#00ff9d'
-                        }
-                    },
-                    fontFamily: {
-                        mono: ['"Courier New"', 'Courier', 'monospace'],
-                    },
-                    boxShadow: {
-                        'neon-blue': '0 0 5px #00f3ff, 0 0 10px #00f3ff',
-                        'neon-red': '0 0 5px #ff003c, 0 0 10px #ff003c',
-                    },
-                    animation: {
-                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-                        'scan': 'scan 4s linear infinite',
-                    },
-                    keyframes: {
-                        scan: {
-                            '0%': { transform: 'translateY(-100%)' },
-                            '100%': { transform: 'translateY(100%)' }
-                        }
-                    }
-                }
-            }
-        }
-    </script>
-
-    <style>
-        body {
-            background-color: #030508;
-            background-image: 
-                linear-gradient(rgba(0, 243, 255, 0.03) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(0, 243, 255, 0.03) 1px, transparent 1px);
-            background-size: 30px 30px;
-            color: #e2e8f0;
-        }
-
-        ::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #0a0f18; 
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #1e293b; 
-            border: 1px solid #00f3ff;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #00f3ff; 
-        }
-
-        .scanline {
-            background: linear-gradient(to bottom, transparent, rgba(0, 243, 255, 0.2), transparent);
-            height: 20px;
-            width: 100%;
-            position: absolute;
-            top: 0;
-            left: 0;
-            pointer-events: none;
-            animation: scan 2.5s linear infinite;
-        }
-
-        .tactical-input {
-            background: rgba(10, 15, 24, 0.8);
-            border: 1px solid #334155;
-            color: #00f3ff;
-            transition: all 0.3s ease;
-        }
-        .tactical-input:focus {
-            outline: none;
-            border-color: #00f3ff;
-            box-shadow: 0 0 8px rgba(0, 243, 255, 0.3);
-        }
-
-        .tactical-table th {
-            background-color: #0f172a;
-            color: #00f3ff;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            font-size: 0.75rem;
-            border-bottom: 2px solid #1e293b;
-        }
-        .tactical-table tr {
-            border-bottom: 1px solid #1e293b;
-            transition: background 0.2s;
-        }
-        .tactical-table tr:hover {
-            background: rgba(0, 243, 255, 0.05);
-        }
-        .tactical-table td {
-            color: #94a3b8;
-            font-size: 0.875rem;
-        }
-
-        .tricolore-bar {
-            height: 2px;
-            width: 100%;
-            background: linear-gradient(90deg, #0055ff 33%, #ffffff 33%, #ffffff 66%, #ff003c 66%);
-            box-shadow: 0 0 10px rgba(0, 85, 255, 0.5);
-            margin-bottom: 1rem;
-        }
-
-        .badge-nuance {
-            display: inline-block;
-            padding: 2px 8px;
-            border-radius: 12px;
-            font-size: 10px;
-            font-weight: bold;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-    </style>
 </head>
-<body class="font-sans antialiased min-h-screen flex flex-col">
-
-    <!-- Toast Notification Container -->
-    <div id="toast-container" class="fixed top-4 right-4 z-50 flex flex-col gap-2 pointer-events-none"></div>
-
-    <div class="container mx-auto px-4 py-6 flex-grow max-w-7xl">
-        
-        <!-- En-tête Tactique -->
-        <header class="mb-8 relative">
-            <div class="tricolore-bar"></div>
-            <div class="bg-mil-panel border border-mil-border p-6 relative overflow-hidden group">
-                <div class="absolute top-0 left-0 w-16 h-16 border-t-2 border-l-2 border-mil-neonBlue opacity-50"></div>
-                <div class="absolute bottom-0 right-0 w-16 h-16 border-b-2 border-r-2 border-mil-neonRed opacity-50"></div>
-                
-                <div class="flex flex-col md:flex-row justify-between items-start md:items-center relative z-10">
-                    <div>
-                        <div class="flex items-center gap-3 mb-1">
-                            <i class="fas fa-satellite-dish text-mil-neonBlue text-2xl animate-pulse-slow"></i>
-                            <h1 class="text-3xl font-bold font-mono tracking-wider text-white">
-                                MUNICIPALES <span class="text-mil-neonBlue">2026</span>
-                            </h1>
-                        </div>
-                        <p class="text-mil-dim font-mono text-sm uppercase tracking-widest flex items-center">
-                            <span class="w-2 h-2 bg-mil-neonRed rounded-full mr-2 animate-pulse"></span>
-                            Module Analyse DROM-COM // Recherche Avancée
-                        </p>
-                    </div>
-                    
-                    <div class="mt-4 md:mt-0 flex items-center gap-4">
-                        <div class="text-right hidden md:block">
-                            <div class="text-xs text-mil-dim font-mono">STATUT SYSTÈME</div>
-                            <div class="text-mil-success font-bold tracking-wider">EN LIGNE</div>
-                        </div>
-                        <div class="h-10 w-px bg-mil-border hidden md:block"></div>
-                        <div class="text-right">
-                             <div class="text-xs text-mil-dim font-mono">SÉCURITÉ</div>
-                             <div class="text-white font-mono text-sm"><i class="fas fa-lock text-mil-neonBlue mr-1"></i> CHIFFRÉ</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </header>
-
-        <!-- Zone d'upload -->
-        <section class="mb-8">
-            <div class="flex items-center justify-between mb-2">
-                <h2 class="text-lg font-mono text-mil-neonBlue uppercase flex items-center">
-                    <i class="fas fa-download mr-2"></i> Importation Données
-                </h2>
-                <span class="text-xs text-mil-dim border border-mil-border px-2 py-0.5 rounded">FORMAT CSV REQUIS</span>
-            </div>
-
-            <div id="dropZone" class="relative bg-mil-panel border-2 border-dashed border-mil-border rounded-lg p-10 text-center transition-all duration-300 cursor-pointer hover:border-mil-neonBlue hover:shadow-neon-blue group">
-                <div class="scanline opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                
-                <div class="relative z-10">
-                    <i class="fas fa-microchip text-5xl text-mil-dim mb-4 group-hover:text-mil-neonBlue transition-colors"></i>
-                    <p class="text-gray-400 text-lg font-mono mb-2 group-hover:text-white">
-                        [ INITIER TRANSFERT FICHIER ]
+<body class="bg-gray-100 font-sans">
+    <div class="container mx-auto px-4 py-8">
+        <!-- En-tête -->
+        <div class="bg-gradient-to-r from-blue-900 to-blue-700 rounded-xl shadow-lg p-6 mb-8 text-white">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h1 class="text-3xl font-bold flex items-center">
+                        <i class="fas fa-umbrella-beach mr-3"></i>
+                        Municipales 2026 · DROM-COM
+                    </h1>
+                    <p class="text-blue-100 mt-2">
+                        <i class="fas fa-database mr-2"></i>
+                        Données officielles data.gouv.fr
                     </p>
-                    <p class="text-sm text-mil-dim mb-6">
-                        Glissez-déposez le fichier CSV dans la zone sécurisée
-                    </p>
-                    <button onclick="document.getElementById('fileInput').click()" 
-                            class="bg-transparent border border-mil-neonBlue text-mil-neonBlue px-8 py-2 rounded font-mono text-sm hover:bg-mil-neonBlue hover:text-black transition-all shadow-[0_0_10px_rgba(0,243,255,0.2)] hover:shadow-[0_0_20px_rgba(0,243,255,0.6)] uppercase tracking-widest">
-                        Sélectionner Source
-                    </button>
-                    <input type="file" id="fileInput" accept=".csv" class="hidden" onchange="handleFile(this.files[0])">
                 </div>
-            </div>
-
-            <!-- Info fichier chargé -->
-            <div id="fileInfo" class="mt-4 p-4 bg-mil-panel border-l-4 border-mil-success hidden relative overflow-hidden">
-                <div class="absolute top-0 right-0 p-2 opacity-20">
-                    <i class="fas fa-check-circle text-4xl text-mil-success"></i>
+                <div class="bg-white/20 backdrop-blur rounded-lg px-4 py-2">
+                    <i class="fas fa-check-circle mr-2"></i>
+                    Structure CSV validée
                 </div>
-                <div class="flex items-center relative z-10">
-                    <i class="fas fa-database text-mil-success mr-3 text-xl animate-bounce"></i>
-                    <div>
-                        <p class="font-mono font-medium text-white" id="fileName"></p>
-                        <p class="text-sm text-mil-dim" id="fileStats"></p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Barre de progression -->
-        <div id="loadingStatus" class="bg-mil-panel border border-mil-border p-6 mb-8 hidden relative overflow-hidden">
-            <div class="absolute inset-0 bg-mil-neonBlue/5 z-0"></div>
-            <div class="relative z-10">
-                <div class="flex items-center justify-between mb-2">
-                    <h2 class="text-sm font-mono text-mil-neonBlue uppercase">
-                        <i class="fas fa-cog fa-spin mr-2"></i> Traitement des données...
-                    </h2>
-                    <span id="progressPercentage" class="text-sm font-mono text-white">0%</span>
-                </div>
-                <div class="w-full bg-black h-4 border border-mil-border relative overflow-hidden">
-                    <div class="absolute inset-0 w-full h-full" style="background-image: linear-gradient(90deg, transparent 50%, #1e293b 50%); background-size: 4px 100%; opacity: 0.3;"></div>
-                    <div id="progressBar" class="bg-gradient-to-r from-blue-600 to-mil-neonBlue h-full transition-all duration-100 relative" style="width: 0%">
-                        <div class="absolute right-0 top-0 bottom-0 w-1 bg-white shadow-[0_0_10px_white]"></div>
-                    </div>
-                </div>
-                <p id="statusMessage" class="text-xs font-mono text-mil-dim mt-2 text-right">
-                    > INITIALISATION DU PARSER...
-                </p>
             </div>
         </div>
 
-        <!-- Cartes statistiques -->
-        <div id="statsCards" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8 hidden"></div>
+        <!-- Zone d'upload -->
+        <div class="bg-white rounded-xl shadow-lg p-6 mb-8">
+            <h2 class="text-lg font-semibold text-gray-800 mb-4">
+                <i class="fas fa-cloud-upload-alt mr-2 text-blue-600"></i>
+                Chargement du fichier CSV
+            </h2>
+            
+            <div class="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-blue-500 transition-colors"
+                 id="dropZone">
+                <i class="fas fa-file-csv text-5xl text-gray-400 mb-3"></i>
+                <p class="text-gray-600 text-lg mb-2">
+                    Glissez-déposez votre fichier CSV ici
+                </p>
+                <p class="text-sm text-gray-500 mb-4">
+                    ou
+                </p>
+                <button onclick="document.getElementById('fileInput').click()" 
+                        class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700">
+                    <i class="fas fa-folder-open mr-2"></i>
+                    Sélectionner le fichier
+                </button>
+                <input type="file" id="fileInput" accept=".csv" class="hidden" onchange="handleFile(this.files[0])">
+                <p class="text-xs text-gray-400 mt-4">
+                    Format attendu : Code département;Département;Code circonscription;Circonscription;...
+                </p>
+            </div>
 
-        <!-- Barre de recherche globale -->
-        <div id="searchSection" class="bg-mil-panel border border-mil-border p-4 mb-8 hidden">
-            <div class="flex items-center gap-3">
-                <i class="fas fa-search text-mil-neonBlue"></i>
-                <input type="text" 
-                       id="globalSearch" 
-                       placeholder="RECHERCHE GLOBALE : nom, prénom, commune, liste, parti..." 
-                       class="flex-1 tactical-input rounded px-4 py-3 text-sm font-mono"
-                       autocomplete="off">
-                <button onclick="clearGlobalSearch()" class="text-mil-dim hover:text-white transition-colors px-3">
-                    <i class="fas fa-times"></i>
+            <!-- Info fichier chargé -->
+            <div id="fileInfo" class="mt-4 p-4 bg-green-50 border border-green-200 rounded-lg hidden">
+                <div class="flex items-center">
+                    <i class="fas fa-check-circle text-green-500 mr-3 text-xl"></i>
+                    <div>
+                        <p class="font-medium text-green-800" id="fileName"></p>
+                        <p class="text-sm text-green-600" id="fileStats"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Barre de progression -->
+        <div id="loadingStatus" class="bg-white rounded-xl shadow-lg p-6 mb-8 hidden">
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="text-lg font-semibold text-gray-700">
+                    <i class="fas fa-sync-alt fa-spin mr-2 text-blue-600"></i>
+                    Traitement du fichier...
+                </h2>
+                <span id="progressPercentage" class="text-sm font-medium text-blue-600">0%</span>
+            </div>
+            <div class="w-full bg-gray-200 rounded-full h-2.5">
+                <div id="progressBar" class="bg-blue-600 h-2.5 rounded-full transition-all duration-300" style="width: 0%"></div>
+            </div>
+            <p id="statusMessage" class="text-sm text-gray-500 mt-3">
+                Lecture du fichier en cours...
+            </p>
+        </div>
+
+        <!-- Cartes statistiques -->
+        <div id="statsCards" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8 hidden"></div>
+
+        <!-- Filtres -->
+        <div id="filtersSection" class="bg-white rounded-xl shadow-lg p-6 mb-8 hidden">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        <i class="fas fa-map-marker-alt mr-1 text-blue-500"></i> Département
+                    </label>
+                    <select id="filterDepartement" class="w-full border rounded-lg px-3 py-2">
+                        <option value="">Tous les DROM-COM</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        <i class="fas fa-city mr-1 text-blue-500"></i> Commune
+                    </label>
+                    <input type="text" id="filterCommune" placeholder="Nom de la commune" 
+                           class="w-full border rounded-lg px-3 py-2">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        <i class="fas fa-venus-mars mr-1 text-blue-500"></i> Sexe
+                    </label>
+                    <select id="filterSexe" class="w-full border rounded-lg px-3 py-2">
+                        <option value="">Tous</option>
+                        <option value="M">Homme</option>
+                        <option value="F">Femme</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        <i class="fas fa-flag mr-1 text-blue-500"></i> Tête de liste
+                    </label>
+                    <select id="filterTeteListe" class="w-full border rounded-lg px-3 py-2">
+                        <option value="">Tous</option>
+                        <option value="OUI">Oui</option>
+                        <option value="">Non</option>
+                    </select>
+                </div>
+            </div>
+            <div class="flex justify-between items-center mt-4">
+                <p id="resultCount" class="text-sm text-gray-600">
+                    <i class="fas fa-users mr-1"></i>
+                    <span id="candidateCount">0</span> candidats affichés
+                </p>
+                <button onclick="resetFilters()" class="text-gray-600 hover:text-gray-800">
+                    <i class="fas fa-undo mr-1"></i> Réinitialiser
                 </button>
             </div>
         </div>
 
-        <!-- Panneau de Contrôle Avancé (Filtres) -->
-        <div id="filtersSection" class="bg-mil-panel border border-mil-border p-6 mb-8 relative hidden">
-            <div class="absolute top-0 left-1/2 transform -translate-x-1/2 w-24 h-1 bg-mil-neonRed shadow-[0_0_10px_#ff003c]"></div>
-            
-            <div class="flex items-center justify-between mb-6 border-b border-mil-border pb-2">
-                <h2 class="text-sm font-mono text-mil-neonBlue uppercase">
-                    <i class="fas fa-filter mr-2"></i> FILTRES AVANCÉS
+        <!-- Tableau des candidats -->
+        <div id="tableSection" class="bg-white rounded-xl shadow-lg overflow-hidden hidden">
+            <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
+                <h2 class="text-xl font-semibold text-gray-800">
+                    <i class="fas fa-list-ul mr-2 text-blue-600"></i>
+                    Candidats dans les DROM-COM
+                    <span id="totalCandidates" class="ml-3 text-sm font-normal text-gray-500"></span>
                 </h2>
-                <div class="flex gap-2">
-                    <span id="activeFiltersCount" class="text-xs text-mil-dim"></span>
-                    <button onclick="resetAllFilters()" class="text-xs text-mil-dim hover:text-white font-mono transition-colors">
-                        [ RÉINITIALISER ]
-                    </button>
-                </div>
             </div>
-
-            <!-- Ligne 1 : Filtres principaux -->
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
-                <!-- Département -->
-                <div class="relative">
-                    <label class="block text-xs font-mono text-mil-dim mb-2 uppercase">
-                        <i class="fas fa-map-marker-alt mr-1 text-mil-neonBlue"></i> Département
-                    </label>
-                    <div class="relative">
-                        <select id="filterDepartement" class="w-full tactical-input rounded px-3 py-2 appearance-none cursor-pointer">
-                            <option value="">TOUS</option>
-                        </select>
-                        <div class="absolute right-3 top-3 pointer-events-none text-mil-neonBlue">
-                            <i class="fas fa-caret-down"></i>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Commune -->
-                <div>
-                    <label class="block text-xs font-mono text-mil-dim mb-2 uppercase">
-                        <i class="fas fa-city mr-1 text-mil-neonBlue"></i> Commune
-                    </label>
-                    <input type="text" id="filterCommune" placeholder="Nom de la commune..." 
-                           class="w-full tactical-input rounded px-3 py-2 font-mono text-sm">
-                </div>
-
-                <!-- Nuance politique / Parti -->
-                <div class="relative">
-                    <label class="block text-xs font-mono text-mil-dim mb-2 uppercase">
-                        <i class="fas fa-flag mr-1 text-mil-neonBlue"></i> Nuance politique
-                    </label>
-                    <div class="relative">
-                        <select id="filterNuance" class="w-full tactical-input rounded px-3 py-2 appearance-none cursor-pointer">
-                            <option value="">TOUTES</option>
-                        </select>
-                        <div class="absolute right-3 top-3 pointer-events-none text-mil-neonBlue">
-                            <i class="fas fa-caret-down"></i>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Liste -->
-                <div>
-                    <label class="block text-xs font-mono text-mil-dim mb-2 uppercase">
-                        <i class="fas fa-list mr-1 text-mil-neonBlue"></i> Nom de liste
-                    </label>
-                    <input type="text" id="filterListe" placeholder="Rechercher une liste..." 
-                           class="w-full tactical-input rounded px-3 py-2 font-mono text-sm">
-                </div>
-            </div>
-
-            <!-- Ligne 2 : Filtres secondaires -->
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
-                <!-- Sexe -->
-                <div class="relative">
-                    <label class="block text-xs font-mono text-mil-dim mb-2 uppercase">
-                        <i class="fas fa-venus-mars mr-1 text-mil-neonBlue"></i> Sexe
-                    </label>
-                    <div class="relative">
-                        <select id="filterSexe" class="w-full tactical-input rounded px-3 py-2 appearance-none cursor-pointer">
-                            <option value="">TOUS</option>
-                            <option value="M">HOMME</option>
-                            <option value="F">FEMME</option>
-                        </select>
-                        <div class="absolute right-3 top-3 pointer-events-none text-mil-neonBlue">
-                            <i class="fas fa-caret-down"></i>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Tête de liste -->
-                <div class="relative">
-                    <label class="block text-xs font-mono text-mil-dim mb-2 uppercase">
-                        <i class="fas fa-star mr-1 text-mil-neonBlue"></i> Tête de liste
-                    </label>
-                    <div class="relative">
-                        <select id="filterTeteListe" class="w-full tactical-input rounded px-3 py-2 appearance-none cursor-pointer">
-                            <option value="">TOUS</option>
-                            <option value="OUI">CHEF DE LISTE</option>
-                            <option value="NON">SUBALTERNE</option>
-                        </select>
-                        <div class="absolute right-3 top-3 pointer-events-none text-mil-neonBlue">
-                            <i class="fas fa-caret-down"></i>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Position dans la liste -->
-                <div class="relative">
-                    <label class="block text-xs font-mono text-mil-dim mb-2 uppercase">
-                        <i class="fas fa-sort-numeric-down mr-1 text-mil-neonBlue"></i> Position
-                    </label>
-                    <div class="relative">
-                        <select id="filterPosition" class="w-full tactical-input rounded px-3 py-2 appearance-none cursor-pointer">
-                            <option value="">TOUTES</option>
-                            <option value="1">TÊTES DE LISTE (1)</option>
-                            <option value="2-5">ÉLIGIBLES (2-5)</option>
-                            <option value="6+">COMPLÉMENTS (6+)</option>
-                        </select>
-                        <div class="absolute right-3 top-3 pointer-events-none text-mil-neonBlue">
-                            <i class="fas fa-caret-down"></i>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Ordre de tri -->
-                <div class="relative">
-                    <label class="block text-xs font-mono text-mil-dim mb-2 uppercase">
-                        <i class="fas fa-sort-amount-down mr-1 text-mil-neonBlue"></i> Trier par
-                    </label>
-                    <div class="relative">
-                        <select id="sortOrder" class="w-full tactical-input rounded px-3 py-2 appearance-none cursor-pointer">
-                            <option value="commune_asc">Commune (A-Z)</option>
-                            <option value="commune_desc">Commune (Z-A)</option>
-                            <option value="nom_asc">Nom (A-Z)</option>
-                            <option value="nom_desc">Nom (Z-A)</option>
-                            <option value="ordre_asc">Position (croissant)</option>
-                            <option value="ordre_desc">Position (décroissant)</option>
-                            <option value="departement_asc">Département (A-Z)</option>
-                        </select>
-                        <div class="absolute right-3 top-3 pointer-events-none text-mil-neonBlue">
-                            <i class="fas fa-caret-down"></i>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Export -->
-                <div class="flex items-end">
-                    <button onclick="exportFilteredData()" class="w-full bg-transparent border border-mil-success text-mil-success px-3 py-2 rounded font-mono text-sm hover:bg-mil-success hover:text-black transition-all">
-                        <i class="fas fa-download mr-2"></i> EXPORTER
-                    </button>
-                </div>
-            </div>
-
-            <!-- Filtres actifs -->
-            <div id="activeFilters" class="flex flex-wrap gap-2 mt-4 min-h-[32px]"></div>
-
-            <!-- Résumé des résultats -->
-            <div class="mt-4 flex justify-between items-center border-t border-mil-border pt-4">
-                <div class="text-xs font-mono text-mil-dim">
-                    <i class="fas fa-database mr-1"></i>
-                    TOTAL BASE: <span id="totalBaseCount">0</span> CANDIDATS
-                </div>
-                <div class="bg-black/50 px-4 py-2 rounded border border-mil-border inline-flex items-center">
-                    <span class="w-2 h-2 rounded-full bg-mil-neonBlue mr-2 animate-pulse"></span>
-                    <span class="text-xs font-mono text-white">RÉSULTATS: <span id="candidateCount" class="text-mil-neonBlue font-bold text-lg ml-1">0</span></span>
-                </div>
-            </div>
-        </div>
-
-        <!-- Tableau de données -->
-        <div id="tableSection" class="bg-mil-panel border border-mil-border rounded-lg overflow-hidden hidden shadow-2xl relative">
-            <div class="px-6 py-4 bg-mil-bg border-b border-mil-border flex justify-between items-center sticky top-0 z-20">
-                <h2 class="text-sm font-mono text-white uppercase tracking-widest flex items-center">
-                    <i class="fas fa-list mr-2 text-mil-neonRed"></i>
-                    Liste du Personnel Candidat
-                </h2>
-                <div class="flex items-center gap-4">
-                    <span id="tableInfo" class="text-xs font-mono text-mil-dim">
-                        <span id="tableStart">0</span>-<span id="tableEnd">0</span>/<span id="tableTotal">0</span>
-                    </span>
-                    <span id="totalCandidates" class="text-xs font-mono text-mil-dim bg-black px-2 py-1 rounded border border-mil-border"></span>
-                </div>
-            </div>
-            
-            <div class="overflow-x-auto max-h-[600px] overflow-y-auto relative">
-                <table class="w-full tactical-table text-left border-collapse">
-                    <thead class="sticky top-0 z-10 shadow-lg">
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
                         <tr>
-                            <th class="p-4 pl-6">#</th>
-                            <th class="p-4">Nom</th>
-                            <th class="p-4">Prénom</th>
-                            <th class="p-4 text-mil-neonBlue">Département</th>
-                            <th class="p-4">Commune</th>
-                            <th class="p-4">Liste</th>
-                            <th class="p-4">Nuance</th>
-                            <th class="p-4 text-center">Statut</th>
-                            <th class="p-4 text-center">Rang</th>
-                            <th class="p-4 text-center">Sexe</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Nom</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Prénom</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Département</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Commune</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Liste</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Tête de liste</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Ordre</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Sexe</th>
                         </tr>
                     </thead>
-                    <tbody id="candidatesTableBody" class="font-mono text-sm divide-y divide-mil-border"></tbody>
+                    <tbody id="candidatesTableBody" class="bg-white divide-y divide-gray-200">
+                        <tr>
+                            <td colspan="8" class="px-6 py-12 text-center text-gray-500">
+                                <i class="fas fa-upload text-3xl mb-3 text-gray-400"></i>
+                                <p>Chargez votre fichier CSV pour voir les données</p>
+                            </td>
+                        </tr>
+                    </tbody>
                 </table>
-            </div>
-
-            <!-- Pagination -->
-            <div id="paginationSection" class="bg-mil-bg px-6 py-3 border-t border-mil-border flex items-center justify-between">
-                <div class="flex items-center gap-2">
-                    <span class="text-xs text-mil-dim">Lignes/page:</span>
-                    <select id="pageSize" class="bg-mil-panel border border-mil-border text-white text-xs rounded px-2 py-1" onchange="changePageSize()">
-                        <option value="50">50</option>
-                        <option value="100" selected>100</option>
-                        <option value="250">250</option>
-                        <option value="500">500</option>
-                        <option value="1000">1000</option>
-                    </select>
-                </div>
-                <div class="flex gap-2">
-                    <button onclick="changePage('first')" class="px-3 py-1 border border-mil-border rounded hover:bg-mil-neonBlue/20 disabled:opacity-50" id="firstPage">
-                        <i class="fas fa-angle-double-left"></i>
-                    </button>
-                    <button onclick="changePage('prev')" class="px-3 py-1 border border-mil-border rounded hover:bg-mil-neonBlue/20 disabled:opacity-50" id="prevPage">
-                        <i class="fas fa-angle-left"></i>
-                    </button>
-                    <span id="pageInfo" class="px-4 py-1 text-xs font-mono text-mil-neonBlue">Page 1</span>
-                    <button onclick="changePage('next')" class="px-3 py-1 border border-mil-border rounded hover:bg-mil-neonBlue/20 disabled:opacity-50" id="nextPage">
-                        <i class="fas fa-angle-right"></i>
-                    </button>
-                    <button onclick="changePage('last')" class="px-3 py-1 border border-mil-border rounded hover:bg-mil-neonBlue/20 disabled:opacity-50" id="lastPage">
-                        <i class="fas fa-angle-double-right"></i>
-                    </button>
-                </div>
             </div>
         </div>
     </div>
 
-    <!-- Pied de page -->
-    <footer class="border-t border-mil-border bg-mil-bg py-6 mt-8">
-        <div class="container mx-auto px-4 text-center">
-            <p class="text-xs text-mil-dim font-mono">
-                SYSTÈME DE SURVEILLANCE ÉLECTORALE 2026 // <span class="text-mil-neonBlue">RECHERCHE AVANCÉE ACTIVE</span>
-            </p>
-            <div class="flex justify-center gap-4 mt-2">
-                <div class="h-1 w-1 bg-mil-neonBlue rounded-full animate-ping"></div>
-                <div class="h-1 w-1 bg-white rounded-full animate-ping delay-75"></div>
-                <div class="h-1 w-1 bg-mil-neonRed rounded-full animate-ping delay-150"></div>
-            </div>
-        </div>
-    </footer>
-
     <script>
-        // --- Configuration & Données ---
+        // Codes des DROM-COM
         const DROM_COM = {
-            '971': 'GUADELOUPE', '972': 'MARTINIQUE', '973': 'GUYANE',
-            '974': 'LA RÉUNION', '976': 'MAYOTTE', '975': 'ST-PIERRE',
-            '977': 'ST-BARTH', '978': 'ST-MARTIN', '986': 'WALLIS',
-            '987': 'POLYNÉSIE', '988': 'CALÉDONIE'
-        };
-
-        const NUANCES_LIBELLES = {
-            'LDIV': 'DIVERS',
-            'LDVC': 'CENTRE',
-            'LDVG': 'GAUCHE',
-            'LDVD': 'DROITE',
-            'LLR': 'LR',
-            'LSOC': 'SOCIALISTE',
-            'LFI': 'FI',
-            'LRN': 'RN',
-            'LREM': 'RENAISSANCE',
-            'LUDI': 'UDI',
-            'LECO': 'ÉCOLOGISTE',
-            'LCOM': 'COMMUNISTE',
-            'LDVD': 'DVD'
+            '971': 'Guadeloupe',
+            '972': 'Martinique',
+            '973': 'Guyane',
+            '974': 'La Réunion',
+            '976': 'Mayotte',
+            '975': 'Saint-Pierre-et-Miquelon',
+            '977': 'Saint-Barthélemy',
+            '978': 'Saint-Martin',
+            '986': 'Wallis-et-Futuna',
+            '987': 'Polynésie française',
+            '988': 'Nouvelle-Calédonie'
         };
 
         let allCandidates = [];
         let filteredCandidates = [];
-        let currentPage = 1;
-        let pageSize = 100;
-        let filterTimeout;
 
-        // --- Gestion Toast ---
-        function showToast(message, type = 'info') {
-            const container = document.getElementById('toast-container');
-            const toast = document.createElement('div');
-            
-            let borderColor = type === 'error' ? 'border-mil-neonRed' : (type === 'success' ? 'border-mil-success' : 'border-mil-neonBlue');
-            let icon = type === 'error' ? 'fa-times-circle' : (type === 'success' ? 'fa-check-circle' : 'fa-info-circle');
-
-            toast.className = `bg-mil-panel border-l-4 ${borderColor} text-white p-4 rounded shadow-lg flex items-center gap-3 min-w-[300px] pointer-events-auto transform transition-all duration-300 translate-x-full opacity-0`;
-            toast.innerHTML = `
-                <i class="fas ${icon} ${type === 'error' ? 'text-mil-neonRed' : type === 'success' ? 'text-mil-success' : 'text-mil-neonBlue'}"></i>
-                <div class="font-mono text-sm">${message}</div>
-            `;
-
-            container.appendChild(toast);
-            requestAnimationFrame(() => {
-                toast.classList.remove('translate-x-full', 'opacity-0');
-            });
-            setTimeout(() => {
-                toast.classList.add('translate-x-full', 'opacity-0');
-                setTimeout(() => toast.remove(), 300);
-            }, 4000);
-        }
-
-        // --- Gestion Drag & Drop ---
+        // Gestion du drop
         const dropZone = document.getElementById('dropZone');
         
-        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
-            dropZone.addEventListener(eventName, preventDefaults, false);
-        });
-
-        function preventDefaults(e) {
+        dropZone.addEventListener('dragover', (e) => {
             e.preventDefault();
-            e.stopPropagation();
-        }
-
-        ['dragenter', 'dragover'].forEach(eventName => {
-            dropZone.addEventListener(eventName, () => {
-                dropZone.classList.add('border-mil-neonBlue', 'bg-mil-panel/80');
-            }, false);
+            dropZone.classList.add('border-blue-500', 'bg-blue-50');
         });
 
-        ['dragleave', 'drop'].forEach(eventName => {
-            dropZone.addEventListener(eventName, () => {
-                dropZone.classList.remove('border-mil-neonBlue', 'bg-mil-panel/80');
-            }, false);
+        dropZone.addEventListener('dragleave', () => {
+            dropZone.classList.remove('border-blue-500', 'bg-blue-50');
         });
 
         dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('border-blue-500', 'bg-blue-50');
             const file = e.dataTransfer.files[0];
             if (file && file.name.endsWith('.csv')) {
                 handleFile(file);
             } else {
-                showToast('Erreur: Format de fichier invalide. CSV requis.', 'error');
+                alert('Veuillez sélectionner un fichier CSV');
             }
         });
 
+        // Gestion du fichier sélectionné
         function handleFile(file) {
             if (!file) return;
             
-            document.getElementById('fileName').textContent = file.name.toUpperCase();
+            // Afficher les infos du fichier
+            document.getElementById('fileName').textContent = file.name;
             document.getElementById('fileInfo').classList.remove('hidden');
-            document.getElementById('searchSection').classList.remove('hidden');
             
+            // Lire et parser le fichier
             parseCSV(file);
         }
 
         function parseCSV(file) {
             showLoading(true);
-            updateProgress(10, "MONTÉE DE CHARGE...");
             
             Papa.parse(file, {
                 delimiter: ";",
                 header: true,
                 skipEmptyLines: true,
                 encoding: "UTF-8",
-                chunk: function(results, parser) {
-                    // Traitement progressif
-                    const chunkCandidates = results.data
-                        .filter(row => {
-                            const codeDep = row['Code département'];
-                            return codeDep && DROM_COM[codeDep];
-                        })
-                        .map(row => ({
-                            codeDep: row['Code département'],
-                            departement: DROM_COM[row['Code département']] || row['Département'],
-                            commune: row['Circonscription'] || '',
-                            liste: row['Libellé abrégé de liste'] || row['Libellé de la liste'] || '',
-                            teteDeListe: row['Tête de liste'] || 'NON',
-                            ordre: parseInt(row['Ordre']) || 0,
-                            sexe: row['Sexe'] || '',
-                            nom: row['Nom sur le bulletin de vote'] || '',
-                            prenom: row['Prénom sur le bulletin de vote'] || '',
-                            nuance: row['Code nuance de liste'] || 'LDIV',
-                            nuanceLibelle: NUANCES_LIBELLES[row['Code nuance de liste']] || row['Code nuance de liste'] || 'DIV'
-                        }))
-                        .filter(c => c.nom && c.nom !== '');
-                    
-                    allCandidates = [...allCandidates, ...chunkCandidates];
-                    
-                    // Mise à jour progression
-                    const progress = (parser.stream._bytesRead / parser.stream._input.length) * 100;
-                    updateProgress(progress, `TRAITEMENT: ${allCandidates.length} ENREGISTREMENTS`);
-                },
-                complete: function() {
-                    updateProgress(100, "ANALYSE TERMINÉE");
-                    setTimeout(() => {
-                        if (allCandidates.length === 0) {
-                            showToast('Aucune donnée DROM-COM détectée.', 'error');
-                            showLoading(false);
-                            return;
-                        }
-                        
-                        document.getElementById('fileStats').innerHTML = `
-                            ${allCandidates.length.toLocaleString()} ENREGISTREMENTS TROUVÉS
-                        `;
-                        document.getElementById('totalBaseCount').textContent = allCandidates.length.toLocaleString();
-
-                        initializeDashboard();
-                        showLoading(false);
-                        showToast('Données importées avec succès', 'success');
-                    }, 500);
+                complete: function(results) {
+                    processData(results.data);
                 },
                 error: function(error) {
-                    showToast('Erreur critique: ' + error.message, 'error');
+                    alert('Erreur lors de la lecture du fichier: ' + error);
                     showLoading(false);
                 }
             });
         }
 
-        function updateProgress(percent, msg) {
-            document.getElementById('progressBar').style.width = percent + '%';
-            document.getElementById('progressPercentage').textContent = Math.round(percent) + '%';
-            document.getElementById('statusMessage').textContent = '> ' + msg;
-        }
+        function processData(data) {
+            // Filtrer uniquement les DROM-COM
+            allCandidates = data
+                .filter(row => {
+                    const codeDep = row['Code département'];
+                    return codeDep && DROM_COM[codeDep];
+                })
+                .map(row => ({
+                    codeDep: row['Code département'],
+                    departement: DROM_COM[row['Code département']] || row['Département'],
+                    commune: row['Circonscription'] || '',
+                    liste: row['Libellé abrégé de liste'] || row['Libellé de la liste'] || '',
+                    teteDeListe: row['Tête de liste'] || '',
+                    ordre: row['Ordre'] || '',
+                    sexe: row['Sexe'] || '',
+                    nom: row['Nom sur le bulletin de vote'] || '',
+                    prenom: row['Prénom sur le bulletin de vote'] || '',
+                    nuance: row['Code nuance de liste'] || '',
+                    nationalite: row['Nationalité'] || 'Française'
+                }))
+                .filter(c => c.nom && c.nom !== ''); // Garder seulement les entrées valides
 
-        function showLoading(show) {
-            document.getElementById('loadingStatus').classList.toggle('hidden', !show);
+            if (allCandidates.length === 0) {
+                alert('Aucun candidat des DROM-COM trouvé dans le fichier');
+                showLoading(false);
+                return;
+            }
+
+            // Mise à jour des stats
+            document.getElementById('fileStats').innerHTML = `
+                ${allCandidates.length} candidats trouvés dans les DROM-COM
+            `;
+
+            showLoading(false);
+            initializeDashboard();
         }
 
         function initializeDashboard() {
+            // Afficher les sections
             document.getElementById('statsCards').classList.remove('hidden');
             document.getElementById('filtersSection').classList.remove('hidden');
             document.getElementById('tableSection').classList.remove('hidden');
@@ -691,206 +296,86 @@
         }
 
         function updateFilters() {
-            // Départements
-            const deptSet = new Set(allCandidates.map(c => c.codeDep));
-            const deptSelect = document.getElementById('filterDepartement');
-            deptSelect.innerHTML = '<option value="">TOUS</option>';
-            Array.from(deptSet).sort().forEach(code => {
-                deptSelect.innerHTML += `<option value="${code}">${code} // ${DROM_COM[code]}</option>`;
+            const deptSet = new Set();
+            
+            allCandidates.forEach(c => {
+                if (c.codeDep) deptSet.add(c.codeDep);
             });
-
-            // Nuances politiques
-            const nuanceSet = new Set(allCandidates.map(c => c.nuance));
-            const nuanceSelect = document.getElementById('filterNuance');
-            nuanceSelect.innerHTML = '<option value="">TOUTES</option>';
-            Array.from(nuanceSet).sort().forEach(nuance => {
-                nuanceSelect.innerHTML += `<option value="${nuance}">${NUANCES_LIBELLES[nuance] || nuance}</option>`;
+            
+            const deptSelect = document.getElementById('filterDepartement');
+            deptSelect.innerHTML = '<option value="">Tous les DROM-COM</option>';
+            Array.from(deptSet).sort().forEach(code => {
+                deptSelect.innerHTML += `<option value="${code}">${DROM_COM[code] || code}</option>`;
             });
         }
 
-        function filterAndDisplayCandidates(resetPage = true) {
-            const search = document.getElementById('globalSearch')?.value.toLowerCase() || '';
+        function filterAndDisplayCandidates() {
             const dept = document.getElementById('filterDepartement').value;
             const commune = document.getElementById('filterCommune').value.toLowerCase();
-            const nuance = document.getElementById('filterNuance').value;
-            const liste = document.getElementById('filterListe').value.toLowerCase();
             const sexe = document.getElementById('filterSexe').value;
             const teteListe = document.getElementById('filterTeteListe').value;
-            const position = document.getElementById('filterPosition').value;
             
             filteredCandidates = allCandidates.filter(c => {
-                // Recherche globale
-                if (search) {
-                    const searchable = `${c.nom} ${c.prenom} ${c.commune} ${c.liste} ${c.nuanceLibelle}`.toLowerCase();
-                    if (!searchable.includes(search)) return false;
-                }
-                
-                // Filtres
                 if (dept && c.codeDep !== dept) return false;
                 if (commune && !c.commune.toLowerCase().includes(commune)) return false;
-                if (nuance && c.nuance !== nuance) return false;
-                if (liste && !c.liste.toLowerCase().includes(liste)) return false;
                 if (sexe && c.sexe !== sexe) return false;
                 if (teteListe === 'OUI' && c.teteDeListe !== 'OUI') return false;
-                if (teteListe === 'NON' && c.teteDeListe === 'OUI') return false;
-                
-                // Position
-                if (position === '1' && c.ordre !== 1) return false;
-                if (position === '2-5' && (c.ordre < 2 || c.ordre > 5)) return false;
-                if (position === '6+' && c.ordre < 6) return false;
-                
+                if (teteListe === '' && c.teteDeListe === 'OUI') return false;
                 return true;
             });
             
-            // Tri
-            applySort();
+            document.getElementById('candidateCount').textContent = filteredCandidates.length;
+            document.getElementById('totalCandidates').textContent = `(total: ${allCandidates.length})`;
             
-            // Mise à jour UI
-            document.getElementById('candidateCount').textContent = filteredCandidates.length.toLocaleString();
-            document.getElementById('totalCandidates').textContent = `BASE: ${allCandidates.length.toLocaleString()}`;
-            document.getElementById('tableTotal').textContent = filteredCandidates.length.toLocaleString();
-            
-            updateActiveFilters();
-            
-            if (resetPage) {
-                currentPage = 1;
-            }
-            
-            displayPage();
+            displayCandidates();
         }
 
-        function applySort() {
-            const sortValue = document.getElementById('sortOrder').value;
-            const [field, direction] = sortValue.split('_');
-            
-            filteredCandidates.sort((a, b) => {
-                let valA, valB;
-                
-                switch(field) {
-                    case 'commune':
-                        valA = a.commune.toLowerCase();
-                        valB = b.commune.toLowerCase();
-                        break;
-                    case 'nom':
-                        valA = `${a.nom} ${a.prenom}`.toLowerCase();
-                        valB = `${b.nom} ${b.prenom}`.toLowerCase();
-                        break;
-                    case 'ordre':
-                        valA = a.ordre;
-                        valB = b.ordre;
-                        break;
-                    case 'departement':
-                        valA = a.departement.toLowerCase();
-                        valB = b.departement.toLowerCase();
-                        break;
-                    default:
-                        return 0;
-                }
-                
-                if (valA < valB) return direction === 'asc' ? -1 : 1;
-                if (valA > valB) return direction === 'asc' ? 1 : -1;
-                return 0;
-            });
-        }
-
-        function updateActiveFilters() {
-            const filters = [];
-            const container = document.getElementById('activeFilters');
-            
-            const search = document.getElementById('globalSearch').value;
-            const dept = document.getElementById('filterDepartement').value;
-            const commune = document.getElementById('filterCommune').value;
-            const nuance = document.getElementById('filterNuance').value;
-            const liste = document.getElementById('filterListe').value;
-            const sexe = document.getElementById('filterSexe').value;
-            const teteListe = document.getElementById('filterTeteListe').value;
-            const position = document.getElementById('filterPosition').value;
-            
-            if (search) filters.push(`<span class="inline-flex items-center px-2 py-1 text-xs bg-blue-900/50 text-mil-neonBlue border border-mil-neonBlue/30 rounded">RECHERCHE: ${search}</span>`);
-            if (dept) filters.push(`<span class="inline-flex items-center px-2 py-1 text-xs bg-purple-900/50 text-purple-400 border border-purple-500/30 rounded">${DROM_COM[dept]}</span>`);
-            if (commune) filters.push(`<span class="inline-flex items-center px-2 py-1 text-xs bg-green-900/50 text-green-400 border border-green-500/30 rounded">${commune}</span>`);
-            if (nuance) filters.push(`<span class="inline-flex items-center px-2 py-1 text-xs bg-yellow-900/50 text-yellow-400 border border-yellow-500/30 rounded">${NUANCES_LIBELLES[nuance] || nuance}</span>`);
-            if (liste) filters.push(`<span class="inline-flex items-center px-2 py-1 text-xs bg-pink-900/50 text-pink-400 border border-pink-500/30 rounded">LISTE: ${liste}</span>`);
-            if (sexe) filters.push(`<span class="inline-flex items-center px-2 py-1 text-xs bg-indigo-900/50 text-indigo-400 border border-indigo-500/30 rounded">${sexe === 'F' ? 'FEMME' : 'HOMME'}</span>`);
-            if (teteListe) filters.push(`<span class="inline-flex items-center px-2 py-1 text-xs bg-red-900/50 text-mil-neonRed border border-mil-neonRed/30 rounded">${teteListe === 'OUI' ? 'CHEF' : 'SUBALTERNE'}</span>`);
-            if (position) filters.push(`<span class="inline-flex items-center px-2 py-1 text-xs bg-gray-700 text-gray-300 border border-gray-500/30 rounded">POS: ${position}</span>`);
-            
-            container.innerHTML = filters.join(' ');
-            document.getElementById('activeFiltersCount').textContent = filters.length ? `(${filters.length} actif${filters.length > 1 ? 's' : ''})` : '';
-        }
-
-        function displayPage() {
-            const start = (currentPage - 1) * pageSize;
-            const end = Math.min(start + pageSize, filteredCandidates.length);
-            const pageData = filteredCandidates.slice(start, end);
-            
+        function displayCandidates() {
             const tbody = document.getElementById('candidatesTableBody');
             
-            if (pageData.length === 0) {
+            if (filteredCandidates.length === 0) {
                 tbody.innerHTML = `
                     <tr>
-                        <td colspan="10" class="p-12 text-center text-mil-dim">
-                            <i class="fas fa-search text-3xl mb-3 opacity-50"></i>
-                            <p class="font-mono">AUCUN RÉSULTAT</p>
+                        <td colspan="8" class="px-6 py-8 text-center text-gray-500">
+                            <i class="fas fa-search text-3xl mb-3 text-gray-400"></i>
+                            <p>Aucun candidat trouvé</p>
                         </td>
                     </tr>
                 `;
-            } else {
-                tbody.innerHTML = pageData.map((c, index) => `
-                    <tr class="hover:bg-white/5 transition-colors border-l-2 border-transparent hover:border-mil-neonBlue">
-                        <td class="p-4 pl-6 text-mil-dim">${start + index + 1}</td>
-                        <td class="p-4 font-bold text-white">${c.nom.toUpperCase()}</td>
-                        <td class="p-4 text-gray-300">${c.prenom}</td>
-                        <td class="p-4 text-mil-neonBlue">${c.departement}</td>
-                        <td class="p-4 text-gray-400">${c.commune}</td>
-                        <td class="p-4 text-xs text-gray-500 truncate max-w-[200px]" title="${c.liste}">${c.liste}</td>
-                        <td class="p-4">
-                            <span class="badge-nuance" style="background: ${getNuanceColor(c.nuance)}20; color: ${getNuanceColor(c.nuance)}; border: 1px solid ${getNuanceColor(c.nuance)}40">
-                                ${c.nuanceLibelle}
-                            </span>
-                        </td>
-                        <td class="p-4 text-center">
-                            ${c.teteDeListe === 'OUI' 
-                                ? '<span class="inline-block px-2 py-0.5 text-[10px] font-bold text-black bg-mil-neonRed rounded shadow-[0_0_8px_#ff003c]">CHEF</span>' 
-                                : '<span class="text-xs text-gray-600">-</span>'}
-                        </td>
-                        <td class="p-4 text-center text-mil-dim font-mono">#${c.ordre}</td>
-                        <td class="p-4 text-center">
-                            <i class="fas ${c.sexe === 'F' ? 'fa-venus text-pink-500' : 'fa-mars text-blue-500'}"></i>
-                        </td>
-                    </tr>
-                `).join('');
+                return;
             }
             
-            // Mise à jour pagination
-            document.getElementById('tableStart').textContent = filteredCandidates.length > 0 ? start + 1 : 0;
-            document.getElementById('tableEnd').textContent = end;
+            tbody.innerHTML = filteredCandidates.slice(0, 1000).map(c => `
+                <tr class="hover:bg-gray-50">
+                    <td class="px-6 py-3 text-sm text-gray-900">${c.nom}</td>
+                    <td class="px-6 py-3 text-sm text-gray-900">${c.prenom}</td>
+                    <td class="px-6 py-3 text-sm text-gray-500">${c.departement}</td>
+                    <td class="px-6 py-3 text-sm text-gray-500">${c.commune}</td>
+                    <td class="px-6 py-3 text-sm text-gray-500">${c.liste}</td>
+                    <td class="px-6 py-3 text-sm">
+                        <span class="px-2 py-1 text-xs font-semibold rounded-full ${c.teteDeListe === 'OUI' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}">
+                            ${c.teteDeListe || 'Non'}
+                        </span>
+                    </td>
+                    <td class="px-6 py-3 text-sm text-gray-500">${c.ordre}</td>
+                    <td class="px-6 py-3 text-sm">
+                        <span class="px-2 py-1 text-xs font-semibold rounded-full ${c.sexe === 'F' ? 'bg-pink-100 text-pink-800' : 'bg-blue-100 text-blue-800'}">
+                            ${c.sexe === 'F' ? 'Femme' : c.sexe === 'M' ? 'Homme' : '-'}
+                        </span>
+                    </td>
+                </tr>
+            `).join('');
             
-            const totalPages = Math.ceil(filteredCandidates.length / pageSize);
-            document.getElementById('pageInfo').textContent = `Page ${currentPage}/${totalPages || 1}`;
-            
-            document.getElementById('firstPage').disabled = currentPage === 1;
-            document.getElementById('prevPage').disabled = currentPage === 1;
-            document.getElementById('nextPage').disabled = currentPage === totalPages || totalPages === 0;
-            document.getElementById('lastPage').disabled = currentPage === totalPages || totalPages === 0;
-        }
-
-        function getNuanceColor(nuance) {
-            const colors = {
-                'LDIV': '#94a3b8',
-                'LDVC': '#fbbf24',
-                'LDVG': '#f87171',
-                'LDVD': '#60a5fa',
-                'LLR': '#3b82f6',
-                'LSOC': '#f97316',
-                'LFI': '#ef4444',
-                'LRN': '#1e293b',
-                'LREM': '#f59e0b',
-                'LUDI': '#8b5cf6',
-                'LECO': '#10b981',
-                'LCOM': '#dc2626'
-            };
-            return colors[nuance] || '#94a3b8';
+            if (filteredCandidates.length > 1000) {
+                tbody.innerHTML += `
+                    <tr class="bg-gray-50">
+                        <td colspan="8" class="px-6 py-3 text-center text-sm text-gray-500">
+                            <i class="fas fa-info-circle mr-1"></i>
+                            Affichage des 1000 premiers résultats (${filteredCandidates.length} au total)
+                        </td>
+                    </tr>
+                `;
+            }
         }
 
         function updateStatistics() {
@@ -899,137 +384,91 @@
             const hommes = allCandidates.filter(c => c.sexe === 'M').length;
             const teteListe = allCandidates.filter(c => c.teteDeListe === 'OUI').length;
             
-            const statsHtml = `
-                <div class="bg-mil-panel border border-mil-border p-5 relative overflow-hidden group hover:border-mil-neonBlue transition-colors">
-                    <div class="absolute right-0 top-0 p-3 opacity-10 group-hover:opacity-20 transition-opacity">
-                        <i class="fas fa-users text-6xl text-mil-neonBlue"></i>
-                    </div>
-                    <div class="relative z-10">
-                        <p class="text-xs font-mono text-mil-dim uppercase">EFFECTIF TOTAL</p>
-                        <p class="text-3xl font-bold text-white font-mono">${total.toLocaleString()}</p>
-                        <p class="text-xs text-mil-neonBlue">CANDIDATS</p>
-                    </div>
-                </div>
-                <div class="bg-mil-panel border border-mil-border p-5 relative overflow-hidden group hover:border-pink-500 transition-colors">
-                    <div class="absolute right-0 top-0 p-3 opacity-10 group-hover:opacity-20 transition-opacity">
-                        <i class="fas fa-venus text-6xl text-pink-500"></i>
-                    </div>
-                    <div class="relative z-10">
-                        <p class="text-xs font-mono text-mil-dim uppercase">FEMMES</p>
-                        <p class="text-3xl font-bold text-white font-mono">${femmes.toLocaleString()}</p>
-                        <p class="text-xs text-pink-500">${((femmes/total)*100).toFixed(1)}%</p>
-                    </div>
-                </div>
-                <div class="bg-mil-panel border border-mil-border p-5 relative overflow-hidden group hover:border-blue-500 transition-colors">
-                    <div class="absolute right-0 top-0 p-3 opacity-10 group-hover:opacity-20 transition-opacity">
-                        <i class="fas fa-mars text-6xl text-blue-500"></i>
-                    </div>
-                    <div class="relative z-10">
-                        <p class="text-xs font-mono text-mil-dim uppercase">HOMMES</p>
-                        <p class="text-3xl font-bold text-white font-mono">${hommes.toLocaleString()}</p>
-                        <p class="text-xs text-blue-500">${((hommes/total)*100).toFixed(1)}%</p>
+            // Stats par département
+            const deptStats = {};
+            allCandidates.forEach(c => {
+                if (c.departement) {
+                    deptStats[c.departement] = (deptStats[c.departement] || 0) + 1;
+                }
+            });
+            
+            const topDept = Object.entries(deptStats)
+                .sort((a, b) => b[1] - a[1])
+                .slice(0, 3)
+                .map(([dept, count]) => `${dept} (${count})`)
+                .join(', ');
+            
+            document.getElementById('statsCards').innerHTML = `
+                <div class="bg-white rounded-xl shadow p-6">
+                    <div class="flex items-center">
+                        <div class="bg-blue-100 rounded-full p-3 mr-4">
+                            <i class="fas fa-users text-blue-600 text-xl"></i>
+                        </div>
+                        <div>
+                            <p class="text-gray-500 text-sm">Total candidats</p>
+                            <p class="text-2xl font-bold">${total}</p>
+                        </div>
                     </div>
                 </div>
-                <div class="bg-mil-panel border border-mil-border p-5 relative overflow-hidden group hover:border-mil-neonRed transition-colors">
-                    <div class="absolute right-0 top-0 p-3 opacity-10 group-hover:opacity-20 transition-opacity">
-                        <i class="fas fa-star text-6xl text-mil-neonRed"></i>
+                
+                <div class="bg-white rounded-xl shadow p-6">
+                    <div class="flex items-center">
+                        <div class="bg-pink-100 rounded-full p-3 mr-4">
+                            <i class="fas fa-venus text-pink-600 text-xl"></i>
+                        </div>
+                        <div>
+                            <p class="text-gray-500 text-sm">Femmes</p>
+                            <p class="text-2xl font-bold">${femmes}</p>
+                            <p class="text-xs text-gray-400">${((femmes/total)*100).toFixed(1)}%</p>
+                        </div>
                     </div>
-                    <div class="relative z-10">
-                        <p class="text-xs font-mono text-mil-dim uppercase">CHEFS DE LISTE</p>
-                        <p class="text-3xl font-bold text-white font-mono">${teteListe.toLocaleString()}</p>
-                        <p class="text-xs text-mil-neonRed">${((teteListe/total)*100).toFixed(1)}%</p>
+                </div>
+                
+                <div class="bg-white rounded-xl shadow p-6">
+                    <div class="flex items-center">
+                        <div class="bg-blue-100 rounded-full p-3 mr-4">
+                            <i class="fas fa-mars text-blue-600 text-xl"></i>
+                        </div>
+                        <div>
+                            <p class="text-gray-500 text-sm">Hommes</p>
+                            <p class="text-2xl font-bold">${hommes}</p>
+                            <p class="text-xs text-gray-400">${((hommes/total)*100).toFixed(1)}%</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-xl shadow p-6">
+                    <div class="flex items-center">
+                        <div class="bg-green-100 rounded-full p-3 mr-4">
+                            <i class="fas fa-star text-green-600 text-xl"></i>
+                        </div>
+                        <div>
+                            <p class="text-gray-500 text-sm">Têtes de liste</p>
+                            <p class="text-2xl font-bold">${teteListe}</p>
+                            <p class="text-xs text-gray-400">Top: ${topDept}</p>
+                        </div>
                     </div>
                 </div>
             `;
-            
-            document.getElementById('statsCards').innerHTML = statsHtml;
         }
 
-        // --- Pagination ---
-        function changePage(direction) {
-            const totalPages = Math.ceil(filteredCandidates.length / pageSize);
-            if (direction === 'first') currentPage = 1;
-            if (direction === 'prev' && currentPage > 1) currentPage--;
-            if (direction === 'next' && currentPage < totalPages) currentPage++;
-            if (direction === 'last') currentPage = totalPages;
-            displayPage();
+        function showLoading(show) {
+            document.getElementById('loadingStatus').classList.toggle('hidden', !show);
         }
 
-        function changePageSize() {
-            pageSize = parseInt(document.getElementById('pageSize').value);
-            currentPage = 1;
-            displayPage();
-        }
-
-        // --- Export ---
-        function exportFilteredData() {
-            if (filteredCandidates.length === 0) {
-                showToast('Aucune donnée à exporter', 'error');
-                return;
-            }
-            
-            const headers = ['Nom', 'Prénom', 'Département', 'Commune', 'Liste', 'Nuance', 'Tête de liste', 'Ordre', 'Sexe'];
-            const csvContent = [
-                headers.join(';'),
-                ...filteredCandidates.map(c => 
-                    [
-                        c.nom,
-                        c.prenom,
-                        c.departement,
-                        c.commune,
-                        `"${c.liste.replace(/"/g, '""')}"`,
-                        c.nuanceLibelle,
-                        c.teteDeListe,
-                        c.ordre,
-                        c.sexe
-                    ].join(';')
-                )
-            ].join('\n');
-            
-            const blob = new Blob(['\uFEFF' + csvContent], { type: 'text/csv;charset=utf-8;' });
-            const link = document.createElement('a');
-            link.href = URL.createObjectURL(blob);
-            link.download = `candidats_drom_com_${new Date().toISOString().slice(0,10)}.csv`;
-            link.click();
-            showToast('Export terminé', 'success');
-        }
-
-        // --- Reset ---
-        function resetAllFilters() {
-            document.getElementById('globalSearch').value = '';
+        function resetFilters() {
             document.getElementById('filterDepartement').value = '';
             document.getElementById('filterCommune').value = '';
-            document.getElementById('filterNuance').value = '';
-            document.getElementById('filterListe').value = '';
             document.getElementById('filterSexe').value = '';
             document.getElementById('filterTeteListe').value = '';
-            document.getElementById('filterPosition').value = '';
-            document.getElementById('sortOrder').value = 'commune_asc';
-            
-            filterAndDisplayCandidates(true);
-            showToast('Filtres réinitialisés');
+            filterAndDisplayCandidates();
         }
 
-        function clearGlobalSearch() {
-            document.getElementById('globalSearch').value = '';
-            filterAndDisplayCandidates(true);
-        }
-
-        // --- Event Listeners avec debounce ---
-        function debounceFilter() {
-            clearTimeout(filterTimeout);
-            filterTimeout = setTimeout(() => filterAndDisplayCandidates(true), 300);
-        }
-
-        document.getElementById('globalSearch')?.addEventListener('input', debounceFilter);
-        document.getElementById('filterDepartement').addEventListener('change', () => filterAndDisplayCandidates(true));
-        document.getElementById('filterCommune').addEventListener('input', debounceFilter);
-        document.getElementById('filterNuance').addEventListener('change', () => filterAndDisplayCandidates(true));
-        document.getElementById('filterListe').addEventListener('input', debounceFilter);
-        document.getElementById('filterSexe').addEventListener('change', () => filterAndDisplayCandidates(true));
-        document.getElementById('filterTeteListe').addEventListener('change', () => filterAndDisplayCandidates(true));
-        document.getElementById('filterPosition').addEventListener('change', () => filterAndDisplayCandidates(true));
-        document.getElementById('sortOrder').addEventListener('change', () => filterAndDisplayCandidates(true));
+        // Écouteurs d'événements
+        document.getElementById('filterDepartement').addEventListener('change', filterAndDisplayCandidates);
+        document.getElementById('filterCommune').addEventListener('input', filterAndDisplayCandidates);
+        document.getElementById('filterSexe').addEventListener('change', filterAndDisplayCandidates);
+        document.getElementById('filterTeteListe').addEventListener('change', filterAndDisplayCandidates);
     </script>
 </body>
 </html>
