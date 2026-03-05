@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SYSTEME TACTIQUE :: Municipales 2026 - DROM-COM</title>
+    <title>SYSTEME TACTIQUE :: Municipales 2026 - Moteur de Recherche</title>
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -156,6 +156,89 @@
             border-color: #00f3ff;
         }
         
+        /* MOTEUR DE RECHERCHE - Nouveaux styles */
+        .search-container {
+            background: #0f172a;
+            border: 1px solid #1e293b;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .search-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .search-input {
+            background: #0a0f18;
+            border: 1px solid #334155;
+            color: #00f3ff;
+            padding: 12px 15px;
+            border-radius: 6px;
+            width: 100%;
+            font-family: 'Courier New', monospace;
+            transition: all 0.3s;
+        }
+        .search-input:focus {
+            outline: none;
+            border-color: #00f3ff;
+            box-shadow: 0 0 10px rgba(0, 243, 255, 0.3);
+        }
+        .search-input::placeholder {
+            color: #475569;
+        }
+        
+        .search-select {
+            background: #0a0f18;
+            border: 1px solid #334155;
+            color: #00f3ff;
+            padding: 12px 15px;
+            border-radius: 6px;
+            width: 100%;
+            cursor: pointer;
+        }
+        
+        .active-filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #1e293b;
+        }
+        
+        .filter-tag {
+            background: rgba(0, 243, 255, 0.1);
+            border: 1px solid #00f3ff;
+            color: #00f3ff;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .filter-tag button {
+            background: none;
+            border: none;
+            color: #ff003c;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+        
+        .search-stats {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 15px;
+            padding: 10px;
+            background: #0a0f18;
+            border-radius: 6px;
+        }
+        
         /* Tableau */
         .table-container {
             overflow-x: auto;
@@ -187,6 +270,17 @@
             background: rgba(0, 243, 255, 0.05);
         }
         
+        .role-badge {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: bold;
+        }
+        .role-chef {
+            background: rgba(255, 0, 60, 0.2);
+            color: #ff003c;
+        }
+        
         footer {
             border-top: 1px solid #1e293b;
             padding: 20px 0;
@@ -205,7 +299,7 @@
             <div style="display:flex; justify-content:space-between; align-items:center;">
                 <div>
                     <h1>MUNICIPALES <span class="neon-blue">2026</span></h1>
-                    <p style="color:#475569; margin-top:5px;">DROM-COM · DONNÉES OFFICIELLES DATA.GOUV.FR</p>
+                    <p style="color:#475569; margin-top:5px;">DROM-COM · MOTEUR DE RECHERCHE AVANCÉ</p>
                 </div>
                 <div style="text-align:right;">
                     <div style="color:#475569; font-size:0.8rem;">MISE À JOUR</div>
@@ -214,9 +308,9 @@
             </div>
         </div>
 
-        <!-- CARTES DE TÉLÉCHARGEMENT - SOURCES OFFICIELLES -->
+        <!-- CARTES DE TÉLÉCHARGEMENT -->
         <div class="grid-3">
-            <!-- 1. France entière (DROM inclus) -->
+            <!-- France entière -->
             <div class="download-card">
                 <span class="size">137,8 Mo</span>
                 <div style="display:flex; align-items:center; gap:10px; margin-bottom:15px;">
@@ -226,20 +320,12 @@
                         <p style="color:#475569; font-size:0.8rem;">DROM inclus (971-976)</p>
                     </div>
                 </div>
-                <div class="stats">
-                    <span><i class="fas fa-download"></i> 7 000+</span>
-                    <span><i class="fas fa-calendar"></i> 28/02/2026</span>
-                </div>
-                <p style="color:#94a3b8; font-size:0.9rem; margin:10px 0;">
-                    Fichier principal : candidatures-france-entiere-tour-1
-                </p>
-                <a href="https://www.data.gouv.fr/fr/datasets/r/b929c2a4-18ec-4e8b-bc37-2ff346a867cd" 
-                   target="_blank" class="download-btn">
+                <a href="https://www.data.gouv.fr/fr/datasets/r/b929c2a4-18ec-4e8b-bc37-2ff346a867cd" target="_blank" class="download-btn">
                     <i class="fas fa-download mr-2"></i> TÉLÉCHARGER
                 </a>
             </div>
 
-            <!-- 2. Polynésie française -->
+            <!-- Polynésie -->
             <div class="download-card">
                 <span class="size">1,4 Mo</span>
                 <div style="display:flex; align-items:center; gap:10px; margin-bottom:15px;">
@@ -249,20 +335,12 @@
                         <p style="color:#475569; font-size:0.8rem;">987 · 48 communes</p>
                     </div>
                 </div>
-                <div class="stats">
-                    <span><i class="fas fa-list"></i> 139 listes</span>
-                    <span><i class="fas fa-users"></i> 4 876 candidats</span>
-                </div>
-                <p style="color:#94a3b8; font-size:0.9rem; margin:10px 0;">
-                    Fichier spécifique Polynésie
-                </p>
-                <a href="https://www.data.gouv.fr/fr/datasets/r/5e7d2f8a-1b3c-4d5e-8f9a-0b1c2d3e4f5g" 
-                   target="_blank" class="download-btn">
+                <a href="https://www.data.gouv.fr/fr/datasets/r/5e7d2f8a-1b3c-4d5e-8f9a-0b1c2d3e4f5g" target="_blank" class="download-btn">
                     <i class="fas fa-download mr-2"></i> TÉLÉCHARGER
                 </a>
             </div>
 
-            <!-- 3. Paris/Lyon/Marseille -->
+            <!-- Paris/Lyon/Marseille -->
             <div class="download-card">
                 <span class="size">611,9 Ko</span>
                 <div style="display:flex; align-items:center; gap:10px; margin-bottom:15px;">
@@ -272,83 +350,9 @@
                         <p style="color:#475569; font-size:0.8rem;">Arrondissements</p>
                     </div>
                 </div>
-                <div class="stats">
-                    <span><i class="fas fa-download"></i> 127</span>
-                    <span><i class="fas fa-calendar"></i> 28/02/2026</span>
-                </div>
-                <p style="color:#94a3b8; font-size:0.9rem; margin:10px 0;">
-                    Conseils d'arrondissements
-                </p>
-                <a href="https://www.data.gouv.fr/fr/datasets/r/6f8g9h0i-2c3d-4e5f-6g7h-8i9j0k1l2m3n" 
-                   target="_blank" class="download-btn">
+                <a href="https://www.data.gouv.fr/fr/datasets/r/6f8g9h0i-2c3d-4e5f-6g7h-8i9j0k1l2m3n" target="_blank" class="download-btn">
                     <i class="fas fa-download mr-2"></i> TÉLÉCHARGER
                 </a>
-            </div>
-        </div>
-
-        <!-- CARTES DES COM SPÉCIFIQUES -->
-        <div class="panel">
-            <div style="display:flex; align-items:center; gap:10px; margin-bottom:20px;">
-                <i class="fas fa-globe" style="color:#00f3ff;"></i>
-                <h2 style="color:white;">AUTRES COLLECTIVITÉS D'OUTRE-MER</h2>
-            </div>
-            
-            <div class="grid-4" style="grid-template-columns:repeat(4,1fr);">
-                <!-- Nouvelle-Calédonie -->
-                <div class="download-card">
-                    <span class="size">Fichier spécifique</span>
-                    <h3 style="color:white; margin:10px 0;">NOUVELLE-CALÉDONIE</h3>
-                    <p style="color:#475569;">988 · 123 listes</p>
-                    <div style="margin:15px 0;">
-                        <span class="badge badge-green">COM</span>
-                    </div>
-                    <a href="https://www.data.gouv.fr/fr/datasets/elections-municipales-2026-listes-candidates-au-premier-tour" 
-                       target="_blank" class="download-btn" style="background:#334155; color:white;">
-                        <i class="fas fa-external-link-alt"></i> VOIR
-                    </a>
-                </div>
-
-                <!-- Wallis-et-Futuna -->
-                <div class="download-card">
-                    <span class="size">Fichier spécifique</span>
-                    <h3 style="color:white; margin:10px 0;">WALLIS-ET-FUTUNA</h3>
-                    <p style="color:#475569;">986 · 3 circonscriptions</p>
-                    <div style="margin:15px 0;">
-                        <span class="badge badge-green">COM</span>
-                    </div>
-                    <a href="https://www.data.gouv.fr/fr/datasets/elections-municipales-2026-listes-candidates-au-premier-tour" 
-                       target="_blank" class="download-btn" style="background:#334155; color:white;">
-                        <i class="fas fa-external-link-alt"></i> VOIR
-                    </a>
-                </div>
-
-                <!-- Saint-Pierre-et-Miquelon -->
-                <div class="download-card">
-                    <span class="size">Fichier spécifique</span>
-                    <h3 style="color:white; margin:10px 0;">ST-PIERRE-ET-MIQUELON</h3>
-                    <p style="color:#475569;">975 · 2 communes</p>
-                    <div style="margin:15px 0;">
-                        <span class="badge badge-red">COM</span>
-                    </div>
-                    <a href="https://www.data.gouv.fr/fr/datasets/elections-municipales-2026-listes-candidates-au-premier-tour" 
-                       target="_blank" class="download-btn" style="background:#334155; color:white;">
-                        <i class="fas fa-external-link-alt"></i> VOIR
-                    </a>
-                </div>
-
-                <!-- Saint-Barthélemy / Saint-Martin -->
-                <div class="download-card">
-                    <span class="size">Fichier spécifique</span>
-                    <h3 style="color:white; margin:10px 0;">ST-BARTH / ST-MARTIN</h3>
-                    <p style="color:#475569;">977 · 978</p>
-                    <div style="margin:15px 0;">
-                        <span class="badge badge-red">COM</span>
-                    </div>
-                    <a href="https://www.data.gouv.fr/fr/datasets/elections-municipales-2026-listes-candidates-au-premier-tour" 
-                       target="_blank" class="download-btn" style="background:#334155; color:white;">
-                        <i class="fas fa-external-link-alt"></i> VOIR
-                    </a>
-                </div>
             </div>
         </div>
 
@@ -375,8 +379,6 @@
             </div>
             
             <div style="text-align:center; padding:40px; background:#0f172a; border-radius:8px;">
-                <i class="fas fa-external-link-alt" style="font-size:3rem; color:#475569; margin-bottom:20px;"></i>
-                <p style="color:white; margin-bottom:20px;">Ouvrir l'explorateur interactif dans un nouvel onglet</p>
                 <a id="explorerLink" href="https://municipales2026.manufacture-osint.fr/#view=explorer&dept=974" target="_blank" style="display:inline-block; background:#00f3ff; color:black; padding:15px 40px; border-radius:8px; text-decoration:none; font-weight:bold;">
                     <i class="fas fa-map mr-2"></i> LANCER L'EXPLORATEUR
                 </a>
@@ -386,7 +388,7 @@
         <!-- UPLOAD CSV -->
         <div class="panel">
             <h2 style="color:#00f3ff; margin-bottom:20px;">
-                <i class="fas fa-download mr-2"></i> ANALYSE DE FICHIER CSV
+                <i class="fas fa-upload mr-2"></i> IMPORTATION DES DONNÉES
             </h2>
             <div id="dropZone" class="upload-zone" onclick="document.getElementById('fileInput').click()">
                 <i class="fas fa-file-csv" style="font-size:3rem; color:#475569; margin-bottom:10px;"></i>
@@ -403,33 +405,55 @@
         <!-- STATS -->
         <div id="statsCards" class="grid-4" style="display:none;"></div>
 
-        <!-- FILTRES -->
-        <div id="filtersSection" class="panel" style="display:none;">
-            <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:15px;">
-                <select id="filterDepartement" style="background:#0a0f18; border:1px solid #334155; color:#00f3ff; padding:8px; border-radius:4px;">
-                    <option value="">TOUS LES TERRITOIRES</option>
-                </select>
-                <input type="text" id="filterCommune" placeholder="Commune..." style="background:#0a0f18; border:1px solid #334155; color:#00f3ff; padding:8px; border-radius:4px;">
-                <select id="filterSexe" style="background:#0a0f18; border:1px solid #334155; color:#00f3ff; padding:8px; border-radius:4px;">
-                    <option value="">TOUS SEXES</option>
-                    <option value="M">HOMME</option>
-                    <option value="F">FEMME</option>
-                </select>
-                <select id="filterTeteListe" style="background:#0a0f18; border:1px solid #334155; color:#00f3ff; padding:8px; border-radius:4px;">
-                    <option value="">TOUS STATUTS</option>
-                    <option value="OUI">CHEF DE LISTE</option>
-                    <option value="NON">SUBALTERNE</option>
+        <!-- MOTEUR DE RECHERCHE AVANCÉ -->
+        <div id="searchSection" class="panel" style="display:none;">
+            <h2 style="color:#00f3ff; margin-bottom:20px;">
+                <i class="fas fa-search mr-2"></i> MOTEUR DE RECHERCHE AVANCÉ
+            </h2>
+            
+            <div class="search-grid">
+                <input type="text" id="searchNom" class="search-input" placeholder="🔍 Nom du candidat...">
+                <input type="text" id="searchCommune" class="search-input" placeholder="🏙️ Commune...">
+                <input type="text" id="searchListe" class="search-input" placeholder="📋 Nom de la liste / Parti...">
+                <select id="searchRole" class="search-select">
+                    <option value="">🎯 Tous les rôles</option>
+                    <option value="OUI">👑 Chefs de liste uniquement</option>
+                    <option value="NON">👥 Colistiers uniquement</option>
                 </select>
             </div>
-            <div style="display:flex; justify-content:space-between; margin-top:20px;">
-                <span id="candidateCount" style="color:#00f3ff;">0 candidats</span>
-                <button onclick="resetFilters()" style="background:none; border:none; color:#475569; cursor:pointer;">RÉINITIALISER LES FILTRES</button>
+
+            <div class="search-grid">
+                <select id="searchTerritoire" class="search-select">
+                    <option value="">🌍 Tous les territoires</option>
+                </select>
+                <select id="searchSexe" class="search-select">
+                    <option value="">⚥ Tous les sexes</option>
+                    <option value="M">♂ Hommes</option>
+                    <option value="F">♀ Femmes</option>
+                </select>
+                <button onclick="resetSearch()" style="background:#334155; border:none; color:white; padding:12px; border-radius:6px; cursor:pointer;">
+                    <i class="fas fa-undo mr-2"></i> Réinitialiser
+                </button>
+                <button onclick="applySearch()" style="background:#00f3ff; border:none; color:black; padding:12px; border-radius:6px; cursor:pointer; font-weight:bold;">
+                    <i class="fas fa-search mr-2"></i> Rechercher
+                </button>
+            </div>
+
+            <!-- Filtres actifs -->
+            <div id="activeFilters" class="active-filters"></div>
+
+            <!-- Statistiques de recherche -->
+            <div id="searchStats" class="search-stats">
+                <span id="resultCount" style="color:#00f3ff;">0 résultats</span>
+                <span id="totalCount" style="color:#475569;">Total: 0 candidats</span>
             </div>
         </div>
 
-        <!-- TABLEAU -->
+        <!-- TABLEAU DES RÉSULTATS -->
         <div id="tableSection" class="panel" style="display:none;">
-            <h2 style="color:#ff003c; margin-bottom:15px;">LISTE DES CANDIDATS DROM-COM</h2>
+            <h2 style="color:#ff003c; margin-bottom:15px;">
+                <i class="fas fa-list mr-2"></i> RÉSULTATS DE LA RECHERCHE
+            </h2>
             <div class="table-container">
                 <table>
                     <thead>
@@ -438,8 +462,8 @@
                             <th>PRÉNOM</th>
                             <th>TERRITOIRE</th>
                             <th>COMMUNE</th>
-                            <th>LISTE</th>
-                            <th>STATUT</th>
+                            <th>LISTE / PARTI</th>
+                            <th>RÔLE</th>
                             <th>SEXE</th>
                         </tr>
                     </thead>
@@ -448,19 +472,14 @@
             </div>
         </div>
 
-        <!-- SOURCE DATA.GOUV.FR -->
+        <!-- SOURCE -->
         <footer>
             <i class="fas fa-database" style="color:#00f3ff; margin-right:5px;"></i>
-            SOURCE OFFICIELLE : 
-            <a href="https://www.data.gouv.fr/datasets/elections-municipales-2026-listes-candidates-au-premier-tour" 
-               target="_blank" style="color:#00f3ff; text-decoration:none;">
-                data.gouv.fr - Élections municipales 2026
-            </a>
-            <br>
-            <span style="color:#475569; font-size:0.7rem;">Mise à jour : 1er mars 2026 · 4 fichiers disponibles</span>
+            SOURCE : data.gouv.fr · Moteur de recherche intégré
         </footer>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
     <script>
         // DROM-COM
         const DROM_COM = {
@@ -471,6 +490,7 @@
         };
 
         let allCandidates = [];
+        let filteredCandidates = [];
 
         // Met à jour le lien de l'explorateur
         function updateExplorerLink() {
@@ -505,72 +525,207 @@
                     
                     if (codeDep && DROM_COM[codeDep]) {
                         allCandidates.push({
+                            codeDep: codeDep,
                             nom: data['Nom sur le bulletin de vote'] || '',
                             prenom: data['Prénom sur le bulletin de vote'] || '',
                             departement: DROM_COM[codeDep],
                             commune: data['Circonscription'] || '',
-                            liste: data['Libellé abrégé de liste'] || '',
+                            liste: data['Libellé abrégé de liste'] || data['Libellé de la liste'] || 'Sans étiquette',
                             teteDeListe: data['Tête de liste'] || 'NON',
-                            sexe: data['Sexe'] || ''
+                            sexe: data['Sexe'] || '',
+                            nuance: data['Code nuance de liste'] || ''
                         });
                     }
                 },
                 complete: function() {
+                    // Initialiser les filtres
+                    initSearchFilters();
+                    
+                    // Afficher les sections
                     document.getElementById('statsCards').style.display = 'grid';
-                    document.getElementById('filtersSection').style.display = 'block';
+                    document.getElementById('searchSection').style.display = 'block';
                     document.getElementById('tableSection').style.display = 'block';
                     
                     // Stats
-                    document.getElementById('statsCards').innerHTML = `
-                        <div class="download-card" style="padding:20px;">
-                            <div style="color:#475569;">TOTAL CANDIDATS</div>
-                            <div style="font-size:2rem; color:white;">${allCandidates.length}</div>
-                        </div>
-                        <div class="download-card" style="padding:20px;">
-                            <div style="color:#475569;">FEMMES</div>
-                            <div style="font-size:2rem; color:#ff69b4;">${allCandidates.filter(c => c.sexe === 'F').length}</div>
-                            <div style="color:#475569;">${((allCandidates.filter(c => c.sexe === 'F').length/allCandidates.length)*100).toFixed(1)}%</div>
-                        </div>
-                        <div class="download-card" style="padding:20px;">
-                            <div style="color:#475569;">HOMMES</div>
-                            <div style="font-size:2rem; color:#4169e1;">${allCandidates.filter(c => c.sexe === 'M').length}</div>
-                            <div style="color:#475569;">${((allCandidates.filter(c => c.sexe === 'M').length/allCandidates.length)*100).toFixed(1)}%</div>
-                        </div>
-                        <div class="download-card" style="padding:20px;">
-                            <div style="color:#475569;">CHEFS DE LISTE</div>
-                            <div style="font-size:2rem; color:#ff003c;">${allCandidates.filter(c => c.teteDeListe === 'OUI').length}</div>
-                        </div>
-                    `;
+                    updateStats();
                     
+                    // Afficher tous les candidats
+                    filteredCandidates = [...allCandidates];
                     displayResults();
                 }
             });
         }
 
+        function initSearchFilters() {
+            const territoireSelect = document.getElementById('searchTerritoire');
+            const territoires = [...new Set(allCandidates.map(c => c.codeDep))].sort();
+            
+            territoireSelect.innerHTML = '<option value="">🌍 Tous les territoires</option>';
+            territoires.forEach(code => {
+                const option = document.createElement('option');
+                option.value = code;
+                option.textContent = `${code} · ${DROM_COM[code]}`;
+                territoireSelect.appendChild(option);
+            });
+        }
+
+        function applySearch() {
+            const searchNom = document.getElementById('searchNom').value.toLowerCase();
+            const searchCommune = document.getElementById('searchCommune').value.toLowerCase();
+            const searchListe = document.getElementById('searchListe').value.toLowerCase();
+            const searchRole = document.getElementById('searchRole').value;
+            const searchTerritoire = document.getElementById('searchTerritoire').value;
+            const searchSexe = document.getElementById('searchSexe').value;
+
+            filteredCandidates = allCandidates.filter(c => {
+                // Filtre par nom
+                if (searchNom && !c.nom.toLowerCase().includes(searchNom) && !c.prenom.toLowerCase().includes(searchNom)) {
+                    return false;
+                }
+                
+                // Filtre par commune
+                if (searchCommune && !c.commune.toLowerCase().includes(searchCommune)) {
+                    return false;
+                }
+                
+                // Filtre par liste/parti
+                if (searchListe && !c.liste.toLowerCase().includes(searchListe)) {
+                    return false;
+                }
+                
+                // Filtre par rôle
+                if (searchRole && c.teteDeListe !== searchRole) {
+                    return false;
+                }
+                
+                // Filtre par territoire
+                if (searchTerritoire && c.codeDep !== searchTerritoire) {
+                    return false;
+                }
+                
+                // Filtre par sexe
+                if (searchSexe && c.sexe !== searchSexe) {
+                    return false;
+                }
+                
+                return true;
+            });
+
+            updateActiveFilters();
+            displayResults();
+            updateStats();
+        }
+
+        function updateActiveFilters() {
+            const container = document.getElementById('activeFilters');
+            const filters = [];
+            
+            const searchNom = document.getElementById('searchNom').value;
+            const searchCommune = document.getElementById('searchCommune').value;
+            const searchListe = document.getElementById('searchListe').value;
+            const searchRole = document.getElementById('searchRole').value;
+            const searchTerritoire = document.getElementById('searchTerritoire').value;
+            const searchSexe = document.getElementById('searchSexe').value;
+            
+            if (searchNom) filters.push(`<span class="filter-tag">Nom: ${searchNom} <button onclick="clearFilter('nom')">×</button></span>`);
+            if (searchCommune) filters.push(`<span class="filter-tag">Commune: ${searchCommune} <button onclick="clearFilter('commune')">×</button></span>`);
+            if (searchListe) filters.push(`<span class="filter-tag">Liste: ${searchListe} <button onclick="clearFilter('liste')">×</button></span>`);
+            if (searchRole) filters.push(`<span class="filter-tag">${searchRole === 'OUI' ? 'Chefs' : 'Colistiers'} <button onclick="clearFilter('role')">×</button></span>`);
+            if (searchTerritoire) filters.push(`<span class="filter-tag">${DROM_COM[searchTerritoire]} <button onclick="clearFilter('territoire')">×</button></span>`);
+            if (searchSexe) filters.push(`<span class="filter-tag">${searchSexe === 'M' ? 'Hommes' : 'Femmes'} <button onclick="clearFilter('sexe')">×</button></span>`);
+            
+            container.innerHTML = filters.join(' ');
+        }
+
+        function clearFilter(filter) {
+            switch(filter) {
+                case 'nom': document.getElementById('searchNom').value = ''; break;
+                case 'commune': document.getElementById('searchCommune').value = ''; break;
+                case 'liste': document.getElementById('searchListe').value = ''; break;
+                case 'role': document.getElementById('searchRole').value = ''; break;
+                case 'territoire': document.getElementById('searchTerritoire').value = ''; break;
+                case 'sexe': document.getElementById('searchSexe').value = ''; break;
+            }
+            applySearch();
+        }
+
+        function resetSearch() {
+            document.getElementById('searchNom').value = '';
+            document.getElementById('searchCommune').value = '';
+            document.getElementById('searchListe').value = '';
+            document.getElementById('searchRole').value = '';
+            document.getElementById('searchTerritoire').value = '';
+            document.getElementById('searchSexe').value = '';
+            
+            filteredCandidates = [...allCandidates];
+            updateActiveFilters();
+            displayResults();
+            updateStats();
+        }
+
         function displayResults() {
             const tbody = document.getElementById('candidatesTableBody');
-            tbody.innerHTML = allCandidates.slice(0, 500).map(c => `
+            const resultCount = document.getElementById('resultCount');
+            const totalCount = document.getElementById('totalCount');
+            
+            resultCount.innerHTML = `${filteredCandidates.length} résultats`;
+            totalCount.innerHTML = `Total: ${allCandidates.length} candidats`;
+            
+            if (filteredCandidates.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; padding:40px;">Aucun résultat trouvé</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = filteredCandidates.slice(0, 500).map(c => `
                 <tr>
-                    <td>${c.nom}</td>
+                    <td style="font-weight:bold; color:white;">${c.nom}</td>
                     <td>${c.prenom}</td>
                     <td style="color:#00f3ff;">${c.departement}</td>
                     <td>${c.commune}</td>
-                    <td>${c.liste}</td>
-                    <td>${c.teteDeListe === 'OUI' ? '<span style="background:#ff003c20; color:#ff003c; padding:4px 8px; border-radius:12px;">CHEF</span>' : '-'}</td>
+                    <td style="max-width:200px; overflow:hidden; text-overflow:ellipsis;">${c.liste}</td>
+                    <td>
+                        ${c.teteDeListe === 'OUI' ? '<span class="role-badge role-chef">CHEF</span>' : '-'}
+                    </td>
                     <td>${c.sexe}</td>
                 </tr>
             `).join('');
-            
-            document.getElementById('candidateCount').textContent = `${allCandidates.length} candidats (affichage 500)`;
         }
 
-        function resetFilters() {
-            document.getElementById('filterDepartement').value = '';
-            document.getElementById('filterCommune').value = '';
-            document.getElementById('filterSexe').value = '';
-            document.getElementById('filterTeteListe').value = '';
+        function updateStats() {
+            const total = allCandidates.length;
+            const femmes = allCandidates.filter(c => c.sexe === 'F').length;
+            const hommes = allCandidates.filter(c => c.sexe === 'M').length;
+            const chefs = allCandidates.filter(c => c.teteDeListe === 'OUI').length;
+            
+            document.getElementById('statsCards').innerHTML = `
+                <div class="download-card" style="padding:20px;">
+                    <div style="color:#475569;">TOTAL</div>
+                    <div style="font-size:2rem; color:white;">${total}</div>
+                </div>
+                <div class="download-card" style="padding:20px;">
+                    <div style="color:#475569;">FEMMES</div>
+                    <div style="font-size:2rem; color:#ff69b4;">${femmes}</div>
+                    <div style="color:#475569;">${((femmes/total)*100 || 0).toFixed(1)}%</div>
+                </div>
+                <div class="download-card" style="padding:20px;">
+                    <div style="color:#475569;">HOMMES</div>
+                    <div style="font-size:2rem; color:#4169e1;">${hommes}</div>
+                    <div style="color:#475569;">${((hommes/total)*100 || 0).toFixed(1)}%</div>
+                </div>
+                <div class="download-card" style="padding:20px;">
+                    <div style="color:#475569;">CHEFS</div>
+                    <div style="font-size:2rem; color:#ff003c;">${chefs}</div>
+                </div>
+            `;
         }
+
+        // Recherche en temps réel (optionnelle)
+        document.getElementById('searchNom').addEventListener('input', applySearch);
+        document.getElementById('searchCommune').addEventListener('input', applySearch);
+        document.getElementById('searchListe').addEventListener('input', applySearch);
+        document.getElementById('searchRole').addEventListener('change', applySearch);
+        document.getElementById('searchTerritoire').addEventListener('change', applySearch);
+        document.getElementById('searchSexe').addEventListener('change', applySearch);
     </script>
-    <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
 </body>
 </html>
