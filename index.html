@@ -143,35 +143,72 @@
             text-shadow: 0 0 8px #00f3ff;
         }
 
-        .iframe-container {
-            position: relative;
+        /* Style corrigé pour l'iframe - pleine largeur */
+        .explorer-container {
             width: 100%;
-            height: 600px;
+            background: #0a0f18;
             border: 2px solid #1e293b;
             border-radius: 8px;
             overflow: hidden;
-            box-shadow: 0 0 20px rgba(0, 243, 255, 0.2);
+            margin-bottom: 2rem;
         }
-        .iframe-container iframe {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            border: none;
+        
+        .explorer-header {
+            background: #0f172a;
+            padding: 12px 20px;
+            border-bottom: 2px solid #1e293b;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
-        .iframe-overlay {
-            position: absolute;
-            bottom: 10px;
-            right: 10px;
-            background: rgba(10, 15, 24, 0.8);
-            border: 1px solid #00f3ff;
-            border-radius: 4px;
-            padding: 4px 8px;
-            font-size: 10px;
+        
+        .explorer-title {
             color: #00f3ff;
-            pointer-events: none;
-            z-index: 10;
+            font-family: 'Courier New', monospace;
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .explorer-select {
+            background: rgba(10, 15, 24, 0.9);
+            border: 1px solid #334155;
+            color: #00f3ff;
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+        .explorer-select:hover {
+            border-color: #00f3ff;
+            box-shadow: 0 0 8px rgba(0, 243, 255, 0.3);
+        }
+        
+        .explorer-iframe {
+            width: 100%;
+            height: 700px;
+            border: none;
+            display: block;
+        }
+        
+        .explorer-footer {
+            background: #0f172a;
+            padding: 8px 20px;
+            border-top: 2px solid #1e293b;
+            text-align: right;
+            font-size: 0.75rem;
+            color: #475569;
+        }
+        .explorer-footer a {
+            color: #00f3ff;
+            text-decoration: none;
+        }
+        .explorer-footer a:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
@@ -278,16 +315,16 @@
             </div>
         </section>
 
-        <!-- Sélecteur de territoire pour l'iframe -->
+        <!-- EXPLORATEUR CARTOGRAPHIQUE - VERSION CORRIGÉE PLEINE LARGEUR -->
         <section class="mb-8">
-            <div class="bg-mil-panel border border-mil-border p-6">
-                <div class="flex items-center justify-between mb-4">
-                    <h2 class="text-lg font-mono text-mil-neonBlue uppercase flex items-center">
-                        <i class="fas fa-map mr-2"></i> EXPLORATEUR CARTOGRAPHIQUE
-                    </h2>
-                    <div class="flex items-center gap-2">
-                        <span class="text-xs text-mil-dim">TERRITOIRE :</span>
-                        <select id="territoireSelector" class="tactical-input rounded px-3 py-1 text-sm" onchange="updateIframe()">
+            <div class="explorer-container">
+                <div class="explorer-header">
+                    <div class="explorer-title">
+                        <i class="fas fa-map-marked-alt text-mil-neonBlue"></i>
+                        EXPLORATEUR CARTOGRAPHIQUE - MUNICIPALES 2026
+                    </div>
+                    <div>
+                        <select id="territoireSelector" class="explorer-select" onchange="updateIframe()">
                             <option value="971">971 · GUADELOUPE</option>
                             <option value="972">972 · MARTINIQUE</option>
                             <option value="973">973 · GUYANE</option>
@@ -303,16 +340,13 @@
                     </div>
                 </div>
                 
-                <!-- Iframe avec overlay -->
-                <div class="iframe-container">
-                    <iframe id="mainIframe" src="https://municipales2026.manufacture-osint.fr/#view=explorer&dept=974&embed=1" allowfullscreen></iframe>
-                    <div class="iframe-overlay">
-                        <i class="fas fa-map-marker-alt mr-1"></i> MANUFACTURE OSINT · MUNICIPALES 2026
-                    </div>
+                <iframe id="mainIframe" class="explorer-iframe" src="https://municipales2026.manufacture-osint.fr/#view=explorer&dept=974&embed=1" allowfullscreen></iframe>
+                
+                <div class="explorer-footer">
+                    <i class="fas fa-map-marker-alt text-mil-neonBlue mr-1"></i>
+                    Source : <a href="https://municipales2026.manufacture-osint.fr" target="_blank">manufacture-osint.fr</a> · 
+                    Données en temps réel
                 </div>
-                <p class="text-xs text-mil-dim mt-2 text-right">
-                    Source : <a href="https://municipales2026.manufacture-osint.fr" target="_blank" class="text-mil-neonBlue hover:underline">manufacture-osint.fr</a>
-                </p>
             </div>
         </section>
 
