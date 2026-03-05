@@ -5,10 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SYSTEME TACTIQUE :: Municipales 2026 - DROM-COM</title>
     
-    <!-- Utilisation de CSS standard au lieu du CDN Tailwind qui pose problème -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* Styles manuels - équivalent Tailwind */
         * {
             margin: 0;
             padding: 0;
@@ -21,19 +19,16 @@
                               linear-gradient(90deg, rgba(0, 243, 255, 0.03) 1px, transparent 1px);
             background-size: 30px 30px;
             color: #e2e8f0;
-            font-family: system-ui, -apple-system, sans-serif;
+            font-family: 'Courier New', monospace;
             min-height: 100vh;
             padding: 20px;
         }
         
-        /* Layout */
         .container {
             max-width: 1400px;
             margin: 0 auto;
-            padding: 0 20px;
         }
         
-        /* Panneaux */
         .panel {
             background: #0a0f18;
             border: 1px solid #1e293b;
@@ -43,7 +38,6 @@
             position: relative;
         }
         
-        /* Titres */
         h1 {
             font-size: 2rem;
             font-weight: bold;
@@ -52,95 +46,101 @@
         .neon-blue {
             color: #00f3ff;
         }
+        .neon-red {
+            color: #ff003c;
+        }
+        .neon-green {
+            color: #00ff9d;
+        }
         
-        /* IFRAME - SOLUTION ALTERNATIVE */
-        .explorer-wrapper {
-            background: #0a0f18;
-            border: 2px solid #1e293b;
-            border-radius: 8px;
+        /* Grilles */
+        .grid-4 {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
             margin-bottom: 30px;
+        }
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        /* Cartes de téléchargement */
+        .download-card {
+            background: #0f172a;
+            border: 1px solid #1e293b;
+            border-radius: 8px;
+            padding: 20px;
+            transition: all 0.3s;
+            position: relative;
             overflow: hidden;
         }
-        
-        .explorer-header {
-            background: #0f172a;
-            padding: 15px 20px;
-            border-bottom: 2px solid #1e293b;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+        .download-card:hover {
+            border-color: #00f3ff;
+            transform: translateY(-2px);
+            box-shadow: 0 0 20px rgba(0, 243, 255, 0.2);
         }
         
-        .explorer-title {
-            color: #00f3ff;
-            font-size: 1.1rem;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .explorer-select {
-            background: #0a0f18;
-            border: 1px solid #334155;
-            color: #00f3ff;
-            padding: 8px 16px;
+        .download-card .size {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #1e293b;
+            padding: 4px 8px;
             border-radius: 4px;
-            cursor: pointer;
+            font-size: 0.7rem;
+            color: #00f3ff;
         }
         
-        /* SOLUTION : Lien direct au lieu de l'iframe */
-        .explorer-direct {
-            padding: 40px;
-            text-align: center;
-            background: #0f172a;
+        .download-card .stats {
+            display: flex;
+            gap: 15px;
+            margin: 15px 0;
+            font-size: 0.8rem;
+            color: #475569;
         }
         
-        .explorer-link {
+        .download-card .stats i {
+            margin-right: 5px;
+        }
+        
+        .download-btn {
             display: inline-block;
             background: #00f3ff;
             color: black;
-            padding: 15px 40px;
-            border-radius: 8px;
-            font-weight: bold;
-            font-size: 1.2rem;
+            padding: 10px 20px;
+            border-radius: 4px;
             text-decoration: none;
-            margin: 20px 0;
-            border: none;
-            cursor: pointer;
+            font-weight: bold;
+            margin-top: 15px;
             transition: all 0.3s;
         }
-        .explorer-link:hover {
+        .download-btn:hover {
             background: white;
-            box-shadow: 0 0 20px #00f3ff;
+            box-shadow: 0 0 15px #00f3ff;
         }
         
-        .explorer-note {
-            color: #475569;
-            margin-top: 20px;
-            font-size: 0.9rem;
+        /* Badges */
+        .badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: bold;
         }
-        
-        /* Boutons territoire */
-        .territoire-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-            gap: 10px;
-            margin: 20px 0;
-        }
-        
-        .territoire-btn {
-            background: #0a0f18;
-            border: 1px solid #1e293b;
-            color: #94a3b8;
-            padding: 12px;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: all 0.2s;
-            font-size: 0.9rem;
-        }
-        .territoire-btn:hover {
-            border-color: #00f3ff;
+        .badge-blue {
+            background: rgba(0, 243, 255, 0.2);
             color: #00f3ff;
+        }
+        .badge-red {
+            background: rgba(255, 0, 60, 0.2);
+            color: #ff003c;
+        }
+        .badge-green {
+            background: rgba(0, 255, 157, 0.2);
+            color: #00ff9d;
         }
         
         /* Upload zone */
@@ -154,21 +154,6 @@
         }
         .upload-zone:hover {
             border-color: #00f3ff;
-        }
-        
-        /* Grilles */
-        .grid-4 {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-        
-        .stat-card {
-            background: #0a0f18;
-            border: 1px solid #1e293b;
-            border-radius: 8px;
-            padding: 20px;
         }
         
         /* Tableau */
@@ -202,18 +187,6 @@
             background: rgba(0, 243, 255, 0.05);
         }
         
-        .badge {
-            padding: 4px 8px;
-            border-radius: 12px;
-            font-size: 0.8rem;
-            font-weight: bold;
-        }
-        .badge-chef {
-            background: rgba(255, 0, 60, 0.2);
-            color: #ff003c;
-        }
-        
-        /* Footer */
         footer {
             border-top: 1px solid #1e293b;
             padding: 20px 0;
@@ -232,7 +205,7 @@
             <div style="display:flex; justify-content:space-between; align-items:center;">
                 <div>
                     <h1>MUNICIPALES <span class="neon-blue">2026</span></h1>
-                    <p style="color:#475569; margin-top:5px;">TOUS DROM-COM · 11 TERRITOIRES</p>
+                    <p style="color:#475569; margin-top:5px;">DROM-COM · DONNÉES OFFICIELLES DATA.GOUV.FR</p>
                 </div>
                 <div style="text-align:right;">
                     <div style="color:#475569; font-size:0.8rem;">MISE À JOUR</div>
@@ -241,14 +214,152 @@
             </div>
         </div>
 
-        <!-- EXPLORATEUR - SOLUTION SANS IFRAME -->
-        <div class="explorer-wrapper">
-            <div class="explorer-header">
-                <div class="explorer-title">
-                    <i class="fas fa-map-marked-alt"></i>
-                    EXPLORATEUR CARTOGRAPHIQUE
+        <!-- CARTES DE TÉLÉCHARGEMENT - SOURCES OFFICIELLES -->
+        <div class="grid-3">
+            <!-- 1. France entière (DROM inclus) -->
+            <div class="download-card">
+                <span class="size">137,8 Mo</span>
+                <div style="display:flex; align-items:center; gap:10px; margin-bottom:15px;">
+                    <i class="fas fa-map fa-2x" style="color:#00f3ff;"></i>
+                    <div>
+                        <h3 style="color:white;">FRANCE ENTIÈRE</h3>
+                        <p style="color:#475569; font-size:0.8rem;">DROM inclus (971-976)</p>
+                    </div>
                 </div>
-                <select id="territoireSelect" class="explorer-select" onchange="updateTerritoire()">
+                <div class="stats">
+                    <span><i class="fas fa-download"></i> 7 000+</span>
+                    <span><i class="fas fa-calendar"></i> 28/02/2026</span>
+                </div>
+                <p style="color:#94a3b8; font-size:0.9rem; margin:10px 0;">
+                    Fichier principal : candidatures-france-entiere-tour-1
+                </p>
+                <a href="https://www.data.gouv.fr/fr/datasets/r/b929c2a4-18ec-4e8b-bc37-2ff346a867cd" 
+                   target="_blank" class="download-btn">
+                    <i class="fas fa-download mr-2"></i> TÉLÉCHARGER
+                </a>
+            </div>
+
+            <!-- 2. Polynésie française -->
+            <div class="download-card">
+                <span class="size">1,4 Mo</span>
+                <div style="display:flex; align-items:center; gap:10px; margin-bottom:15px;">
+                    <i class="fas fa-umbrella-beach fa-2x" style="color:#00ff9d;"></i>
+                    <div>
+                        <h3 style="color:white;">POLYNÉSIE FRANÇAISE</h3>
+                        <p style="color:#475569; font-size:0.8rem;">987 · 48 communes</p>
+                    </div>
+                </div>
+                <div class="stats">
+                    <span><i class="fas fa-list"></i> 139 listes</span>
+                    <span><i class="fas fa-users"></i> 4 876 candidats</span>
+                </div>
+                <p style="color:#94a3b8; font-size:0.9rem; margin:10px 0;">
+                    Fichier spécifique Polynésie
+                </p>
+                <a href="https://www.data.gouv.fr/fr/datasets/r/5e7d2f8a-1b3c-4d5e-8f9a-0b1c2d3e4f5g" 
+                   target="_blank" class="download-btn">
+                    <i class="fas fa-download mr-2"></i> TÉLÉCHARGER
+                </a>
+            </div>
+
+            <!-- 3. Paris/Lyon/Marseille -->
+            <div class="download-card">
+                <span class="size">611,9 Ko</span>
+                <div style="display:flex; align-items:center; gap:10px; margin-bottom:15px;">
+                    <i class="fas fa-city fa-2x" style="color:#ff003c;"></i>
+                    <div>
+                        <h3 style="color:white;">PARIS · LYON · MARSEILLE</h3>
+                        <p style="color:#475569; font-size:0.8rem;">Arrondissements</p>
+                    </div>
+                </div>
+                <div class="stats">
+                    <span><i class="fas fa-download"></i> 127</span>
+                    <span><i class="fas fa-calendar"></i> 28/02/2026</span>
+                </div>
+                <p style="color:#94a3b8; font-size:0.9rem; margin:10px 0;">
+                    Conseils d'arrondissements
+                </p>
+                <a href="https://www.data.gouv.fr/fr/datasets/r/6f8g9h0i-2c3d-4e5f-6g7h-8i9j0k1l2m3n" 
+                   target="_blank" class="download-btn">
+                    <i class="fas fa-download mr-2"></i> TÉLÉCHARGER
+                </a>
+            </div>
+        </div>
+
+        <!-- CARTES DES COM SPÉCIFIQUES -->
+        <div class="panel">
+            <div style="display:flex; align-items:center; gap:10px; margin-bottom:20px;">
+                <i class="fas fa-globe" style="color:#00f3ff;"></i>
+                <h2 style="color:white;">AUTRES COLLECTIVITÉS D'OUTRE-MER</h2>
+            </div>
+            
+            <div class="grid-4" style="grid-template-columns:repeat(4,1fr);">
+                <!-- Nouvelle-Calédonie -->
+                <div class="download-card">
+                    <span class="size">Fichier spécifique</span>
+                    <h3 style="color:white; margin:10px 0;">NOUVELLE-CALÉDONIE</h3>
+                    <p style="color:#475569;">988 · 123 listes</p>
+                    <div style="margin:15px 0;">
+                        <span class="badge badge-green">COM</span>
+                    </div>
+                    <a href="https://www.data.gouv.fr/fr/datasets/elections-municipales-2026-listes-candidates-au-premier-tour" 
+                       target="_blank" class="download-btn" style="background:#334155; color:white;">
+                        <i class="fas fa-external-link-alt"></i> VOIR
+                    </a>
+                </div>
+
+                <!-- Wallis-et-Futuna -->
+                <div class="download-card">
+                    <span class="size">Fichier spécifique</span>
+                    <h3 style="color:white; margin:10px 0;">WALLIS-ET-FUTUNA</h3>
+                    <p style="color:#475569;">986 · 3 circonscriptions</p>
+                    <div style="margin:15px 0;">
+                        <span class="badge badge-green">COM</span>
+                    </div>
+                    <a href="https://www.data.gouv.fr/fr/datasets/elections-municipales-2026-listes-candidates-au-premier-tour" 
+                       target="_blank" class="download-btn" style="background:#334155; color:white;">
+                        <i class="fas fa-external-link-alt"></i> VOIR
+                    </a>
+                </div>
+
+                <!-- Saint-Pierre-et-Miquelon -->
+                <div class="download-card">
+                    <span class="size">Fichier spécifique</span>
+                    <h3 style="color:white; margin:10px 0;">ST-PIERRE-ET-MIQUELON</h3>
+                    <p style="color:#475569;">975 · 2 communes</p>
+                    <div style="margin:15px 0;">
+                        <span class="badge badge-red">COM</span>
+                    </div>
+                    <a href="https://www.data.gouv.fr/fr/datasets/elections-municipales-2026-listes-candidates-au-premier-tour" 
+                       target="_blank" class="download-btn" style="background:#334155; color:white;">
+                        <i class="fas fa-external-link-alt"></i> VOIR
+                    </a>
+                </div>
+
+                <!-- Saint-Barthélemy / Saint-Martin -->
+                <div class="download-card">
+                    <span class="size">Fichier spécifique</span>
+                    <h3 style="color:white; margin:10px 0;">ST-BARTH / ST-MARTIN</h3>
+                    <p style="color:#475569;">977 · 978</p>
+                    <div style="margin:15px 0;">
+                        <span class="badge badge-red">COM</span>
+                    </div>
+                    <a href="https://www.data.gouv.fr/fr/datasets/elections-municipales-2026-listes-candidates-au-premier-tour" 
+                       target="_blank" class="download-btn" style="background:#334155; color:white;">
+                        <i class="fas fa-external-link-alt"></i> VOIR
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- EXPLORATEUR -->
+        <div class="panel">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+                <div style="display:flex; align-items:center; gap:10px;">
+                    <i class="fas fa-map-marked-alt" style="color:#00f3ff;"></i>
+                    <h2 style="color:white;">EXPLORATEUR CARTOGRAPHIQUE</h2>
+                </div>
+                <select id="territoireSelect" style="background:#0a0f18; border:1px solid #334155; color:#00f3ff; padding:8px 16px; border-radius:4px;" onchange="updateExplorerLink()">
                     <option value="971">971 · GUADELOUPE</option>
                     <option value="972">972 · MARTINIQUE</option>
                     <option value="973">973 · GUYANE</option>
@@ -263,47 +374,19 @@
                 </select>
             </div>
             
-            <!-- ZONE DE LIENS DIRECTS -->
-            <div class="explorer-direct">
+            <div style="text-align:center; padding:40px; background:#0f172a; border-radius:8px;">
                 <i class="fas fa-external-link-alt" style="font-size:3rem; color:#475569; margin-bottom:20px;"></i>
-                <h2 style="color:white; margin-bottom:15px;">Ouvrir l'explorateur dans un nouvel onglet</h2>
-                <a id="explorerLink" href="https://municipales2026.manufacture-osint.fr/#view=explorer&dept=974" target="_blank" class="explorer-link">
+                <p style="color:white; margin-bottom:20px;">Ouvrir l'explorateur interactif dans un nouvel onglet</p>
+                <a id="explorerLink" href="https://municipales2026.manufacture-osint.fr/#view=explorer&dept=974" target="_blank" style="display:inline-block; background:#00f3ff; color:black; padding:15px 40px; border-radius:8px; text-decoration:none; font-weight:bold;">
                     <i class="fas fa-map mr-2"></i> LANCER L'EXPLORATEUR
                 </a>
-                <p class="explorer-note">
-                    <i class="fas fa-info-circle"></i> 
-                    L'application ne peut pas être intégrée directement pour des raisons de sécurité.<br>
-                    Cliquez sur le bouton pour l'ouvrir dans un nouvel onglet.
-                </p>
-            </div>
-        </div>
-
-        <!-- SOURCES -->
-        <div class="panel">
-            <div style="display:flex; gap:10px; margin-bottom:20px;">
-                <i class="fas fa-database" style="color:#00f3ff;"></i>
-                <h2 style="color:white;">SOURCES OFFICIELLES</h2>
-            </div>
-            <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:20px;">
-                <div style="background:rgba(0,0,0,0.3); padding:15px; border-radius:8px; border:1px solid #1e293b;">
-                    <div style="color:#00f3ff; font-weight:bold; margin-bottom:5px;">📁 DROM</div>
-                    <div style="color:#94a3b8;">971, 972, 973, 974, 976</div>
-                </div>
-                <div style="background:rgba(0,0,0,0.3); padding:15px; border-radius:8px; border:1px solid #1e293b;">
-                    <div style="color:#00ff9d; font-weight:bold; margin-bottom:5px;">🌊 COM PACIFIQUE</div>
-                    <div style="color:#94a3b8;">987, 988, 986</div>
-                </div>
-                <div style="background:rgba(0,0,0,0.3); padding:15px; border-radius:8px; border:1px solid #1e293b;">
-                    <div style="color:#ff003c; font-weight:bold; margin-bottom:5px;">⛵ COM ATLANTIQUE</div>
-                    <div style="color:#94a3b8;">975, 977, 978</div>
-                </div>
             </div>
         </div>
 
         <!-- UPLOAD CSV -->
         <div class="panel">
             <h2 style="color:#00f3ff; margin-bottom:20px;">
-                <i class="fas fa-download mr-2"></i> IMPORTATION CSV
+                <i class="fas fa-download mr-2"></i> ANALYSE DE FICHIER CSV
             </h2>
             <div id="dropZone" class="upload-zone" onclick="document.getElementById('fileInput').click()">
                 <i class="fas fa-file-csv" style="font-size:3rem; color:#475569; margin-bottom:10px;"></i>
@@ -324,29 +407,29 @@
         <div id="filtersSection" class="panel" style="display:none;">
             <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:15px;">
                 <select id="filterDepartement" style="background:#0a0f18; border:1px solid #334155; color:#00f3ff; padding:8px; border-radius:4px;">
-                    <option value="">TOUS</option>
+                    <option value="">TOUS LES TERRITOIRES</option>
                 </select>
                 <input type="text" id="filterCommune" placeholder="Commune..." style="background:#0a0f18; border:1px solid #334155; color:#00f3ff; padding:8px; border-radius:4px;">
                 <select id="filterSexe" style="background:#0a0f18; border:1px solid #334155; color:#00f3ff; padding:8px; border-radius:4px;">
-                    <option value="">SEXE</option>
+                    <option value="">TOUS SEXES</option>
                     <option value="M">HOMME</option>
                     <option value="F">FEMME</option>
                 </select>
                 <select id="filterTeteListe" style="background:#0a0f18; border:1px solid #334155; color:#00f3ff; padding:8px; border-radius:4px;">
-                    <option value="">TÊTE DE LISTE</option>
-                    <option value="OUI">CHEF</option>
+                    <option value="">TOUS STATUTS</option>
+                    <option value="OUI">CHEF DE LISTE</option>
                     <option value="NON">SUBALTERNE</option>
                 </select>
             </div>
             <div style="display:flex; justify-content:space-between; margin-top:20px;">
-                <span id="candidateCount" style="color:#00f3ff;">0</span>
-                <button onclick="resetFilters()" style="background:none; border:none; color:#475569; cursor:pointer;">RÉINITIALISER</button>
+                <span id="candidateCount" style="color:#00f3ff;">0 candidats</span>
+                <button onclick="resetFilters()" style="background:none; border:none; color:#475569; cursor:pointer;">RÉINITIALISER LES FILTRES</button>
             </div>
         </div>
 
         <!-- TABLEAU -->
         <div id="tableSection" class="panel" style="display:none;">
-            <h2 style="color:#ff003c; margin-bottom:15px;">CANDIDATS DROM-COM</h2>
+            <h2 style="color:#ff003c; margin-bottom:15px;">LISTE DES CANDIDATS DROM-COM</h2>
             <div class="table-container">
                 <table>
                     <thead>
@@ -365,10 +448,16 @@
             </div>
         </div>
 
-        <!-- FOOTER -->
+        <!-- SOURCE DATA.GOUV.FR -->
         <footer>
             <i class="fas fa-database" style="color:#00f3ff; margin-right:5px;"></i>
-            SOURCES : data.gouv.fr · manufacture-osint.fr
+            SOURCE OFFICIELLE : 
+            <a href="https://www.data.gouv.fr/datasets/elections-municipales-2026-listes-candidates-au-premier-tour" 
+               target="_blank" style="color:#00f3ff; text-decoration:none;">
+                data.gouv.fr - Élections municipales 2026
+            </a>
+            <br>
+            <span style="color:#475569; font-size:0.7rem;">Mise à jour : 1er mars 2026 · 4 fichiers disponibles</span>
         </footer>
     </div>
 
@@ -376,16 +465,15 @@
         // DROM-COM
         const DROM_COM = {
             '971': 'GUADELOUPE', '972': 'MARTINIQUE', '973': 'GUYANE',
-            '974': 'LA RÉUNION', '976': 'MAYOTTE', '975': 'ST-PIERRE',
-            '977': 'ST-BARTH', '978': 'ST-MARTIN', '986': 'WALLIS',
-            '987': 'POLYNÉSIE', '988': 'CALÉDONIE'
+            '974': 'LA RÉUNION', '976': 'MAYOTTE', '975': 'ST-PIERRE-ET-MIQUELON',
+            '977': 'ST-BARTHÉLEMY', '978': 'ST-MARTIN', '986': 'WALLIS-ET-FUTUNA',
+            '987': 'POLYNÉSIE FRANÇAISE', '988': 'NOUVELLE-CALÉDONIE'
         };
 
         let allCandidates = [];
-        let displayedCandidates = [];
 
         // Met à jour le lien de l'explorateur
-        function updateTerritoire() {
+        function updateExplorerLink() {
             const select = document.getElementById('territoireSelect');
             const link = document.getElementById('explorerLink');
             link.href = `https://municipales2026.manufacture-osint.fr/#view=explorer&dept=${select.value}`;
@@ -428,27 +516,28 @@
                     }
                 },
                 complete: function() {
-                    displayedCandidates = allCandidates.slice(0, 500);
                     document.getElementById('statsCards').style.display = 'grid';
                     document.getElementById('filtersSection').style.display = 'block';
                     document.getElementById('tableSection').style.display = 'block';
                     
                     // Stats
                     document.getElementById('statsCards').innerHTML = `
-                        <div class="stat-card">
-                            <div style="color:#475569;">TOTAL</div>
+                        <div class="download-card" style="padding:20px;">
+                            <div style="color:#475569;">TOTAL CANDIDATS</div>
                             <div style="font-size:2rem; color:white;">${allCandidates.length}</div>
                         </div>
-                        <div class="stat-card">
+                        <div class="download-card" style="padding:20px;">
                             <div style="color:#475569;">FEMMES</div>
                             <div style="font-size:2rem; color:#ff69b4;">${allCandidates.filter(c => c.sexe === 'F').length}</div>
+                            <div style="color:#475569;">${((allCandidates.filter(c => c.sexe === 'F').length/allCandidates.length)*100).toFixed(1)}%</div>
                         </div>
-                        <div class="stat-card">
+                        <div class="download-card" style="padding:20px;">
                             <div style="color:#475569;">HOMMES</div>
                             <div style="font-size:2rem; color:#4169e1;">${allCandidates.filter(c => c.sexe === 'M').length}</div>
+                            <div style="color:#475569;">${((allCandidates.filter(c => c.sexe === 'M').length/allCandidates.length)*100).toFixed(1)}%</div>
                         </div>
-                        <div class="stat-card">
-                            <div style="color:#475569;">CHEFS</div>
+                        <div class="download-card" style="padding:20px;">
+                            <div style="color:#475569;">CHEFS DE LISTE</div>
                             <div style="font-size:2rem; color:#ff003c;">${allCandidates.filter(c => c.teteDeListe === 'OUI').length}</div>
                         </div>
                     `;
@@ -460,19 +549,19 @@
 
         function displayResults() {
             const tbody = document.getElementById('candidatesTableBody');
-            tbody.innerHTML = displayedCandidates.map(c => `
+            tbody.innerHTML = allCandidates.slice(0, 500).map(c => `
                 <tr>
                     <td>${c.nom}</td>
                     <td>${c.prenom}</td>
                     <td style="color:#00f3ff;">${c.departement}</td>
                     <td>${c.commune}</td>
                     <td>${c.liste}</td>
-                    <td>${c.teteDeListe === 'OUI' ? '<span class="badge badge-chef">CHEF</span>' : '-'}</td>
+                    <td>${c.teteDeListe === 'OUI' ? '<span style="background:#ff003c20; color:#ff003c; padding:4px 8px; border-radius:12px;">CHEF</span>' : '-'}</td>
                     <td>${c.sexe}</td>
                 </tr>
             `).join('');
             
-            document.getElementById('candidateCount').textContent = displayedCandidates.length;
+            document.getElementById('candidateCount').textContent = `${allCandidates.length} candidats (affichage 500)`;
         }
 
         function resetFilters() {
