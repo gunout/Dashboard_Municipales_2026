@@ -3,337 +3,374 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SYSTEME TACTIQUE :: Municipales 2026 - TOUS DROM-COM</title>
+    <title>SYSTEME TACTIQUE :: Municipales 2026 - DROM-COM</title>
     
-    <!-- Scripts & Styles -->
-    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Utilisation de CSS standard au lieu du CDN Tailwind qui pose problème -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
-    
-    <!-- Configuration Tailwind -->
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        mil: {
-                            bg: '#030508',
-                            panel: '#0a0f18',
-                            border: '#1e293b',
-                            neonBlue: '#00f3ff',
-                            neonRed: '#ff003c',
-                            neonWhite: '#e2e8f0',
-                            dim: '#475569',
-                            success: '#00ff9d'
-                        }
-                    }
-                }
-            }
-        }
-    </script>
-
     <style>
-        body {
-            background-color: #030508;
-            background-image: 
-                linear-gradient(rgba(0, 243, 255, 0.03) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(0, 243, 255, 0.03) 1px, transparent 1px);
-            background-size: 30px 30px;
-            color: #e2e8f0;
+        /* Styles manuels - équivalent Tailwind */
+        * {
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
         }
-
-        ::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
+        
+        body {
+            background-color: #030508;
+            background-image: linear-gradient(rgba(0, 243, 255, 0.03) 1px, transparent 1px),
+                              linear-gradient(90deg, rgba(0, 243, 255, 0.03) 1px, transparent 1px);
+            background-size: 30px 30px;
+            color: #e2e8f0;
+            font-family: system-ui, -apple-system, sans-serif;
+            min-height: 100vh;
+            padding: 20px;
         }
-        ::-webkit-scrollbar-track {
-            background: #0a0f18; 
+        
+        /* Layout */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
         }
-        ::-webkit-scrollbar-thumb {
-            background: #1e293b; 
-            border: 1px solid #00f3ff;
+        
+        /* Panneaux */
+        .panel {
+            background: #0a0f18;
+            border: 1px solid #1e293b;
+            border-radius: 8px;
+            padding: 24px;
+            margin-bottom: 30px;
+            position: relative;
         }
-
-        .tactical-input {
-            background: rgba(10, 15, 24, 0.8);
-            border: 1px solid #334155;
+        
+        /* Titres */
+        h1 {
+            font-size: 2rem;
+            font-weight: bold;
+            color: white;
+        }
+        .neon-blue {
             color: #00f3ff;
         }
-        .tactical-input:focus {
-            outline: none;
-            border-color: #00f3ff;
-            box-shadow: 0 0 8px rgba(0, 243, 255, 0.3);
-        }
-
-        .tactical-table th {
-            background-color: #0f172a;
-            color: #00f3ff;
-            border-bottom: 2px solid #1e293b;
-        }
-        .tactical-table tr:hover {
-            background: rgba(0, 243, 255, 0.05);
-        }
-
-        .tricolore-bar {
-            height: 2px;
-            width: 100%;
-            background: linear-gradient(90deg, #0055ff 33%, #ffffff 33%, #ffffff 66%, #ff003c 66%);
-            box-shadow: 0 0 10px rgba(0, 85, 255, 0.5);
-            margin-bottom: 1rem;
-        }
-
-        /* STYLE CORRIGÉ POUR L'IFRAME - PLEINE LARGEUR */
-        .iframe-container {
-            width: 100%;
+        
+        /* IFRAME - SOLUTION ALTERNATIVE */
+        .explorer-wrapper {
             background: #0a0f18;
             border: 2px solid #1e293b;
             border-radius: 8px;
+            margin-bottom: 30px;
             overflow: hidden;
-            margin: 0;
-            padding: 0;
         }
         
-        .iframe-header {
+        .explorer-header {
             background: #0f172a;
-            padding: 12px 20px;
+            padding: 15px 20px;
             border-bottom: 2px solid #1e293b;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            width: 100%;
         }
         
-        .iframe-title {
+        .explorer-title {
             color: #00f3ff;
-            font-family: 'Courier New', monospace;
-            font-size: 1rem;
+            font-size: 1.1rem;
             display: flex;
             align-items: center;
             gap: 10px;
         }
         
-        .iframe-select {
+        .explorer-select {
             background: #0a0f18;
             border: 1px solid #334155;
             color: #00f3ff;
-            padding: 6px 12px;
+            padding: 8px 16px;
             border-radius: 4px;
-            font-family: 'Courier New', monospace;
+            cursor: pointer;
         }
         
-        .iframe-content {
-            width: 100%;
-            height: 700px;
-            position: relative;
-            margin: 0;
-            padding: 0;
-        }
-        
-        .iframe-content iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
-            display: block;
-            margin: 0;
-            padding: 0;
-        }
-        
-        .iframe-footer {
+        /* SOLUTION : Lien direct au lieu de l'iframe */
+        .explorer-direct {
+            padding: 40px;
+            text-align: center;
             background: #0f172a;
-            padding: 8px 20px;
-            border-top: 2px solid #1e293b;
-            text-align: right;
-            font-size: 0.75rem;
-            color: #475569;
-            width: 100%;
         }
-        .iframe-footer a {
-            color: #00f3ff;
+        
+        .explorer-link {
+            display: inline-block;
+            background: #00f3ff;
+            color: black;
+            padding: 15px 40px;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 1.2rem;
             text-decoration: none;
+            margin: 20px 0;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
         }
-        .iframe-footer a:hover {
-            text-decoration: underline;
+        .explorer-link:hover {
+            background: white;
+            box-shadow: 0 0 20px #00f3ff;
+        }
+        
+        .explorer-note {
+            color: #475569;
+            margin-top: 20px;
+            font-size: 0.9rem;
+        }
+        
+        /* Boutons territoire */
+        .territoire-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 10px;
+            margin: 20px 0;
+        }
+        
+        .territoire-btn {
+            background: #0a0f18;
+            border: 1px solid #1e293b;
+            color: #94a3b8;
+            padding: 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.9rem;
+        }
+        .territoire-btn:hover {
+            border-color: #00f3ff;
+            color: #00f3ff;
+        }
+        
+        /* Upload zone */
+        .upload-zone {
+            border: 2px dashed #1e293b;
+            border-radius: 8px;
+            padding: 40px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .upload-zone:hover {
+            border-color: #00f3ff;
+        }
+        
+        /* Grilles */
+        .grid-4 {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background: #0a0f18;
+            border: 1px solid #1e293b;
+            border-radius: 8px;
+            padding: 20px;
+        }
+        
+        /* Tableau */
+        .table-container {
+            overflow-x: auto;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        th {
+            background: #0f172a;
+            color: #00f3ff;
+            padding: 12px;
+            text-align: left;
+            position: sticky;
+            top: 0;
+        }
+        
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #1e293b;
+            color: #94a3b8;
+        }
+        
+        tr:hover {
+            background: rgba(0, 243, 255, 0.05);
+        }
+        
+        .badge {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+        .badge-chef {
+            background: rgba(255, 0, 60, 0.2);
+            color: #ff003c;
+        }
+        
+        /* Footer */
+        footer {
+            border-top: 1px solid #1e293b;
+            padding: 20px 0;
+            margin-top: 40px;
+            text-align: center;
+            color: #475569;
+            font-size: 0.8rem;
         }
     </style>
 </head>
-<body class="font-sans antialiased min-h-screen">
-
-    <!-- Toast Container -->
-    <div id="toast-container" class="fixed top-4 right-4 z-50"></div>
-
-    <div class="container mx-auto px-4 py-6 max-w-full">
-        
+<body>
+    <div class="container">
         <!-- En-tête -->
-        <header class="mb-8">
-            <div class="tricolore-bar"></div>
-            <div class="bg-mil-panel border border-mil-border p-6">
-                <div class="flex justify-between items-center">
-                    <div>
-                        <h1 class="text-3xl font-bold text-white">
-                            MUNICIPALES <span class="text-mil-neonBlue">2026</span>
-                        </h1>
-                        <p class="text-mil-dim mt-1">
-                            <span class="w-2 h-2 bg-mil-neonRed rounded-full inline-block mr-2 animate-pulse"></span>
-                            TOUS DROM-COM · 11 TERRITOIRES
-                        </p>
-                    </div>
-                    <div class="text-right">
-                        <div class="text-xs text-mil-dim">MISE À JOUR</div>
-                        <div class="text-mil-success">1 MARS 2026</div>
-                    </div>
+        <div class="panel">
+            <div style="height:2px; background:linear-gradient(90deg, #0055ff 33%, #ffffff 33%, #ffffff 66%, #ff003c 66%); margin-bottom:20px;"></div>
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+                <div>
+                    <h1>MUNICIPALES <span class="neon-blue">2026</span></h1>
+                    <p style="color:#475569; margin-top:5px;">TOUS DROM-COM · 11 TERRITOIRES</p>
+                </div>
+                <div style="text-align:right;">
+                    <div style="color:#475569; font-size:0.8rem;">MISE À JOUR</div>
+                    <div style="color:#00ff9d;">1 MARS 2026</div>
                 </div>
             </div>
-        </header>
-
-        <!-- SOURCES -->
-        <section class="mb-8">
-            <div class="bg-mil-panel border border-mil-border p-6">
-                <div class="flex items-center gap-3 mb-4">
-                    <i class="fas fa-database text-mil-neonBlue"></i>
-                    <h2 class="text-xl font-mono text-white">SOURCES OFFICIELLES</h2>
-                </div>
-                
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div class="bg-black/30 p-4 rounded border border-mil-border">
-                        <p class="text-mil-neonBlue font-bold mb-2">📁 DROM</p>
-                        <p class="text-sm">971, 972, 973, 974, 976</p>
-                    </div>
-                    <div class="bg-black/30 p-4 rounded border border-mil-border">
-                        <p class="text-mil-success font-bold mb-2">🌊 COM PACIFIQUE</p>
-                        <p class="text-sm">987, 988, 986</p>
-                    </div>
-                    <div class="bg-black/30 p-4 rounded border border-mil-border">
-                        <p class="text-mil-neonRed font-bold mb-2">⛵ COM ATLANTIQUE</p>
-                        <p class="text-sm">975, 977, 978</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- IFRAME PLEINE LARGEUR - CORRIGÉ -->
-        <section class="mb-8">
-            <div class="iframe-container">
-                <div class="iframe-header">
-                    <div class="iframe-title">
-                        <i class="fas fa-map-marked-alt text-mil-neonBlue"></i>
-                        EXPLORATEUR CARTOGRAPHIQUE - MUNICIPALES 2026
-                    </div>
-                    <select id="territoireSelector" class="iframe-select" onchange="updateIframe()">
-                        <option value="971">971 · GUADELOUPE</option>
-                        <option value="972">972 · MARTINIQUE</option>
-                        <option value="973">973 · GUYANE</option>
-                        <option value="974" selected>974 · LA RÉUNION</option>
-                        <option value="976">976 · MAYOTTE</option>
-                        <option value="975">975 · ST-PIERRE-ET-MIQUELON</option>
-                        <option value="977">977 · ST-BARTHÉLEMY</option>
-                        <option value="978">978 · ST-MARTIN</option>
-                        <option value="986">986 · WALLIS-ET-FUTUNA</option>
-                        <option value="987">987 · POLYNÉSIE FRANÇAISE</option>
-                        <option value="988">988 · NOUVELLE-CALÉDONIE</option>
-                    </select>
-                </div>
-                
-                <div class="iframe-content">
-                    <iframe id="mainIframe" src="https://municipales2026.manufacture-osint.fr/#view=explorer&dept=974&embed=1" allowfullscreen></iframe>
-                </div>
-                
-                <div class="iframe-footer">
-                    <i class="fas fa-map-marker-alt text-mil-neonBlue mr-1"></i>
-                    Source : <a href="https://municipales2026.manufacture-osint.fr" target="_blank">manufacture-osint.fr</a>
-                </div>
-            </div>
-        </section>
-
-        <!-- UPLOAD -->
-        <section class="mb-8">
-            <div class="bg-mil-panel border border-mil-border p-6">
-                <h2 class="text-lg font-mono text-mil-neonBlue mb-4">
-                    <i class="fas fa-download mr-2"></i> IMPORTATION CSV
-                </h2>
-
-                <div id="dropZone" class="border-2 border-dashed border-mil-border p-8 text-center cursor-pointer hover:border-mil-neonBlue">
-                    <i class="fas fa-file-csv text-4xl text-mil-dim mb-3"></i>
-                    <p class="text-white mb-2">Glissez-déposez votre fichier CSV</p>
-                    <button onclick="document.getElementById('fileInput').click()" 
-                            class="border border-mil-neonBlue text-mil-neonBlue px-6 py-2 rounded hover:bg-mil-neonBlue hover:text-black transition">
-                        Sélectionner
-                    </button>
-                    <input type="file" id="fileInput" accept=".csv" class="hidden" onchange="handleFile(this.files[0])">
-                </div>
-
-                <div id="fileInfo" class="mt-4 p-3 bg-mil-panel border-l-4 border-mil-success hidden">
-                    <p class="text-white" id="fileName"></p>
-                    <p class="text-sm text-mil-dim" id="fileStats"></p>
-                </div>
-            </div>
-        </section>
-
-        <!-- STATS -->
-        <div id="statsCards" class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8 hidden"></div>
-
-        <!-- RECHERCHE -->
-        <div id="searchSection" class="bg-mil-panel border border-mil-border p-4 mb-8 hidden">
-            <input type="text" id="globalSearch" placeholder="RECHERCHE..." class="w-full tactical-input rounded px-4 py-3">
         </div>
 
+        <!-- EXPLORATEUR - SOLUTION SANS IFRAME -->
+        <div class="explorer-wrapper">
+            <div class="explorer-header">
+                <div class="explorer-title">
+                    <i class="fas fa-map-marked-alt"></i>
+                    EXPLORATEUR CARTOGRAPHIQUE
+                </div>
+                <select id="territoireSelect" class="explorer-select" onchange="updateTerritoire()">
+                    <option value="971">971 · GUADELOUPE</option>
+                    <option value="972">972 · MARTINIQUE</option>
+                    <option value="973">973 · GUYANE</option>
+                    <option value="974" selected>974 · LA RÉUNION</option>
+                    <option value="976">976 · MAYOTTE</option>
+                    <option value="975">975 · ST-PIERRE-ET-MIQUELON</option>
+                    <option value="977">977 · ST-BARTHÉLEMY</option>
+                    <option value="978">978 · ST-MARTIN</option>
+                    <option value="986">986 · WALLIS-ET-FUTUNA</option>
+                    <option value="987">987 · POLYNÉSIE FRANÇAISE</option>
+                    <option value="988">988 · NOUVELLE-CALÉDONIE</option>
+                </select>
+            </div>
+            
+            <!-- ZONE DE LIENS DIRECTS -->
+            <div class="explorer-direct">
+                <i class="fas fa-external-link-alt" style="font-size:3rem; color:#475569; margin-bottom:20px;"></i>
+                <h2 style="color:white; margin-bottom:15px;">Ouvrir l'explorateur dans un nouvel onglet</h2>
+                <a id="explorerLink" href="https://municipales2026.manufacture-osint.fr/#view=explorer&dept=974" target="_blank" class="explorer-link">
+                    <i class="fas fa-map mr-2"></i> LANCER L'EXPLORATEUR
+                </a>
+                <p class="explorer-note">
+                    <i class="fas fa-info-circle"></i> 
+                    L'application ne peut pas être intégrée directement pour des raisons de sécurité.<br>
+                    Cliquez sur le bouton pour l'ouvrir dans un nouvel onglet.
+                </p>
+            </div>
+        </div>
+
+        <!-- SOURCES -->
+        <div class="panel">
+            <div style="display:flex; gap:10px; margin-bottom:20px;">
+                <i class="fas fa-database" style="color:#00f3ff;"></i>
+                <h2 style="color:white;">SOURCES OFFICIELLES</h2>
+            </div>
+            <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:20px;">
+                <div style="background:rgba(0,0,0,0.3); padding:15px; border-radius:8px; border:1px solid #1e293b;">
+                    <div style="color:#00f3ff; font-weight:bold; margin-bottom:5px;">📁 DROM</div>
+                    <div style="color:#94a3b8;">971, 972, 973, 974, 976</div>
+                </div>
+                <div style="background:rgba(0,0,0,0.3); padding:15px; border-radius:8px; border:1px solid #1e293b;">
+                    <div style="color:#00ff9d; font-weight:bold; margin-bottom:5px;">🌊 COM PACIFIQUE</div>
+                    <div style="color:#94a3b8;">987, 988, 986</div>
+                </div>
+                <div style="background:rgba(0,0,0,0.3); padding:15px; border-radius:8px; border:1px solid #1e293b;">
+                    <div style="color:#ff003c; font-weight:bold; margin-bottom:5px;">⛵ COM ATLANTIQUE</div>
+                    <div style="color:#94a3b8;">975, 977, 978</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- UPLOAD CSV -->
+        <div class="panel">
+            <h2 style="color:#00f3ff; margin-bottom:20px;">
+                <i class="fas fa-download mr-2"></i> IMPORTATION CSV
+            </h2>
+            <div id="dropZone" class="upload-zone" onclick="document.getElementById('fileInput').click()">
+                <i class="fas fa-file-csv" style="font-size:3rem; color:#475569; margin-bottom:10px;"></i>
+                <p style="color:white; margin-bottom:10px;">Glissez-déposez votre fichier CSV</p>
+                <p style="color:#475569; font-size:0.9rem;">ou cliquez pour sélectionner</p>
+                <input type="file" id="fileInput" accept=".csv" style="display:none;" onchange="handleFile(this.files[0])">
+            </div>
+            <div id="fileInfo" style="margin-top:15px; padding:15px; background:#0f172a; border-left:4px solid #00ff9d; display:none;">
+                <p id="fileName" style="color:white;"></p>
+                <p id="fileStats" style="color:#475569; font-size:0.9rem;"></p>
+            </div>
+        </div>
+
+        <!-- STATS -->
+        <div id="statsCards" class="grid-4" style="display:none;"></div>
+
         <!-- FILTRES -->
-        <div id="filtersSection" class="bg-mil-panel border border-mil-border p-6 mb-8 hidden">
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-                <select id="filterDepartement" class="tactical-input rounded px-3 py-2">
+        <div id="filtersSection" class="panel" style="display:none;">
+            <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:15px;">
+                <select id="filterDepartement" style="background:#0a0f18; border:1px solid #334155; color:#00f3ff; padding:8px; border-radius:4px;">
                     <option value="">TOUS</option>
                 </select>
-                <input type="text" id="filterCommune" placeholder="Commune..." class="tactical-input rounded px-3 py-2">
-                <select id="filterSexe" class="tactical-input rounded px-3 py-2">
+                <input type="text" id="filterCommune" placeholder="Commune..." style="background:#0a0f18; border:1px solid #334155; color:#00f3ff; padding:8px; border-radius:4px;">
+                <select id="filterSexe" style="background:#0a0f18; border:1px solid #334155; color:#00f3ff; padding:8px; border-radius:4px;">
                     <option value="">SEXE</option>
                     <option value="M">HOMME</option>
                     <option value="F">FEMME</option>
                 </select>
-                <select id="filterTeteListe" class="tactical-input rounded px-3 py-2">
+                <select id="filterTeteListe" style="background:#0a0f18; border:1px solid #334155; color:#00f3ff; padding:8px; border-radius:4px;">
                     <option value="">TÊTE DE LISTE</option>
                     <option value="OUI">CHEF</option>
                     <option value="NON">SUBALTERNE</option>
                 </select>
             </div>
-            <div class="flex justify-between mt-4">
-                <span id="candidateCount" class="text-mil-neonBlue">0</span>
-                <button onclick="resetFilters()" class="text-mil-dim hover:text-white">RÉINITIALISER</button>
+            <div style="display:flex; justify-content:space-between; margin-top:20px;">
+                <span id="candidateCount" style="color:#00f3ff;">0</span>
+                <button onclick="resetFilters()" style="background:none; border:none; color:#475569; cursor:pointer;">RÉINITIALISER</button>
             </div>
         </div>
 
         <!-- TABLEAU -->
-        <div id="tableSection" class="bg-mil-panel border border-mil-border rounded-lg overflow-hidden hidden">
-            <div class="px-6 py-4 bg-black/50 border-b border-mil-border">
-                <h2 class="text-white">CANDIDATS DROM-COM</h2>
-            </div>
-            <div class="overflow-x-auto">
-                <table class="w-full tactical-table">
+        <div id="tableSection" class="panel" style="display:none;">
+            <h2 style="color:#ff003c; margin-bottom:15px;">CANDIDATS DROM-COM</h2>
+            <div class="table-container">
+                <table>
                     <thead>
                         <tr>
-                            <th class="p-4">NOM</th>
-                            <th class="p-4">PRÉNOM</th>
-                            <th class="p-4">TERRITOIRE</th>
-                            <th class="p-4">COMMUNE</th>
-                            <th class="p-4">LISTE</th>
-                            <th class="p-4">STATUT</th>
-                            <th class="p-4">SEXE</th>
+                            <th>NOM</th>
+                            <th>PRÉNOM</th>
+                            <th>TERRITOIRE</th>
+                            <th>COMMUNE</th>
+                            <th>LISTE</th>
+                            <th>STATUT</th>
+                            <th>SEXE</th>
                         </tr>
                     </thead>
                     <tbody id="candidatesTableBody"></tbody>
                 </table>
             </div>
         </div>
-    </div>
 
-    <!-- FOOTER -->
-    <footer class="border-t border-mil-border bg-mil-bg py-4 mt-8">
-        <div class="container mx-auto px-4 text-center text-xs text-mil-dim">
-            <i class="fas fa-database text-mil-neonBlue mr-1"></i>
+        <!-- FOOTER -->
+        <footer>
+            <i class="fas fa-database" style="color:#00f3ff; margin-right:5px;"></i>
             SOURCES : data.gouv.fr · manufacture-osint.fr
-        </div>
-    </footer>
+        </footer>
+    </div>
 
     <script>
         // DROM-COM
@@ -347,70 +384,12 @@
         let allCandidates = [];
         let displayedCandidates = [];
 
-        // Met à jour l'iframe
-        function updateIframe() {
-            const territoire = document.getElementById('territoireSelector').value;
-            document.getElementById('mainIframe').src = `https://municipales2026.manufacture-osint.fr/#view=explorer&dept=${territoire}&embed=1`;
-        }
-
-        // Gestionnaire de fichier
-        function handleFile(file) {
-            if (!file) return;
-            
-            document.getElementById('fileName').textContent = file.name;
-            document.getElementById('fileInfo').classList.remove('hidden');
-            
-            Papa.parse(file, {
-                delimiter: ";",
-                header: true,
-                step: function(row) {
-                    const data = row.data;
-                    const codeDep = data['Code département'];
-                    
-                    if (codeDep && DROM_COM[codeDep]) {
-                        allCandidates.push({
-                            codeDep: codeDep,
-                            departement: DROM_COM[codeDep],
-                            commune: data['Circonscription'] || '',
-                            liste: data['Libellé abrégé de liste'] || '',
-                            teteDeListe: data['Tête de liste'] || 'NON',
-                            sexe: data['Sexe'] || '',
-                            nom: data['Nom sur le bulletin de vote'] || '',
-                            prenom: data['Prénom sur le bulletin de vote'] || ''
-                        });
-                    }
-                },
-                complete: function() {
-                    displayedCandidates = allCandidates.slice(0, 500);
-                    document.getElementById('statsCards').classList.remove('hidden');
-                    document.getElementById('searchSection').classList.remove('hidden');
-                    document.getElementById('filtersSection').classList.remove('hidden');
-                    document.getElementById('tableSection').classList.remove('hidden');
-                    displayResults();
-                }
-            });
-        }
-
-        function displayResults() {
-            const tbody = document.getElementById('candidatesTableBody');
-            tbody.innerHTML = displayedCandidates.map(c => `
-                <tr class="border-b border-mil-border">
-                    <td class="p-4">${c.nom}</td>
-                    <td class="p-4">${c.prenom}</td>
-                    <td class="p-4 text-mil-neonBlue">${c.departement}</td>
-                    <td class="p-4">${c.commune}</td>
-                    <td class="p-4">${c.liste}</td>
-                    <td class="p-4">${c.teteDeListe === 'OUI' ? 'CHEF' : '-'}</td>
-                    <td class="p-4">${c.sexe}</td>
-                </tr>
-            `).join('');
-        }
-
-        function resetFilters() {
-            document.getElementById('filterDepartement').value = '';
-            document.getElementById('filterCommune').value = '';
-            document.getElementById('filterSexe').value = '';
-            document.getElementById('filterTeteListe').value = '';
+        // Met à jour le lien de l'explorateur
+        function updateTerritoire() {
+            const select = document.getElementById('territoireSelect');
+            const link = document.getElementById('explorerLink');
+            link.href = `https://municipales2026.manufacture-osint.fr/#view=explorer&dept=${select.value}`;
+            link.innerHTML = `<i class="fas fa-map mr-2"></i> LANCER ${DROM_COM[select.value]}`;
         }
 
         // Drag & drop
@@ -421,6 +400,88 @@
             const file = e.dataTransfer.files[0];
             if (file) handleFile(file);
         });
+
+        function handleFile(file) {
+            if (!file) return;
+            
+            document.getElementById('fileName').textContent = file.name;
+            document.getElementById('fileInfo').style.display = 'block';
+            
+            Papa.parse(file, {
+                delimiter: ";",
+                header: true,
+                skipEmptyLines: true,
+                step: function(row) {
+                    const data = row.data;
+                    const codeDep = data['Code département'];
+                    
+                    if (codeDep && DROM_COM[codeDep]) {
+                        allCandidates.push({
+                            nom: data['Nom sur le bulletin de vote'] || '',
+                            prenom: data['Prénom sur le bulletin de vote'] || '',
+                            departement: DROM_COM[codeDep],
+                            commune: data['Circonscription'] || '',
+                            liste: data['Libellé abrégé de liste'] || '',
+                            teteDeListe: data['Tête de liste'] || 'NON',
+                            sexe: data['Sexe'] || ''
+                        });
+                    }
+                },
+                complete: function() {
+                    displayedCandidates = allCandidates.slice(0, 500);
+                    document.getElementById('statsCards').style.display = 'grid';
+                    document.getElementById('filtersSection').style.display = 'block';
+                    document.getElementById('tableSection').style.display = 'block';
+                    
+                    // Stats
+                    document.getElementById('statsCards').innerHTML = `
+                        <div class="stat-card">
+                            <div style="color:#475569;">TOTAL</div>
+                            <div style="font-size:2rem; color:white;">${allCandidates.length}</div>
+                        </div>
+                        <div class="stat-card">
+                            <div style="color:#475569;">FEMMES</div>
+                            <div style="font-size:2rem; color:#ff69b4;">${allCandidates.filter(c => c.sexe === 'F').length}</div>
+                        </div>
+                        <div class="stat-card">
+                            <div style="color:#475569;">HOMMES</div>
+                            <div style="font-size:2rem; color:#4169e1;">${allCandidates.filter(c => c.sexe === 'M').length}</div>
+                        </div>
+                        <div class="stat-card">
+                            <div style="color:#475569;">CHEFS</div>
+                            <div style="font-size:2rem; color:#ff003c;">${allCandidates.filter(c => c.teteDeListe === 'OUI').length}</div>
+                        </div>
+                    `;
+                    
+                    displayResults();
+                }
+            });
+        }
+
+        function displayResults() {
+            const tbody = document.getElementById('candidatesTableBody');
+            tbody.innerHTML = displayedCandidates.map(c => `
+                <tr>
+                    <td>${c.nom}</td>
+                    <td>${c.prenom}</td>
+                    <td style="color:#00f3ff;">${c.departement}</td>
+                    <td>${c.commune}</td>
+                    <td>${c.liste}</td>
+                    <td>${c.teteDeListe === 'OUI' ? '<span class="badge badge-chef">CHEF</span>' : '-'}</td>
+                    <td>${c.sexe}</td>
+                </tr>
+            `).join('');
+            
+            document.getElementById('candidateCount').textContent = displayedCandidates.length;
+        }
+
+        function resetFilters() {
+            document.getElementById('filterDepartement').value = '';
+            document.getElementById('filterCommune').value = '';
+            document.getElementById('filterSexe').value = '';
+            document.getElementById('filterTeteListe').value = '';
+        }
     </script>
+    <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
 </body>
 </html>
