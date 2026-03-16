@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MUNICIPALES 2026 · CARTE CENTRALE</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #0a0c1c;
+            font-family: 'Share Tech Mono', 'Courier New', monospace;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Layout principal : carte CENTRALE, panneaux sur les côtés */
+        .main-container {
+            display: flex;
+            width: 100vw;
+            height: 100vh;
+            gap: 16px;
+            padding: 16px;
+            background: #030514;
+        }
+
+        /* PANEL GAUCHE - fixe, ne cache pas la carte */
+        .left-panel {
+            width: 300px;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            height: 100%;
+            overflow-y: auto;
+            padding-right: 8px;
+            z-index: 10;
+        }
+
+        /* ZONE CARTE - au centre, bien visible */
+        .map-center {
+            flex: 1;
+            min-width: 0; /* important pour le flex */
+            border-radius: 32px;
+            overflow: hidden;
+            border: 3px solid #00ffff;
+            box-shadow: 0 0 40px rgba(0, 255, 255, 0.6), inset 0 0 20px rgba(255, 0, 128, 0.4);
+            background: #000;
+            z-index: 20;
+        }
+
+        .map-center iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            display: block;
+        }
+
+        /* PANEL DROIT - fixe, ne cache pas la carte */
+        .right-panel {
+            width: 320px;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            height: 100%;
+            overflow-y: auto;
+            padding-left: 8px;
+            z-index: 10;
+        }
+
+        /* STYLE DES CARTES D'ANALYSE (bleu-blanc-rouge néon) */
+        .card {
+            background: rgba(2, 12, 28, 0.85);
+            backdrop-filter: blur(12px);
+            border: 1px solid #00f7ff;
+            border-radius: 28px;
+            padding: 20px 18px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8), 0 0 0 2px rgba(255, 60, 120, 0.3) inset;
+        }
+
+        .card-title {
+            color: #ffb0d0;
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            border-left: 4px solid #ff0066;
+            padding-left: 14px;
+            margin-bottom: 18px;
+            font-weight: bold;
+        }
+
+        /* Stats chiffres */
+        .stat-block {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 15px;
+        }
+        .big-value {
+            font-size: 2.8rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #fff, #00ffff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1;
+        }
+        .stat-label {
+            color: #88aaff;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        .trend {
+            font-size: 0.85rem;
+            color: #88ff88;
+        }
+
+        /* Barres de progression */
+        .progress-item {
+            margin: 14px 0;
+        }
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            color: #b0d0ff;
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+        }
+        .progress-bg {
+            height: 20px;
+            background: #111f33;
+            border-radius: 30px;
+            overflow: hidden;
+            border: 1px solid #3399ff;
+        }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #0066ff, #ff0066);
+            border-radius: 30px;
+            box-shadow: 0 0 15px #00aaff;
+        }
+
+        /* Grille pour zones de tension */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: 12px;
+        }
+        .grid-cell {
+            background: #082032;
+            border-radius: 22px;
+            padding: 16px 10px;
+            text-align: center;
+            border: 1px solid #ff4488;
+        }
+        .grid-number {
+            font-size: 2.2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #ff99aa, cyan);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Badge */
+        .badge {
+            background: #110927;
+            border: 1px solid magenta;
+            border-radius: 40px;
+            padding: 4px 14px;
+            font-size: 0.7rem;
+            color: #ccaaff;
+            display: inline-block;
+        }
+
+        /* Header pour les panneaux */
+        .panel-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+        .led-panel {
+            width: 10px;
+            height: 10px;
+            background: #00ffff;
+            border-radius: 50%;
+            box-shadow: 0 0 15px cyan;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.3; } }
+
+        .credit-footer {
+            color: #6688aa;
+            font-size: 0.65rem;
+            text-align: center;
+            margin-top: 16px;
+            padding-top: 12px;
+            border-top: 1px dashed #336699;
+        }
+
+        /* Scroll personnalisé */
+        .left-panel::-webkit-scrollbar, .right-panel::-webkit-scrollbar {
+            width: 5px;
+        }
+        .left-panel::-webkit-scrollbar-track, .right-panel::-webkit-scrollbar-track {
+            background: #001a2f;
+            border-radius: 10px;
+        }
+        .left-panel::-webkit-scrollbar-thumb, .right-panel::-webkit-scrollbar-thumb {
+            background: #00a6ff;
+            border-radius: 10px;
+        }
+
+        /* Effet de surbrillance sur la carte */
+        .map-center::after {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+            border: 3px solid transparent;
+            border-radius: 32px;
+            box-shadow: 0 0 60px rgba(0, 255, 255, 0.3) inset;
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <!-- PANEL GAUCHE : ANALYSES STRATÉGIQUES -->
+        <div class="left-panel">
+            <!-- En-tête du panel -->
+            <div class="card" style="padding: 16px;">
+                <div class="panel-header">
+                    <span class="led-panel"></span>
+                    <span style="color:white; font-weight:bold; letter-spacing:2px;">🔵 ANALYSE TEMPS RÉEL</span>
+                </div>
+                <div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:8px;">
+                    <span class="badge">IA PRÉDICTIVE</span>
+                    <span class="badge">MIN INTÉRIEUR</span>
+                </div>
+            </div>
+
+            <!-- Carte des abstentions (mini) -->
+            <div class="card">
+                <div class="card-title">📊 ABSTRACTION CLÉS</div>
+                <div class="stat-block">
+                    <div class="big-value">43,8%</div>
+                    <div class="stat-label">moyenne nationale</div>
+                    <div class="trend">▼ -1.2% vs 2020</div>
+                </div>
+                <div class="progress-item">
+                    <div class="progress-label"><span>18-34 ans</span> <span>63%</span></div>
+                    <div class="progress-bg"><div class="progress-fill" style="width:63%"></div></div>
+                </div>
+                <div class="progress-item">
+                    <div class="progress-label"><span>35-64 ans</span> <span>47%</span></div>
+                    <div class="progress-bg"><div class="progress-fill" style="width:47%"></div></div>
+                </div>
+                <div class="progress-item">
+                    <div class="progress-label"><span>65+ ans</span> <span>28%</span></div>
+                    <div class="progress-bg"><div class="progress-fill" style="width:28%"></div></div>
+                </div>
+            </div>
+
+            <!-- Nuances en tête -->
+            <div class="card">
+                <div class="card-title">⚪ FORCES EN PRÉSENCE</div>
+                <div class="progress-item">
+                    <div class="progress-label"><span>🔵 UG (Gauche unie)</span> <span>31%</span></div>
+                    <div class="progress-bg"><div class="progress-fill" style="width:31%"></div></div>
+                </div>
+                <div class="progress-item">
+                    <div class="progress-label"><span>🔴 RN + alliés</span> <span>22%</span></div>
+                    <div class="progress-bg"><div class="progress-fill" style="width:22%"></div></div>
+                </div>
+                <div class="progress-item">
+                    <div class="progress-label"><span>⚪ Ensemble</span> <span>18%</span></div>
+                    <div class="progress-bg"><div class="progress-fill" style="width:18%"></div></div>
+                </div>
+                <div class="progress-item">
+                    <div class="progress-label"><span>🟢 Écologistes</span> <span>15%</span></div>
+                    <div class="progress-bg"><div class="progress-fill" style="width:15%"></div></div>
+                </div>
+                <div class="progress-item">
+                    <div class="progress-label"><span>🔵 LR</span> <span>11%</span></div>
+                    <div class="progress-bg"><div class="progress-fill" style="width:11%"></div></div>
+                </div>
+            </div>
+
+            <!-- Volatilité / bascules -->
+            <div class="card">
+                <div class="card-title">⚡ INDICATEURS DE BASCULE</div>
+                <div class="grid-2">
+                    <div class="grid-cell">
+                        <div class="grid-number">147</div>
+                        <div style="color:#aaccff;">communes bascules</div>
+                    </div>
+                    <div class="grid-cell">
+                        <div class="grid-number">18,2%</div>
+                        <div style="color:#aaccff;">volatilité</div>
+                    </div>
+                </div>
+                <div style="background:#082032; border-radius:20px; padding:14px; margin-top:12px; border:1px solid cyan;">
+                    <span style="color:#88ddff;">🔮 127 triangulaires probables</span>
+                </div>
+            </div>
+
+            <!-- Source -->
+            <div class="credit-footer">
+                Indi Ecorchard · Géographe<br>
+                data.gouv.fr
+            </div>
+        </div>
+
+        <!-- ZONE CENTRALE : CARTE INTERACTIVE PLEINE -->
+        <div class="map-center">
+            <iframe 
+                src="https://indi75018.github.io/Municipales2026/"
+                title="CARTE MUNICIPALES 2026"
+                sandbox="allow-same-origin allow-scripts allow-popups allow-forms"
+                allow="geolocation; clipboard-write"
+                loading="eager">
+            </iframe>
+        </div>
+
+        <!-- PANEL DROIT : ANALYSES PRÉDICTIVES ET PROJECTIONS -->
+        <div class="right-panel">
+            <!-- Projection 2nd tour -->
+            <div class="card">
+                <div class="card-title">🧠 PROJECTION 2ND TOUR</div>
+                <div class="progress-item">
+                    <div class="progress-label"><span>🔵 UG + ÉCO</span> <span>46%</span></div>
+                    <div class="progress-bg"><div class="progress-fill" style="width:46%"></div></div>
+                </div>
+                <div class="progress-item">
+                    <div class="progress-label"><span>🔴 RN</span> <span>30%</span></div>
+                    <div class="progress-bg"><div class="progress-fill" style="width:30%; background:linear-gradient(90deg,#ff4444,#ff0088);"></div></div>
+                </div>
+                <div class="progress-item">
+                    <div class="progress-label"><span>⚪ ENS + LR</span> <span>24%</span></div>
+                    <div class="progress-bg"><div class="progress-fill" style="width:24%; background:linear-gradient(90deg,#ffff88,#ffaa00);"></div></div>
+                </div>
+                <div style="margin-top:16px; background:#082032; border-radius:20px; padding:12px; text-align:center;">
+                    <span style="color:#ffaa88;">58 duels UG/RN · 127 triangulaires</span>
+                </div>
+            </div>
+
+            <!-- Zones chaudes -->
+            <div class="card">
+                <div class="card-title">📡 ZONES DE TENSION</div>
+                <div class="grid-2">
+                    <div class="grid-cell">
+                        <div class="grid-number">+8,2%</div>
+                        <div style="color:#88ddff;">RN Grand Est</div>
+                    </div>
+                    <div class="grid-cell">
+                        <div class="grid-number">63%</div>
+                        <div style="color:#88ddff;">-30 ans abst.</div>
+                    </div>
+                    <div class="grid-cell">
+                        <div class="grid-number">11</div>
+                        <div style="color:#ffaaaa;">villes >100k</div>
+                    </div>
+                    <div class="grid-cell">
+                        <div class="grid-number">81%</div>
+                        <div style="color:#88ff88;">report ECO→UG</div>
+                    </div>
+                </div>
+                <div style="margin-top:16px; border-top:1px dashed #ff4488; padding-top:12px;">
+                    <span style="color:cyan;">⚠️ Alerte rouge : </span><span style="color:#ffaa88;">Bassin minier · abstention 68%</span>
+                </div>
+            </div>
+
+            <!-- Thermogramme et corrélations -->
+            <div class="card">
+                <div class="card-title">🌡️ CORRÉLATIONS SOCIODÉMO</div>
+                <div class="progress-item">
+                    <div class="progress-label"><span>🏘️ QPV abstention</span> <span>58%</span></div>
+                    <div class="progress-bg"><div class="progress-fill" style="width:58%"></div></div>
+                </div>
+                <div class="progress-item">
+                    <div class="progress-label"><span>🏡 Rural abstention</span> <span>38%</span></div>
+                    <div class="progress-bg"><div class="progress-fill" style="width:38%"></div></div>
+                </div>
+                <div class="progress-item">
+                    <div class="progress-label"><span>📈 HLM >25%</span> <span>+15% abst.</span></div>
+                    <div class="progress-bg"><div class="progress-fill" style="width:70%"></div></div>
+                </div>
+            </div>
+
+            <!-- Contact et mise à jour -->
+            <div class="card" style="background: #0a1022;">
+                <div style="display:flex; justify-content:space-between; color:#88aaff; font-size:0.75rem;">
+                    <span>📡 MAJ 17/03 23:59</span>
+                    <span>indi.ecorchard@gmail.com</span>
+                </div>
+                <div style="display:flex; gap:8px; margin-top:10px; justify-content:center;">
+                    <span style="background:#0044aa; border-radius:30px; padding:4px 12px; color:white;">BLEU</span>
+                    <span style="background:#ffffff; border-radius:30px; padding:4px 12px; color:black;">BLANC</span>
+                    <span style="background:#aa2222; border-radius:30px; padding:4px 12px; color:white;">ROUGE</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
